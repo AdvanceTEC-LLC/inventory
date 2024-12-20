@@ -34,8 +34,6 @@ stockRouter.get('/', async (_request, response) => {
 })
 
 stockRouter.get('/material/:partNumber', async (request, response) => {
-  const { partNumber } = request.params
-
   const stock = await Stock.findOne({
     attributes: {
       exclude: ['materialId', 'createdAt', 'updatedAt'],
@@ -52,7 +50,7 @@ stockRouter.get('/material/:partNumber', async (request, response) => {
 
   if (!stock) {
     return response.status(404).send({
-      message: 'No stock found for the given material and project',
+      message: 'No stock found for the given material',
     })
   }
 

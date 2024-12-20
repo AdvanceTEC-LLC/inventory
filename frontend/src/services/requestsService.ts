@@ -31,7 +31,7 @@ const removeAll = async (): Promise<RequestType> => {
   return response.data
 }
 
-const cratesService = {
+const requestsService = {
   getAll,
   create,
   update,
@@ -39,4 +39,4 @@ const cratesService = {
   removeAll,
 }
 
-export default cratesService
+export default requestsService

@@ -1,55 +1,75 @@
 import { useState } from 'react'
-import { projects, vendors } from '../../data'
+import { projects } from '../../data'
 import { Header, Subtitle, Title } from '../Text'
 import CsvFileUpload from './CsvFileUpload'
-
-const shipmentStatuses = ['Arriving at Warehouse', 'Leaving Warehouse']
+import { VendorType } from '../../types/vendor'
+import { useQuery } from '@tanstack/react-query'
+import vendorsService from '../../services/vendorsService'
+import { ShipmentTypeEnum } from '../../types/shipment'
 
 const ShipmentsForm = () => {
-  const [shipmentStatus, setShipmentStatus] = useState<string>(
-    shipmentStatuses[0]
+  const [shipmentType, setShipmentType] = useState<ShipmentTypeEnum>(
+    Object.values(ShipmentTypeEnum)[0]
   )
+
+  const {
+    data: vendors = [],
+    isLoading,
+    isError,
+  } = useQuery<VendorType[]>({
+    queryKey: ['vendors'],
+    queryFn: vendorsService.getAll,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>Error fetching vendor data.</div>
+  }
 
   return (
     <form className="flex flex-col gap-y-4 bg-white p-8 rounded-md shadow-md">
       <div className="flex flex-col gap-y-2">
-        <Title text="Shipments" />
-        <Subtitle text="Track resource changes related to incoming or outgoing shipments" />
+        <Title text="Track New Shipment" />
+        <Subtitle text="Log resource changes related to incoming or outgoing shipments" />
       </div>
       <div className="flex flex-col gap-y-2">
         <Header text="Tracking" />
 
         <div className="flex items-center gap-x-4 w-full">
-          <label className="text-gray-500 text-nowrap">Shipment Status</label>
+          <label className="text-gray-500 text-nowrap">Shipment Type</label>
           <select
             className="border-b-2 border-gray-300 w-full py-2 pr-2"
-            value={shipmentStatus}
+            value={shipmentType}
             onChange={(event) => {
-              setShipmentStatus(event.target.value)
+              setShipmentType(event.target.value as ShipmentTypeEnum)
             }}
           >
-            {shipmentStatuses.map((status, index) => (
-              <option key={index} value={status}>
-                {status}
+            {Object.values(ShipmentTypeEnum).map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}
           </select>
         </div>
 
-        {shipmentStatus === shipmentStatuses[0] && (
+        {shipmentType === Object.values(ShipmentTypeEnum)[0] && (
           <div className="flex items-center gap-x-4 w-full">
             <label className="text-gray-500 text-nowrap">Vendor</label>
             <select className="border-b-2 border-gray-300 w-full py-2 pr-2">
               {vendors.map((vendor, index) => (
-                <option key={index} value={vendor}>
-                  {vendor}
+                <option key={index} value={vendor.name}>
+                  {vendor.name}
                 </option>
               ))}
             </select>
           </div>
         )}
 
-        {shipmentStatus === shipmentStatuses[1] && (
+        {shipmentType === Object.values(ShipmentTypeEnum)[1] && (
           <div className="flex items-center gap-x-4 w-full">
             <label className="text-gray-500 text-nowrap">
               Destination Site
@@ -65,12 +85,7 @@ const ShipmentsForm = () => {
         )}
       </div>
 
-      {shipmentStatus === shipmentStatuses[0] && (
-        <div className="flex flex-col gap-y-2">
-          <Header text="Purchase Order" />
-          <CsvFileUpload />
-        </div>
-      )}
+      {shipmentType === Object.values(ShipmentTypeEnum)[0] && <CsvFileUpload />}
     </form>
   )
 }

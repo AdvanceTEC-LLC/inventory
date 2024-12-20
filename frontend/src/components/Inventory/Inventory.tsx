@@ -1,13 +1,13 @@
 import Container from '../Container'
 import { Subtitle, Title } from '../Text'
-import InventoryTable from './InventoryTable'
+import StockTable from './StockTable'
 
 const Inventory = () => {
   return (
     <Container>
       <Title text={'Inventory'} />
       <Subtitle text="View total and project specific stock" />
-      <InventoryTable />
+      <StockTable />
     </Container>
   )
 }

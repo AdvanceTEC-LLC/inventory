@@ -2,7 +2,7 @@ import ErrorPage from './components/ErrorPage'
 import Layout from './components/Layout'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Shipments from './components/Shipments/Shipments'
-import Catalog from './components/Catalog/Catalog'
+import Requests from './components/Requests/Requests'
 import Inventory from './components/Inventory/Inventory'
 import Debug from './components/Debug/Debug'
 
@@ -14,9 +14,9 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: '/debug', element: <Debug /> },
-      { path: '/catalog', element: <Catalog /> },
-      { path: '/shipments', element: <Shipments /> },
       { path: '/inventory', element: <Inventory /> },
+      { path: '/requests', element: <Requests /> },
+      { path: '/shipments', element: <Shipments /> },
     ],
   },
 ])

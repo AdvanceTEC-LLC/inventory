@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Papa from 'papaparse'
-import { MaterialType, ProjectType, StockType } from '../../types'
+import { CreateMaterialType, MaterialType } from '../../types/material'
+import { CreateProjectType, ProjectType } from '../../types/project'
+import { CreateStockType, StockType } from '../../types/stock'
 import materialsService from '../../services/materialsService'
 import { vendors } from '../../data'
 import stockService from '../../services/stockService'
@@ -13,7 +15,7 @@ import {
   notifyWithTimeout,
   showNotification,
 } from '../../reducers/notificationReducer'
-import { NotificationType } from '../../types'
+import { NotificationType } from '../../types/notification'
 
 const CsvFileUpload = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -49,14 +51,7 @@ const CsvFileUpload = () => {
         return
       }
 
-      const projectNumber = uploadedStock.project
-        ? uploadedStock.project.number
-        : undefined
-
-      const currentStock = await stockService.getMaterialStock(
-        material,
-        projectNumber
-      )
+      const currentStock = await stockService.getMaterialStock(material)
 
       const newQuantity: number = currentStock.quantity + uploadedStock.quantity
 
@@ -69,7 +64,7 @@ const CsvFileUpload = () => {
     } catch (error: unknown) {
       const notification: NotificationType = {
         title: 'Something went wrong',
-        message: `Failed to increase stock of ${material.partDescription}.`,
+        message: `Failed to increase stock of ${material.description}.`,
         status: 'error',
         closable: true,
       }
@@ -82,7 +77,7 @@ const CsvFileUpload = () => {
     }
   }
 
-  const addMaterialToCatalog = async (material: MaterialType) => {
+  const addMaterialToCatalog = async (material: CreateMaterialType) => {
     try {
       const response = await materialsService.create(material)
 
@@ -97,10 +92,8 @@ const CsvFileUpload = () => {
         return
       }
 
-      const newStock = {
-        id: matchingStock.id,
-        material: response,
-        project: matchingStock.project,
+      const newStock: CreateStockType = {
+        materialId: response.id,
         quantity: matchingStock.quantity,
       }
 
@@ -207,7 +200,7 @@ const CsvFileUpload = () => {
   const parseCustomerPN = (data: string) => {
     const regex = /Customer PN:\s*(\S+)/
     const match = regex.exec(data)
-    return match ? match[1] : null
+    return match ? match[1] : undefined
   }
 
   // Extracts the dimensions from the 'size' cell
@@ -230,7 +223,7 @@ const CsvFileUpload = () => {
         // Extract project name from the 4th row
         const fourthRow = rows[3] ?? []
         const projectName = fourthRow[1]?.trim() ?? ''
-        const project: ProjectType = {
+        const project: CreateProjectType = {
           number: 0, // The spreadsheet does not contain the project number
           name: projectName,
         }
@@ -249,7 +242,7 @@ const CsvFileUpload = () => {
             const material: MaterialType = {
               id: 0,
               partNumber: row[1]?.trim(),
-              partDescription: row[2]?.trim(),
+              description: row[2]?.trim(),
               size: parseSize(row[3]?.trim()),
               color: row[5]?.trim(),
               vendor: vendors[0],
@@ -259,7 +252,6 @@ const CsvFileUpload = () => {
             const stock: StockType = {
               id: 0,
               material,
-              project: project,
               quantity,
             }
 
@@ -316,10 +308,14 @@ const CsvFileUpload = () => {
                     key={index}
                   >
                     <td className="mr-4 pb-2 pt-4">
-                      <Text text={stock.material.partDescription} />
+                      <Text text={stock.material.description} />
                     </td>
                     <td className="mx-4 pb-2 pt-4">
-                      <Text text={stock.material.size ?? ''} />
+                      <Text
+                        text={`${stock.material.thicknessInches || ''}T x ${
+                          stock.material.widthInches || ''
+                        }W x ${stock.material.lengthInches || ''}L`}
+                      />
                     </td>
                     <td className="mx-4 pb-2 pt-4">
                       <Text text={stock.material.color ?? ''} />

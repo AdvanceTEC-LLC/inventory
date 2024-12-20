@@ -1,14 +1,17 @@
+// Table
 import { createColumnHelper } from '@tanstack/react-table'
 import Table from '../Table'
-import { MaterialType } from '../../types'
-import { useEffect, useState } from 'react'
+
+// Queries
+import { useQuery } from '@tanstack/react-query'
 import materialsService from '../../services/materialsService'
+import { MaterialType } from '../../types/material'
 
 const columnHelper = createColumnHelper<MaterialType>()
 
 const columns = [
   {
-    header: 'Material',
+    header: 'Materials',
     columns: [
       columnHelper.accessor('partNumber', {
         header: () => 'Part Number',
@@ -30,11 +33,6 @@ const columns = [
         header: () => 'Tag',
         cell: (info) => info.getValue(),
       }),
-    ],
-  },
-  {
-    header: 'Size',
-    columns: [
       columnHelper.accessor('thicknessInches', {
         header: () => 'Thickness',
         cell: (info) => info.getValue(),
@@ -56,18 +54,29 @@ const columns = [
 ]
 
 const MaterialTable = () => {
-  const [materials, setMaterials] = useState<MaterialType[]>([])
+  const {
+    data: materials = [],
+    isLoading,
+    isError,
+  } = useQuery<MaterialType[]>({
+    queryKey: ['materials'],
+    queryFn: materialsService.getAll,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
 
-  const getMaterials = async () => {
-    const materials = await materialsService.getAll()
-    setMaterials(materials)
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
-  useEffect(() => {
-    void getMaterials()
-  }, [])
+  if (isError) {
+    return <div>Error fetching materials data.</div>
+  }
 
-  return <Table data={materials} columns={columns} />
+  return (
+    <div className="flex flex-col gap-y-4">
+      <Table data={materials} columns={columns} search={false} />
+    </div>
+  )
 }
 
 export default MaterialTable

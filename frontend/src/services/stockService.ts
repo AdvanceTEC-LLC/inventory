@@ -9,14 +9,10 @@ const getAll = async (): Promise<StockType[]> => {
   return response.data
 }
 
-const getMaterialStock = async (
-  material: MaterialType,
-  projectNumber?: number
-): Promise<StockType> => {
-  const requestURL = `${baseURL}/material/${material.partNumber}`
-  const params = projectNumber ? { projectNumber } : undefined
-
-  const response = await axios.get<StockType>(requestURL, { params })
+const getMaterialStock = async (material: MaterialType): Promise<StockType> => {
+  const response = await axios.get<StockType>(
+    `${baseURL}/material/${material.partNumber}`
+  )
   return response.data
 }
 

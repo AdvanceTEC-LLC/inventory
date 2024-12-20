@@ -1,3 +1,4 @@
+import { CrateDetailsType, CrateType } from './crate'
 import { ProjectType } from './project'
 import { VendorType } from './vendor'
 
@@ -24,4 +25,13 @@ export interface CreateShipmentType {
   status: ShipmentStatusEnum
   projectId: number
   vendorId: number
+}
+
+export interface ShipmentDetailsType {
+  id: number
+  type: ShipmentTypeEnum
+  status: ShipmentStatusEnum
+  project: ProjectType
+  vendor: VendorType
+  crates: CrateDetailsType[]
 }

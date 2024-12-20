@@ -1,10 +1,8 @@
 import RemoveFromCatalogForm from './RemoveFromCatalogForm'
 import AddToCatalogForm from './AddToCatalogForm'
-import MaterialTable from './MaterialTable'
-import VendorTable from './VendorTable'
 import Container from '../Container'
-import ProjectTable from './ProjectTable'
 import { Subtitle, Title } from '../Text'
+import MaterialTable from './MaterialTable'
 
 const userIsAdmin = false
 
@@ -21,30 +19,20 @@ const Catalog = () => {
           <div className="flex flex-col gap-y-8">
             <div className="flex flex-col gap-y-2">
               <Title text="Catalog" />
-              <Subtitle text="Each unique item tracked in inventory" />
+              <Subtitle text="Each unique material tracked in inventory" />
             </div>
             <MaterialTable />
           </div>
-          <VendorTable />
-          <ProjectTable />
         </Container>
       </div>
     )
 
   return (
-    <Container>
-      <div className="flex flex-col gap-y-8">
-        <div className="flex flex-col gap-y-2">
-          <Title text="Catalog" />
-          <Subtitle text="Each unique item tracked in inventory" />
-        </div>
+    <div className="flex flex-col gap-8">
+      <Container className="flex flex-col gap-y-8">
         <MaterialTable />
-      </div>
-      {/*<div className="grid grid-cols-[1fr_1fr] gap-8">
-        <VendorTable />
-        <ProjectTable />
-      </div>*/}
-    </Container>
+      </Container>
+    </div>
   )
 }
 

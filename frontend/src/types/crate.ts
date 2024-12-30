@@ -7,18 +7,11 @@ export interface CrateType {
   number: string
   location: LocationType
   project: ProjectType
+  stock: StockType[]
 }
 
 export interface CreateCrateType {
   number: string
   locationId: number
   projectId: number
-}
-
-export interface CrateDetailsType {
-  id: number
-  number: string
-  location: LocationType
-  project: ProjectType
-  stock: StockType[]
 }

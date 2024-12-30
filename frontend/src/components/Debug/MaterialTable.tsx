@@ -139,23 +139,24 @@ const StockTable = () => {
       form.elements.namedItem('description') as HTMLInputElement
     ).value
 
-    const thickness = form.elements.namedItem('thickness')
+    const thicknessInches = form.elements.namedItem('thicknessInches')
       ? parseInt(
-          (form.elements.namedItem('thickness') as HTMLInputElement).value,
+          (form.elements.namedItem('thicknessInches') as HTMLInputElement)
+            .value,
           10
         )
       : undefined
 
-    const width = form.elements.namedItem('width')
+    const widthInches = form.elements.namedItem('widthInches')
       ? parseInt(
-          (form.elements.namedItem('width') as HTMLInputElement).value,
+          (form.elements.namedItem('widthInches') as HTMLInputElement).value,
           10
         )
       : undefined
 
-    const length = form.elements.namedItem('length')
+    const lengthInches = form.elements.namedItem('lengthInches')
       ? parseInt(
-          (form.elements.namedItem('length') as HTMLInputElement).value,
+          (form.elements.namedItem('lengthInches') as HTMLInputElement).value,
           10
         )
       : undefined
@@ -176,9 +177,9 @@ const StockTable = () => {
     const newMaterial: CreateMaterialType = {
       partNumber,
       description,
-      thicknessInches: thickness,
-      widthInches: width,
-      lengthInches: length,
+      thicknessInches,
+      widthInches,
+      lengthInches,
       color,
       tag,
       vendorId,
@@ -255,7 +256,7 @@ const StockTable = () => {
           />
         </div>
         <div className="flex gap-x-4 justify-between">
-          <Button type="submit" text="Create materials" onClick={() => {}} />
+          <Button type="submit" text="Create material" onClick={() => {}} />
           <Button text="Delete all materials" onClick={deleteAllMaterials} />
         </div>
       </form>

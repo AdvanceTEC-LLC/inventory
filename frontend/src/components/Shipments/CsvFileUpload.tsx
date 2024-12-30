@@ -270,7 +270,7 @@ const CsvFileUpload = () => {
   if (file)
     return (
       <div className="flex flex-col gap-y-8">
-        <div className="flex justify-between">
+        <div className="flex gap-x-4">
           <Text text={`File Name: ${file.name}`} />
           <button
             className="w-fit text-red-500"

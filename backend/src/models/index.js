@@ -39,27 +39,32 @@ const defineRelationships = () => {
   Request.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
   Project.hasMany(Request, { foreignKey: 'projectId', as: 'requests' })
 
-  // CrateStock to Crate relationship
-  CrateStock.belongsTo(Crate, { foreignKey: 'crateId', as: 'crate' })
-  Crate.hasMany(CrateStock, { foreignKey: 'crateId', as: 'crateStocks' })
-
-  // CrateStock to Stock relationship
-  CrateStock.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' })
-  Stock.hasMany(CrateStock, { foreignKey: 'stockId', as: 'crateStocks' })
-
-  // ShipmentCrate to Shipment relationship
-  ShipmentCrate.belongsTo(Shipment, {
+  Shipment.belongsToMany(Crate, {
+    through: ShipmentCrate,
     foreignKey: 'shipmentId',
-    as: 'shipment',
+    otherKey: 'crateId',
+    as: 'crates',
   })
-  Shipment.hasMany(ShipmentCrate, {
-    foreignKey: 'shipmentId',
-    as: 'shipmentCrates',
+  Crate.belongsToMany(Shipment, {
+    through: ShipmentCrate,
+    foreignKey: 'crateId',
+    otherKey: 'shipmentId',
+    as: 'shipments',
   })
 
-  // ShipmentCrate to Crate relationship
-  ShipmentCrate.belongsTo(Crate, { foreignKey: 'crateId', as: 'crate' })
-  Crate.hasMany(ShipmentCrate, { foreignKey: 'crateId', as: 'shipmentCrates' })
+  // Crate to Stock through CrateStock
+  Crate.belongsToMany(Stock, {
+    through: CrateStock,
+    foreignKey: 'crateId',
+    otherKey: 'stockId',
+    as: 'stock',
+  })
+  Stock.belongsToMany(Crate, {
+    through: CrateStock,
+    foreignKey: 'stockId',
+    otherKey: 'crateId',
+    as: 'crates',
+  })
 
   // RequestStock to Request relationship
   RequestStock.belongsTo(Request, { foreignKey: 'requestId', as: 'request' })

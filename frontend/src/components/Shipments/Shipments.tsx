@@ -1,22 +1,25 @@
 import Container from '../Container'
 import { Title } from '../Text'
-import ShipmentDetails from './ShipmentDetails'
 import ShipmentsForm from './ShipmentsForm'
-import ShipmentsTable from './ShipmentsTable'
+import ShipmentDetailsTable from './ShipmentDetails/ShipmentDetailsTable'
 
 const Shipments = () => {
   return (
     <div className="flex flex-col gap-y-8">
-      <ShipmentsForm />
+      <Container>
+        <ShipmentsForm />
+      </Container>
 
+      {/*
       <Container>
         <Title text="Shipments Log" />
         <ShipmentsTable />
       </Container>
+      */}
 
       <Container>
-        <Title text="Shipments Details" />
-        <ShipmentDetails />
+        <Title text="Shipments" />
+        <ShipmentDetailsTable />
       </Container>
     </div>
   )

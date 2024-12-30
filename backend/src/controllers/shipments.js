@@ -1,7 +1,17 @@
 import { Router } from 'express'
-import { Shipment, Project, Vendor } from '../models/index.js'
+import {
+  Shipment,
+  Project,
+  Vendor,
+  ShipmentCrate,
+  Crate,
+  CrateStock,
+  Stock,
+} from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { vendorFindOptions } from './vendors.js'
+import { crateFindOptions } from './crates.js'
+import { stockFindOptions } from './stock.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
@@ -19,6 +29,21 @@ export const shipmentFindOptions = {
       as: 'vendor',
       ...vendorFindOptions,
     },
+    {
+      model: Crate,
+      as: 'crates',
+      through: { attributes: [] },
+      ...crateFindOptions,
+      include: [
+        {
+          model: Stock,
+          as: 'stock',
+          through: { attributes: [] },
+          ...stockFindOptions,
+        },
+        ...crateFindOptions.include,
+      ],
+    },
   ],
 }
 
@@ -29,14 +54,27 @@ const shipmentFinder = async (request, _response, next) => {
   if (!shipment) {
     throw new NotFoundError(`Shipment with id ${id} not found`)
   }
-  request.shipment = shipment
+
+  const shipmentCrates = await ShipmentCrate.findAll({
+    attributes: { where: { shipmentId: request.shipment.id } },
+  })
+
+  const findCrate = async (crateId) => {
+    return await Crate.findByPk(crateId, crateFindOptions)
+  }
+
+  const crates = shipmentCrates.map((shipmentCrate) =>
+    findCrate(shipmentCrate.crateId),
+  )
+
+  request.shipment = { ...request.shipment, crates }
+
   next()
 }
 
 shipmentsRouter.get('/', async (_request, response) => {
-  const shipment = await Shipment.findAll(shipmentFindOptions)
-
-  response.status(200).send(shipment)
+  const shipments = await Shipment.findAll(shipmentFindOptions)
+  response.status(200).send(shipments)
 })
 
 shipmentsRouter.get('/:id', shipmentFinder, async (request, response) => {

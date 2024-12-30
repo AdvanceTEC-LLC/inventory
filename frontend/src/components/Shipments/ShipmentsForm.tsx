@@ -31,7 +31,7 @@ const ShipmentsForm = () => {
   }
 
   return (
-    <form className="flex flex-col gap-y-4 bg-white p-8 rounded-md shadow-md">
+    <form className="flex flex-col gap-y-8 overflow-x-auto">
       <div className="flex flex-col gap-y-2">
         <Title text="Track New Shipment" />
         <Subtitle text="Log resource changes related to incoming or outgoing shipments" />
@@ -39,7 +39,7 @@ const ShipmentsForm = () => {
       <div className="flex flex-col gap-y-2">
         <Header text="Tracking" />
 
-        <div className="flex items-center gap-x-4 w-full">
+        <div className="grid grid-cols-[1fr_1fr] gap-x-4 w-full">
           <label className="text-gray-500 text-nowrap">Shipment Type</label>
           <select
             className="border-b-2 border-gray-300 w-full py-2 pr-2"
@@ -57,7 +57,7 @@ const ShipmentsForm = () => {
         </div>
 
         {shipmentType === Object.values(ShipmentTypeEnum)[0] && (
-          <div className="flex items-center gap-x-4 w-full">
+          <div className="grid grid-cols-[1fr_1fr] gap-x-4 w-full">
             <label className="text-gray-500 text-nowrap">Vendor</label>
             <select className="border-b-2 border-gray-300 w-full py-2 pr-2">
               {vendors.map((vendor, index) => (
@@ -70,7 +70,7 @@ const ShipmentsForm = () => {
         )}
 
         {shipmentType === Object.values(ShipmentTypeEnum)[1] && (
-          <div className="flex items-center gap-x-4 w-full">
+          <div className="grid grid-cols-[1fr_1fr] gap-x-4 w-full">
             <label className="text-gray-500 text-nowrap">
               Destination Site
             </label>

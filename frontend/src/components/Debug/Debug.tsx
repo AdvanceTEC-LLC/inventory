@@ -79,17 +79,21 @@ const Debug = () => {
         <CrateTable />
       </Container>
 
+      {/*
       <Container>
         <CrateStockTable />
       </Container>
+      */}
 
       <Container>
         <ShipmentTable />
       </Container>
 
+      {/*
       <Container>
         <ShipmentCrateTable />
       </Container>
+      */}
 
       <Container>
         <RequestTable />

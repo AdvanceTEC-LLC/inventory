@@ -15,9 +15,7 @@ import CrateTable from './CrateTable'
 import LocationTable from './LocationTable'
 import cratesService from '../../services/cratesService'
 import locationsService from '../../services/locationsService'
-import CrateStockTable from './CrateStockTable'
 import ShipmentTable from './ShipmentTable'
-import ShipmentCrateTable from './ShipmentCratesTable'
 import RequestTable from './RequestTable'
 import RequestStockTable from './RequestStockTable'
 
@@ -79,21 +77,9 @@ const Debug = () => {
         <CrateTable />
       </Container>
 
-      {/*
-      <Container>
-        <CrateStockTable />
-      </Container>
-      */}
-
       <Container>
         <ShipmentTable />
       </Container>
-
-      {/*
-      <Container>
-        <ShipmentCrateTable />
-      </Container>
-      */}
 
       <Container>
         <RequestTable />

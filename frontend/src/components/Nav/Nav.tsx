@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import NavTab from './NavTab'
+import { links } from './links'
+import NavLink from './NavLink'
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -9,10 +10,16 @@ const Nav = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const links = ['Shipments', 'Inventory', 'Requests']
-  const sortedLinks = links.sort((a, b) => {
-    return a.localeCompare(b)
-  })
+  const sortedLinks = links
+    .map((parentLink) => ({
+      ...parentLink,
+      // Sort the dropdown items if they exist
+      dropdown: parentLink.dropdown?.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      ),
+    }))
+    // Sort the parent links by their name
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
     <div className="flex flex-col md:flex-row bg-gradient-to-br from-atec-light to-atec md:px-24 lg:px-48">
@@ -39,7 +46,7 @@ const Nav = () => {
         } md:flex flex-col pb-2 md:pb-0 md:flex-row md:gap-x-8 md:items-center text-white`}
       >
         {sortedLinks.map((link, index) => (
-          <NavTab key={index} name={link} />
+          <NavLink key={index} link={link} />
         ))}
         <Link to={`/debug`}>
           <div className="w-full h-full py-2 px-8 md:px-0 hover:bg-white hover:text-atec transition duration-200">

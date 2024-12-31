@@ -1,60 +1,73 @@
 // Table
-import { createColumnHelper } from '@tanstack/react-table'
-import Table from '../Table'
+import { GridColDef } from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
 import stockService from '../../services/stockService'
 import { StockType } from '../../types/stock'
 
-const columnHelper = createColumnHelper<StockType>()
-
-const columns = [
+const columns: GridColDef[] = [
   {
-    header: 'Stock',
-    columns: [
-      columnHelper.accessor('material.partNumber', {
-        header: () => 'Part Number',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.description', {
-        header: () => 'Description',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.vendor.name', {
-        header: () => 'Vendor',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.tag', {
-        header: () => 'Tag',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.color', {
-        header: () => 'Color',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.thicknessInches', {
-        header: () => 'Size',
-        cell: ({ row }) => {
-          const { thicknessInches, widthInches, lengthInches } =
-            row.original.material
-          return `${thicknessInches || ''}T x ${widthInches || ''}W x ${
-            lengthInches || ''
-          }L`
-        },
-      }),
-
-      columnHelper.accessor('material.squareFeet', {
-        header: () => 'Square Feet',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('quantity', {
-        header: () => 'Quantity',
-        cell: (info) => info.getValue(),
-      }),
-    ],
+    field: 'partNumber',
+    headerName: 'Part Number',
+    flex: 1,
+    valueGetter: (_value, row) => row.material.partNumber,
+  },
+  {
+    field: 'description',
+    headerName: 'Description',
+    flex: 1,
+    valueGetter: (_value, row) => row.material.description,
+  },
+  {
+    field: 'vendor',
+    headerName: 'Vendor',
+    flex: 1,
+    valueGetter: (_value, row) => row.material.vendor.name,
+  },
+  {
+    field: 'color',
+    headerName: 'Color',
+    flex: 1,
+    valueGetter: (_value, row) => row.material.color,
+  },
+  {
+    field: 'tag',
+    headerName: 'Tag',
+    flex: 1,
+    valueGetter: (_value, row) => row.material.tag,
+  },
+  {
+    field: 'size',
+    headerName: 'Size',
+    flex: 1,
+    valueGetter: (_value, row) => {
+      if (
+        row.material.thicknessInches &&
+        row.material.widthInches &&
+        row.material.lengthInches
+      )
+        return `${row.material.thicknessInches}"T x ${row.material.widthInches}"W x ${row.material.lengthInches}"L`
+    },
+  },
+  {
+    field: 'squareFeet',
+    headerName: 'Square Feet',
+    flex: 1,
+    valueGetter: (_value, row) => {
+      if (row.material.squareFeet) return `${row.material.squareFeet}'`
+    },
+  },
+  {
+    field: 'quantity',
+    headerName: 'Quantity',
+    flex: 1,
+    valueGetter: (_value, row) => row.quantity,
   },
 ]
+
+const paginationModel = { page: 0, pageSize: 5 }
 
 const StockTable = () => {
   const {
@@ -76,9 +89,14 @@ const StockTable = () => {
   }
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <Table data={stock} columns={columns} search={false} />
-    </div>
+    <DataGrid
+      rows={stock}
+      columns={columns}
+      initialState={{ pagination: { paginationModel } }}
+      pageSizeOptions={[5, 10]}
+      sx={{ border: 0 }}
+      disableRowSelectionOnClick
+    />
   )
 }
 

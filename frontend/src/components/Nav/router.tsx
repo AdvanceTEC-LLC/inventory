@@ -3,12 +3,12 @@ import { createBrowserRouter } from 'react-router-dom'
 import Layout from '../Layout'
 import ErrorPage from '../ErrorPage'
 import Debug from '../Debug/Debug'
-import { links } from './links'
+import { routes } from './routes'
 import { LinkType } from '../../types/link'
-import Inventory from '../Inventory/Inventory'
+import Inventory from '../Inventory/Inventory/Inventory'
 
-const generateRoutes = (links: LinkType[]) => {
-  return links.flatMap((parentLink) => {
+const generateRoutes = (routes: LinkType[]) => {
+  return routes.flatMap((parentLink) => {
     const parentRoute = {
       path: `/${parentLink.path}`,
       element: parentLink.element,
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <Inventory /> },
       { path: '/debug', element: <Debug /> },
-      ...generateRoutes(links),
+      ...generateRoutes(routes),
     ],
   },
 ])

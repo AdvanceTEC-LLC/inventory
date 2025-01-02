@@ -1,12 +1,11 @@
-import { ItemType } from '../../types'
 // Style
-import Container from '../Container'
-import Button from '../Button'
-import { Header, Subtitle, Text, Title } from '../Text'
+import Container from '../../Container'
+import Button from '../../Button'
+import { Header, Subtitle, Text, Title } from '../../Text'
 // Form and input validation
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import itemsService from '../../services/materialsService'
+//import itemsService from '../../../services/materialsService'
 
 const types = ['Consumable', 'Material']
 
@@ -53,8 +52,8 @@ const validationSchema = Yup.object().shape({
 })
 
 const AddToCatalogForm = () => {
-  const handleSubmit = async (values: ItemType) => {
-    const item: ItemType = {
+  /*const handleSubmit = async (values: ConsumableType) => {
+    const item: ConsumableType = {
       id: '',
       type: values.type,
       category: values.category,
@@ -63,7 +62,7 @@ const AddToCatalogForm = () => {
       unitOfMeasure: values.unitOfMeasure,
     }
     await itemsService.create(item)
-  }
+  }*/
 
   return (
     <Container>
@@ -89,7 +88,7 @@ const AddToCatalogForm = () => {
         }}
         validateOnMount
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={() => {} /*handleSubmit*/}
       >
         {({ errors, touched, values, isSubmitting, isValid }) => (
           <Form>

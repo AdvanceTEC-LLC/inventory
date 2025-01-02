@@ -1,12 +1,12 @@
 import RemoveFromCatalogForm from './RemoveFromCatalogForm'
 import AddToCatalogForm from './AddToCatalogForm'
-import Container from '../Container'
-import { Subtitle, Title } from '../Text'
+import Container from '../../Container'
+import { Subtitle, Title } from '../../Text'
 import MaterialTable from './MaterialTable'
 
-const userIsAdmin = false
+const userIsAdmin = true
 
-const Catalog = () => {
+const ManageMaterials = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (userIsAdmin)
     return (
@@ -15,7 +15,7 @@ const Catalog = () => {
           <AddToCatalogForm />
           <RemoveFromCatalogForm />
         </div>
-        <Container>
+        <Container className="overflow-x-auto">
           <div className="flex flex-col gap-y-8">
             <div className="flex flex-col gap-y-2">
               <Title text="Catalog" />
@@ -36,4 +36,4 @@ const Catalog = () => {
   )
 }
 
-export default Catalog
+export default ManageMaterials

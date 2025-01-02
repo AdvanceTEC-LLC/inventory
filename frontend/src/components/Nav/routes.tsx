@@ -1,22 +1,22 @@
 import { LinkType } from '../../types/link'
 import Debug from '../Debug/Debug'
-import Inventory from '../Inventory/Inventory'
+
+import Inventory from '../Inventory/Inventory/Inventory'
+import ManageMaterials from '../Inventory/Manage Materials/ManageMaterials'
+
 import Requests from '../Requests/Requests'
 import Shipments from '../Shipments/Shipments'
 
-export const links: LinkType[] = [
+export const routes: LinkType[] = [
   {
     name: 'Inventory',
     path: 'inventory',
     element: <Inventory />,
     dropdown: [
       {
-        name: 'Total Inventory',
-        path: 'total-inventory',
-      },
-      {
-        name: 'Project Inventory',
-        path: 'project-inventory',
+        name: 'View Inventory',
+        path: '',
+        element: <Inventory />,
       },
       {
         name: 'Crates',
@@ -25,6 +25,7 @@ export const links: LinkType[] = [
       {
         name: 'Manage Materials',
         path: 'manage-materials',
+        element: <ManageMaterials />,
       },
     ],
   },

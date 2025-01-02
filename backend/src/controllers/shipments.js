@@ -34,15 +34,6 @@ export const shipmentFindOptions = {
       as: 'crates',
       through: { attributes: [] },
       ...crateFindOptions,
-      include: [
-        {
-          model: Stock,
-          as: 'stock',
-          through: { attributes: [] },
-          ...stockFindOptions,
-        },
-        ...crateFindOptions.include,
-      ],
     },
   ],
 }

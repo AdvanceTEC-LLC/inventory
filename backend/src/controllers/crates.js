@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import { Crate, Location, Project } from '../models/index.js'
+import { Crate, Location, Project, Stock } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { locationFindOptions } from './locations.js'
+import { stockFindOptions } from './stock.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
@@ -18,6 +19,12 @@ export const crateFindOptions = {
       model: Project,
       as: 'project',
       ...projectFindOptions,
+    },
+    {
+      model: Stock,
+      as: 'stock',
+      through: { attributes: [] },
+      ...stockFindOptions,
     },
   ],
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { links } from './links'
+import { routes } from './routes'
 import NavLink from './NavLink'
 
 const Nav = () => {
@@ -10,7 +10,7 @@ const Nav = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const sortedLinks = links
+  const sortedLinks = routes
     .map((parentLink) => ({
       ...parentLink,
       // Sort the dropdown items if they exist

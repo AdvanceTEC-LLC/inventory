@@ -1,13 +1,6 @@
-// Table
 import { GridColDef } from '@mui/x-data-grid'
-import { DataGrid } from '@mui/x-data-grid'
 
-// Queries
-import { useQuery } from '@tanstack/react-query'
-import stockService from '../../services/stockService'
-import { StockType } from '../../types/stock'
-
-const columns: GridColDef[] = [
+export const columns: GridColDef[] = [
   {
     field: 'partNumber',
     headerName: 'Part Number',
@@ -66,38 +59,3 @@ const columns: GridColDef[] = [
     valueGetter: (_value, row) => row.quantity,
   },
 ]
-
-const paginationModel = { page: 0, pageSize: 5 }
-
-const StockTable = () => {
-  const {
-    data: stock = [],
-    isLoading,
-    isError,
-  } = useQuery<StockType[]>({
-    queryKey: ['stock'],
-    queryFn: stockService.getAll,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  })
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (isError) {
-    return <div>Error fetching stock data.</div>
-  }
-
-  return (
-    <DataGrid
-      rows={stock}
-      columns={columns}
-      initialState={{ pagination: { paginationModel } }}
-      pageSizeOptions={[5, 10]}
-      sx={{ border: 0 }}
-      disableRowSelectionOnClick
-    />
-  )
-}
-
-export default StockTable

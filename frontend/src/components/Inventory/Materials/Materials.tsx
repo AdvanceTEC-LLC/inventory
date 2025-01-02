@@ -2,11 +2,11 @@ import RemoveFromCatalogForm from './RemoveFromCatalogForm'
 import AddToCatalogForm from './AddToCatalogForm'
 import Container from '../../Container'
 import { Subtitle, Title } from '../../Text'
-import MaterialTable from './MaterialTable'
+import MaterialsTable from './Table'
 
 const userIsAdmin = true
 
-const ManageMaterials = () => {
+const Materials = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (userIsAdmin)
     return (
@@ -21,7 +21,7 @@ const ManageMaterials = () => {
               <Title text="Catalog" />
               <Subtitle text="Each unique material tracked in inventory" />
             </div>
-            <MaterialTable />
+            <MaterialsTable />
           </div>
         </Container>
       </div>
@@ -30,10 +30,10 @@ const ManageMaterials = () => {
   return (
     <div className="flex flex-col gap-8">
       <Container className="flex flex-col gap-y-8">
-        <MaterialTable />
+        <MaterialsTable />
       </Container>
     </div>
   )
 }
 
-export default ManageMaterials
+export default Materials

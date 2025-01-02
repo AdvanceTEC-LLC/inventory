@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { columns } from './columns'
 import { StockType } from '../../../types/stock'
+import { Header } from '../../Text'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
@@ -11,7 +12,6 @@ import cratesService from '../../../services/cratesService'
 import { CrateType } from '../../../types/crate'
 import projectsService from '../../../services/projectsService'
 import { ProjectType } from '../../../types/project'
-import { Header } from '../../Text'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
@@ -73,7 +73,7 @@ const InventoryTable = () => {
       filterStock(project)
       return
     } else {
-      console.log(`Invalid filter: ${filter}`)
+      filterStock('total')
     }
   }
 
@@ -97,6 +97,7 @@ const InventoryTable = () => {
         <Header text="Filter" className="col-span-2" />
 
         <select
+          name="filter"
           className="border border-gray-300 rounded p-2 w-full"
           onChange={(event) => {
             handleFilterChange(event.target.value)

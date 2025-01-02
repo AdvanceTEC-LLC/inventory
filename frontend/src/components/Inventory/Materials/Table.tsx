@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query'
 import materialsService from '../../../services/materialsService'
 import { MaterialType } from '../../../types/material'
 
-const MaterialTable = () => {
+const MaterialsTable = () => {
   const {
     data: materials = [],
     isLoading,
@@ -33,4 +33,4 @@ const MaterialTable = () => {
   )
 }
 
-export default MaterialTable
+export default MaterialsTable

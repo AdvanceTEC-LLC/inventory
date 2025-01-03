@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 import shipmentsService from '../../../services/shipmentsService'
 import ShipmentRow from './ShipmentRow'
 
-const ShipmentDetailsTable = () => {
+const ShipmentsTable = () => {
   const {
     data: shipments = [],
     isLoading,
@@ -49,4 +49,4 @@ const ShipmentDetailsTable = () => {
   )
 }
 
-export default ShipmentDetailsTable
+export default ShipmentsTable

@@ -34,7 +34,7 @@ const CrateRow = ({ crate }: CrateRowProps) => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           ) : (
-            <Subtext text="No stock" className="ml-2" />
+            <Subtext text="This crate is empty" className="ml-2" />
           )}
         </TableCell>
         <TableCell>

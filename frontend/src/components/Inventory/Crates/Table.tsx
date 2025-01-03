@@ -138,7 +138,7 @@ const CratesTable = () => {
           </TableBody>
         </Table>
       ) : (
-        <Subtext text="There are no crates in the system" />
+        <Subtext text="There are no crates that match the filter criteria" />
       )}
     </>
   )

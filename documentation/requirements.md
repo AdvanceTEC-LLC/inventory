@@ -156,7 +156,7 @@ Provide an interface to select materials and quantities required at a specific j
 
 #### Projects
 
-Add and remove projects ad new jobs are started and completed. Update existing materials to unassigned when their associated project is removed.
+Add and remove projects as new jobs are started and completed. Update existing materials to unassigned when their associated project is removed.
 
 ### Deliverables
 

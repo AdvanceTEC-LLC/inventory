@@ -7,6 +7,9 @@ import Crates from '../Inventory/Crates/Crates'
 
 import Requests from '../Requests/Requests'
 import Shipments from '../Shipments/Shipments'
+import Locations from '../Other/Locations/Locations'
+import Projects from '../Other/Projects/Projects'
+import Vendors from '../Other/Vendors/Vendors'
 
 export const routes: LinkType[] = [
   {
@@ -45,8 +48,8 @@ export const routes: LinkType[] = [
         path: 'shipping-to-site',
       },
       {
-        name: 'Shipment History',
-        path: 'shipment-history',
+        name: 'History',
+        path: 'history',
       },
     ],
   },
@@ -77,14 +80,17 @@ export const routes: LinkType[] = [
       {
         name: 'Projects',
         path: 'Projects',
+        element: <Projects />,
       },
       {
         name: 'Vendors',
         path: 'Vendors',
+        element: <Vendors />,
       },
       {
         name: 'Locations',
         path: 'Locations',
+        element: <Locations />,
       },
     ],
   },

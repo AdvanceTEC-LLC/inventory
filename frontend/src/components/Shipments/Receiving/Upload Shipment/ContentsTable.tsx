@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { Crate, Stock } from './types'
 import { useState } from 'react'
-import { Subtext, Header } from '../../../Text'
+import { Header } from '../../../Text'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
@@ -19,19 +19,21 @@ interface ContentsTableProps {
 
 const ContentsTable = ({ crates }: ContentsTableProps) => {
   return (
-    <Table>
-      <TableHead className="bg-gray-50">
-        <TableRow>
-          <TableCell />
-          <TableCell>Crate Number</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {crates.map((crate, index) => (
-          <CrateRow crate={crate} key={index} />
-        ))}
-      </TableBody>
-    </Table>
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHead className="bg-gray-50">
+          <TableRow>
+            <TableCell />
+            <TableCell>Crate Number</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {crates.map((crate, index) => (
+            <CrateRow crate={crate} key={index} />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 }
 

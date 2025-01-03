@@ -11,7 +11,7 @@ import {
 } from './types'
 
 // Styled Components
-import { Subtext, Text } from '../../../Text'
+import { Subtext, Subtitle, Text, Title } from '../../../Text'
 import Button from '../../../Button'
 
 import ContentsTable from './ContentsTable'
@@ -206,33 +206,43 @@ const UploadShipment = () => {
 
   return (
     <div className="flex flex-col gap-y-8">
-      <div className="flex flex-col gap-y-2 md:grid md:grid-cols-[1fr_1fr] md:gap-x-4 md:items-center">
-        <label className="text-gray-500 text-nowrap">Upload Shipment</label>
+      <div className="flex flex-col gap-y-8 md:grid md:grid-cols-[1fr_1fr] md:gap-x-4">
+        <div className="flex flex-col gap-y-8">
+          <div>
+            <Title text={'Receiving Shipments'} />
+            <Subtitle text="Add new stock to the warehouse inventory" />
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <label className="text-gray-500 text-nowrap">Upload Shipment</label>
 
-        {file ? (
-          <div className="flex flex-col gap-y-2">
-            <Text text={file.name} />
-            <button
-              className="w-fit text-red-500"
-              onClick={() => {
-                setFile(null)
-                setShipment(null)
-              }}
-            >
-              Remove file
-            </button>
+            {file && shipment ? (
+              <div>
+                <div>
+                  <Text text={file.name} />
+                  <button
+                    className="w-fit text-red-500"
+                    onClick={() => {
+                      setFile(null)
+                      setShipment(null)
+                    }}
+                  >
+                    Remove file
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-y-2">
+                <input type="file" accept=".csv" onChange={handleFileChange} />
+                <Subtext text="Upload a CSV file with shipment data" />
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="flex flex-col gap-y-2">
-            <input type="file" accept=".csv" onChange={handleFileChange} />
-            <Subtext text="Upload a CSV file with shipment data" />
-          </div>
-        )}
+        </div>
+        {shipment && <ShipmentDetails shipment={shipment} />}
       </div>
 
       {shipment && (
         <div className="flex flex-col gap-y-8">
-          <ShipmentDetails shipment={shipment} />
           <ContentsTable crates={shipment.crates} />
           <Button
             text="Confirm Shipment"

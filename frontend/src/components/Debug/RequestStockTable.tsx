@@ -100,6 +100,7 @@ const RequestStockTable = () => {
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
 
+  /*
   const {
     data: RequestStock = [],
     isLoading,
@@ -109,6 +110,7 @@ const RequestStockTable = () => {
     queryFn: requestStockService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
+  */
 
   const createRequestMutation = useMutation({
     mutationFn: (newRequest: CreateRequestStockType) =>
@@ -186,6 +188,7 @@ const RequestStockTable = () => {
     deleteAllMutation.mutate()
   }
 
+  /*
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -193,10 +196,11 @@ const RequestStockTable = () => {
   if (isError) {
     return <div>Error fetching request stock data.</div>
   }
+  */
 
   return (
     <div className="flex flex-col gap-y-4">
-      <Table data={RequestStock} columns={columns} search={false} />
+      {/*<Table data={RequestStock} columns={columns} search={false} />*/}
 
       <form onSubmit={createRequest} className="flex flex-col gap-y-4">
         <div className="flex items-center gap-x-4">

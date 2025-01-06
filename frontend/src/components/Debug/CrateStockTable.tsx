@@ -105,6 +105,7 @@ const CrateStockTable = () => {
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
 
+  /*
   const {
     data: crateStock = [],
     isLoading,
@@ -114,6 +115,7 @@ const CrateStockTable = () => {
     queryFn: crateStockService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
+  */
 
   const createCrateMutation = useMutation({
     mutationFn: (newCrate: CreateCrateStockType) =>
@@ -191,6 +193,7 @@ const CrateStockTable = () => {
     deleteAllMutation.mutate()
   }
 
+  /*
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -198,10 +201,11 @@ const CrateStockTable = () => {
   if (isError) {
     return <div>Error fetching crate stock data.</div>
   }
+  */
 
   return (
     <div className="flex flex-col gap-y-4">
-      <Table data={crateStock} columns={columns} search={false} />
+      {/*<Table data={crateStock} columns={columns} search={false} />*/}
 
       <form onSubmit={createCrate} className="flex flex-col gap-y-4">
         <div className="flex items-center gap-x-4">

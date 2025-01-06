@@ -1,11 +1,13 @@
 // Table
-import Table from '../../Table'
 import { columns } from './columns'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
 import materialsService from '../../../services/materialsService'
 import { MaterialType } from '../../../types/material'
+import { DataGrid } from '@mui/x-data-grid'
+
+const paginationModel = { page: 0, pageSize: 5 }
 
 const MaterialsTable = () => {
   const {
@@ -27,9 +29,14 @@ const MaterialsTable = () => {
   }
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <Table data={materials} columns={columns} search={false} />
-    </div>
+    <DataGrid
+      rows={materials}
+      columns={columns}
+      initialState={{ pagination: { paginationModel } }}
+      pageSizeOptions={[5, 10]}
+      sx={{ border: 0 }}
+      disableRowSelectionOnClick
+    />
   )
 }
 

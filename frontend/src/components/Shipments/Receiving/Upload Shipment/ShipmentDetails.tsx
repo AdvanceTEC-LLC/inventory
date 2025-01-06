@@ -10,7 +10,9 @@ const ShipmentDetails = ({ shipment }: ShipmentDetailsProps) => {
     <div className="flex flex-col gap-y-2">
       <div className="flex gap-x-4 items-center">
         <Header text="Project" />
-        <Text text={shipment.details.project.name} />
+        <Text
+          text={`${shipment.details.project.number} ${shipment.details.project.name}`}
+        />
       </div>
       <div className="flex gap-x-4 items-center">
         <Header text="Vendor" /> <Text text={shipment.details.vendor} />

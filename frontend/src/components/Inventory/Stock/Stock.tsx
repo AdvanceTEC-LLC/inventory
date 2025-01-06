@@ -1,15 +1,15 @@
 import Container from '../../Container'
 import { Subtitle, Title } from '../../Text'
-import InventoryTable from './Table'
+import StockTable from './Table'
 
-const Inventory = () => {
+const Stock = () => {
   return (
     <Container>
-      <Title text={'Inventory'} />
+      <Title text={'Stock'} />
       <Subtitle text="View material stock and filter by project" />
-      <InventoryTable />
+      <StockTable />
     </Container>
   )
 }
 
-export default Inventory
+export default Stock

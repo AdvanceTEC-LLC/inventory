@@ -12,11 +12,23 @@ import cratesService from '../../../services/cratesService'
 import { CrateType } from '../../../types/crate'
 import projectsService from '../../../services/projectsService'
 import { ProjectType } from '../../../types/project'
+import stockService from '../../../services/stockService'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
-const InventoryTable = () => {
+const StockTable = () => {
   const [filteredStock, setFilteredStock] = useState<StockType[]>([])
+  const [totalStock, setTotalStock] = useState<StockType[]>([])
+
+  const {
+    data: stock = [],
+    isLoading: isStockLoading,
+    isError: isStockError,
+  } = useQuery<StockType[]>({
+    queryKey: ['stock'],
+    queryFn: stockService.getAll,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
 
   const {
     data: crates = [],
@@ -39,17 +51,54 @@ const InventoryTable = () => {
   })
 
   useEffect(() => {
-    if (crates.length > 0) {
-      const totalStock = crates.flatMap((crate) => crate.stock)
-      setFilteredStock(totalStock)
-    }
-  }, [crates])
+    if (stock) {
+      const groupedStock = stock.reduce(
+        (acc: Record<number, StockType>, item) => {
+          const materialId = item.material.id
 
-  if (isCratesLoading || isProjectsLoading) {
+          if (!acc[materialId]) {
+            // Initialize a new StockType object if not already present
+            acc[materialId] = {
+              id: item.id, // Keep one of the IDs; this can be adjusted if needed
+              material: item.material,
+              quantity: 0, // Start with zero to sum later
+            }
+          }
+
+          // Sum the quantities for the same material ID
+          acc[materialId].quantity += item.quantity
+
+          return acc
+        },
+        {}
+      )
+
+      // Convert the grouped object back into an array
+      const totalStockArray = Object.values(groupedStock)
+
+      setTotalStock((prevState) => {
+        // Avoid unnecessary state update if the totalStock is the same
+        if (JSON.stringify(prevState) !== JSON.stringify(totalStockArray)) {
+          return totalStockArray
+        }
+        return prevState
+      })
+
+      setFilteredStock((prevState) => {
+        // Avoid unnecessary state update if the filteredStock is the same
+        if (JSON.stringify(prevState) !== JSON.stringify(totalStockArray)) {
+          return totalStockArray
+        }
+        return prevState
+      })
+    }
+  }, [stock])
+
+  if (isStockLoading || isCratesLoading || isProjectsLoading) {
     return <div>Loading...</div>
   }
 
-  if (isCratesError || isProjectsError) {
+  if (isStockError || isCratesError || isProjectsError) {
     return <div>Error fetching data.</div>
   }
 
@@ -78,6 +127,11 @@ const InventoryTable = () => {
   }
 
   const filterStock = (filter: ProjectType | string) => {
+    if (filter === 'total') {
+      setFilteredStock(totalStock)
+      return
+    }
+
     let filteredCrates: CrateType[] = crates
 
     if (filter === 'unassigned') {
@@ -134,4 +188,4 @@ const InventoryTable = () => {
   )
 }
 
-export default InventoryTable
+export default StockTable

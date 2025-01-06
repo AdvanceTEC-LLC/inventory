@@ -4,7 +4,7 @@ import Container from '../../Container'
 import { Subtitle, Title } from '../../Text'
 import MaterialsTable from './Table'
 
-const userIsAdmin = true
+const userIsAdmin = false
 
 const Materials = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -18,7 +18,7 @@ const Materials = () => {
         <Container className="overflow-x-auto">
           <div className="flex flex-col gap-y-8">
             <div className="flex flex-col gap-y-2">
-              <Title text="Catalog" />
+              <Title text="Materials" />
               <Subtitle text="Each unique material tracked in inventory" />
             </div>
             <MaterialsTable />
@@ -28,11 +28,11 @@ const Materials = () => {
     )
 
   return (
-    <div className="flex flex-col gap-8">
-      <Container className="flex flex-col gap-y-8">
-        <MaterialsTable />
-      </Container>
-    </div>
+    <Container>
+      <Title text={'Materials'} />
+      <Subtitle text="Each unique material tracked in inventory" />
+      <MaterialsTable />
+    </Container>
   )
 }
 

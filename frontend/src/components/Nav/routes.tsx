@@ -1,6 +1,6 @@
 import { LinkType } from '../../types/link'
 
-import Inventory from '../Inventory/Inventory/Inventory'
+import Inventory from '../Inventory/Stock/Stock'
 import Materials from '../Inventory/Materials/Materials'
 import Crates from '../Inventory/Crates/Crates'
 
@@ -12,6 +12,7 @@ import Requests from '../Requests/Requests'
 import Projects from '../Other/Projects/Projects'
 import Locations from '../Other/Locations/Locations'
 import Vendors from '../Other/Vendors/Vendors'
+import Sending from '../Shipments/Sending/Sending'
 
 export const routes: LinkType[] = [
   {
@@ -20,7 +21,7 @@ export const routes: LinkType[] = [
     element: <Inventory />,
     dropdown: [
       {
-        name: 'View Stock',
+        name: 'Stock',
         path: '',
         element: <Inventory />,
       },
@@ -47,12 +48,13 @@ export const routes: LinkType[] = [
         element: <Receiving />,
       },
       {
-        name: 'Shipping to Site',
-        path: 'shipping-to-site',
+        name: 'Sending to Site',
+        path: 'sending-to-site',
+        element: <Sending />,
       },
       {
         name: 'History',
-        path: 'history',
+        path: '',
         element: <History />,
       },
     ],

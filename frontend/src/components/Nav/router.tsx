@@ -5,7 +5,7 @@ import ErrorPage from '../ErrorPage'
 import Debug from '../Debug/Debug'
 import { routes } from './routes'
 import { LinkType } from '../../types/link'
-import Inventory from '../Inventory/Inventory/Inventory'
+import Inventory from '../Inventory/Stock/Stock'
 
 const generateRoutes = (routes: LinkType[]) => {
   return routes.flatMap((parentLink) => {

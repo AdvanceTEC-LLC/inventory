@@ -18,6 +18,8 @@ import locationsService from '../../services/locationsService'
 import ShipmentTable from './ShipmentTable'
 import RequestTable from './RequestTable'
 import RequestStockTable from './RequestStockTable'
+import CrateStockTable from './CrateStockTable'
+import ShipmentCrateTable from './ShipmentCratesTable'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -78,7 +80,15 @@ const Debug = () => {
       </Container>
 
       <Container>
+        <CrateStockTable />
+      </Container>
+
+      <Container>
         <ShipmentTable />
+      </Container>
+
+      <Container>
+        <ShipmentCrateTable />
       </Container>
 
       <Container>

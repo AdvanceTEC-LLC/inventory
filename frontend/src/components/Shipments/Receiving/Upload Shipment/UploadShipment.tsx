@@ -8,14 +8,15 @@ import {
   ReceivedShipment,
   ShipmentMaterial,
   Stock,
+  Vendor,
 } from './types'
 
 // Styled Components
-import { Subtext, Subtitle, Text, Title } from '../../../Text'
-import Button from '../../../Button'
+import { Header, Subtext, Text } from '../../../Text'
 
 import ContentsTable from './ContentsTable'
 import ShipmentDetails from './ShipmentDetails'
+import ConfirmShipmentButton from './ConfirmButton'
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -63,9 +64,9 @@ const UploadShipment = () => {
     const projectNumber: number = parseInt(rows[1][1]?.trim())
     const projectName: string = rows[1][2]?.trim()
 
-    const vendor = rows[1][3]?.trim()
+    const vendorName = rows[1][3]?.trim()
 
-    const shipDate = rows[1][4]?.trim()
+    const sendDate = rows[1][4]?.trim()
     const receivedDate = rows[1][5]?.trim()
 
     const project: Project = {
@@ -73,7 +74,11 @@ const UploadShipment = () => {
       name: projectName,
     }
 
-    if (!company || !project || !vendor || !shipDate || !receivedDate) {
+    const vendor: Vendor = {
+      name: vendorName,
+    }
+
+    if (!company || !project || !vendor || !sendDate || !receivedDate) {
       console.error('Error: Missing details in the shipment')
       return null
     }
@@ -82,7 +87,7 @@ const UploadShipment = () => {
       company,
       project,
       vendor,
-      shipDate,
+      sendDate,
       receivedDate,
     }
   }
@@ -177,7 +182,7 @@ const UploadShipment = () => {
       complete: (results) => {
         const rows = results.data as string[][]
 
-        const details: ShipmentDetails | null = getDetails(rows)
+        const details = getDetails(rows)
         if (!details) {
           return
         }
@@ -187,7 +192,7 @@ const UploadShipment = () => {
           return
         }
 
-        setShipment({ details, crates })
+        setShipment({ ...details, crates })
       },
       error: (error: unknown) => {
         console.error('Error parsing CSV:', error)
@@ -195,48 +200,33 @@ const UploadShipment = () => {
     })
   }
 
-  const confirmShipment = async () => {
-    if (!shipment) {
-      console.error('Error: No shipment to confirm')
-      return
-    }
-
-    console.log('Shipment confirmed:', shipment)
-  }
-
   return (
     <div className="flex flex-col gap-y-8">
-      <div className="flex flex-col gap-y-8 md:grid md:grid-cols-[1fr_1fr] md:gap-x-4">
-        <div className="flex flex-col gap-y-8">
-          <div>
-            <Title text={'Receiving Shipments'} />
-            <Subtitle text="Add new stock to the warehouse inventory" />
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label className="text-gray-500 text-nowrap">Upload Shipment</label>
+      <div className="flex flex-col gap-y-8 md:grid md:grid-cols-[1fr_1fr] md:gap-x-8">
+        <div className="flex flex-col gap-y-2">
+          <Header text="Upload Shipment" />
 
-            {file && shipment ? (
+          {file && shipment ? (
+            <div>
               <div>
-                <div>
-                  <Text text={file.name} />
-                  <button
-                    className="w-fit text-red-500"
-                    onClick={() => {
-                      setFile(null)
-                      setShipment(null)
-                    }}
-                  >
-                    Remove file
-                  </button>
-                </div>
+                <Text text={file.name} />
+                <button
+                  className="w-fit text-red-500"
+                  onClick={() => {
+                    setFile(null)
+                    setShipment(null)
+                  }}
+                >
+                  Remove file
+                </button>
               </div>
-            ) : (
-              <div className="flex flex-col gap-y-2">
-                <input type="file" accept=".csv" onChange={handleFileChange} />
-                <Subtext text="Upload a CSV file with shipment data" />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-y-2">
+              <input type="file" accept=".csv" onChange={handleFileChange} />
+              <Subtext text="Upload a CSV file with shipment data" />
+            </div>
+          )}
         </div>
         {shipment && <ShipmentDetails shipment={shipment} />}
       </div>
@@ -244,12 +234,7 @@ const UploadShipment = () => {
       {shipment && (
         <div className="flex flex-col gap-y-8">
           <ContentsTable crates={shipment.crates} />
-          <Button
-            text="Confirm Shipment"
-            onClick={() => {
-              void confirmShipment()
-            }}
-          />
+          <ConfirmShipmentButton shipment={shipment} />
         </div>
       )}
     </div>

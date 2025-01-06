@@ -8,26 +8,22 @@ interface ShipmentDetailsProps {
 const ShipmentDetails = ({ shipment }: ShipmentDetailsProps) => {
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="flex gap-x-4 items-center">
-        <Header text="Project" />
-        <Text
-          text={`${shipment.details.project.number} ${shipment.details.project.name}`}
-        />
-      </div>
-      <div className="flex gap-x-4 items-center">
-        <Header text="Vendor" /> <Text text={shipment.details.vendor} />
-      </div>
+      <Header text="Upload Details" />
 
-      <div className="flex gap-x-4 items-center">
-        <Header text="Ship Date" /> <Text text={shipment.details.shipDate} />
-      </div>
-      <div className="flex gap-x-4 items-center">
-        <Header text="Received Date" />
-        <Text text={shipment.details.receivedDate} />
-      </div>
+      <div className="grid grid-cols-[1fr_1fr] gap-x-4">
+        <Text text="Project" />
+        <Text text={`${shipment.project.number} ${shipment.project.name}`} />
 
-      <div className="flex gap-x-4 items-center">
-        <Header text="Number of Crates" />
+        <Text text="Vendor" />
+        <Text text={shipment.vendor.name} />
+
+        <Text text="Send Date" />
+        <Text text={shipment.sendDate} />
+
+        <Text text="Received Date" />
+        <Text text={shipment.receivedDate} />
+
+        <Text text="Number of Crates" />
         <Text text={shipment.crates.length.toString()} />
       </div>
     </div>

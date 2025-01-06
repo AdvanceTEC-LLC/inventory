@@ -71,7 +71,13 @@ const CrateTable = () => {
     isError,
   } = useQuery<CrateType[]>({
     queryKey: ['crates'],
-    queryFn: cratesService.getAll,
+    queryFn: async () => {
+      const data = await cratesService.getAll()
+      return data.map((crate) => ({
+        ...crate,
+        location: crate.location ?? { aisle: null, col: null, shelf: null },
+      }))
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 

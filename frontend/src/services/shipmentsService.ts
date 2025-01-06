@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { CreateShipmentType, ShipmentType } from '../types/shipment'
+import { ReceivedShipment } from '../components/Shipments/Receiving/Upload Shipment/types'
 
 const baseURL = '/api/shipments'
 
@@ -10,6 +11,16 @@ const getAll = async (): Promise<ShipmentType[]> => {
 
 const create = async (shipment: CreateShipmentType): Promise<ShipmentType> => {
   const response = await axios.post<ShipmentType>(baseURL, shipment)
+  return response.data
+}
+
+const createReceived = async (
+  shipment: ReceivedShipment
+): Promise<ShipmentType> => {
+  const response = await axios.post<ShipmentType>(
+    `${baseURL}/received/`,
+    shipment
+  )
   return response.data
 }
 
@@ -34,6 +45,7 @@ const removeAll = async (): Promise<ShipmentType> => {
 const shipmentsService = {
   getAll,
   create,
+  createReceived,
   update,
   remove,
   removeAll,

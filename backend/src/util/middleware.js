@@ -26,7 +26,10 @@ const errorHandler = (error, request, response, next) => {
     response.status(statusCode).json({ error: message })
   } else {
     // Handle unexpected errors
-    response.status(500).json({ error: 'Internal Server Error' })
+    response.status(500).send({
+      message: 'An unexpected error occurred while creating the project.',
+      error: error.name,
+    })
   }
 }
 

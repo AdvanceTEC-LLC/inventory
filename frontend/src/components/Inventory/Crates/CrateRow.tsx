@@ -21,6 +21,12 @@ interface CrateRowProps {
 const CrateRow = ({ crate }: CrateRowProps) => {
   const [open, setOpen] = React.useState(false)
 
+  const formatLocation = (crate: CrateType) => {
+    if (!crate.location) return ''
+
+    return `Aisle ${crate.location.aisle} ${crate.location.col}x${crate.location.shelf}`
+  }
+
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -41,16 +47,13 @@ const CrateRow = ({ crate }: CrateRowProps) => {
           <div className="text-text-secondary">{crate.number}</div>
         </TableCell>
         <TableCell>
-          <div className="text-text-secondary">
-            Aisle {crate.location.aisle} {crate.location.col}x
-            {crate.location.shelf}
-          </div>
+          <div className="text-text-secondary">{formatLocation(crate)}</div>
         </TableCell>
-        <TableCell>
+        {/*<TableCell>
           <div className="text-text-secondary">
             {crate.project.number} {crate.project.name}
           </div>
-        </TableCell>
+        </TableCell>*/}
       </TableRow>
       <TableRow>
         <TableCell style={{ padding: 0 }} colSpan={6}>
@@ -62,7 +65,8 @@ const CrateRow = ({ crate }: CrateRowProps) => {
                 <Table>
                   <TableHead className="bg-gray-50">
                     <TableRow>
-                      <TableCell>Material</TableCell>
+                      <TableCell>Part Number</TableCell>
+                      <TableCell>Description</TableCell>
                       <TableCell>Quantity</TableCell>
                     </TableRow>
                   </TableHead>

@@ -1,14 +1,10 @@
 export interface ReceivedShipment {
-  details: ShipmentDetails
-  crates: Crate[]
-}
-
-export interface ShipmentDetails {
   company: string
   project: Project
-  vendor: string
-  shipDate: string
+  vendor: Vendor
+  sendDate: string
   receivedDate: string
+  crates: Crate[]
 }
 
 export interface Project {
@@ -39,4 +35,8 @@ export interface Crate {
 export interface Stock {
   material: ShipmentMaterial
   quantity: number
+}
+
+export interface Vendor {
+  name: string
 }

@@ -15,7 +15,6 @@ Crate.init(
     },
     locationId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: { model: 'locations', key: 'id' },
     },
     projectId: {

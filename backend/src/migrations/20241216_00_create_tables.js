@@ -260,7 +260,6 @@ export const up = async ({ context: queryInterface }) => {
     },
     location_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: 'locations',
         key: 'id',

@@ -20,6 +20,9 @@ import RequestTable from './RequestTable'
 import RequestStockTable from './RequestStockTable'
 import CrateStockTable from './CrateStockTable'
 import ShipmentCrateTable from './ShipmentCratesTable'
+import crateStockService from '../../services/crateStockService'
+import shipmentCratesService from '../../services/shipmentCratesService'
+import requestStockService from '../../services/requestStockService'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -32,6 +35,9 @@ const Debug = () => {
       await vendorsService.removeAll()
       await cratesService.removeAll()
       await locationsService.removeAll()
+      await crateStockService.removeAll()
+      await shipmentCratesService.removeAll()
+      await requestStockService.removeAll()
 
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })
@@ -39,6 +45,9 @@ const Debug = () => {
       queryClient.invalidateQueries({ queryKey: ['vendors'] })
       queryClient.invalidateQueries({ queryKey: ['crates'] })
       queryClient.invalidateQueries({ queryKey: ['locations'] })
+      queryClient.invalidateQueries({ queryKey: ['crateStock'] })
+      queryClient.invalidateQueries({ queryKey: ['shipmentCrates'] })
+      queryClient.invalidateQueries({ queryKey: ['requestStock'] })
     } catch (error) {
       console.log(error)
     }

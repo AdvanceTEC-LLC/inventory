@@ -33,12 +33,9 @@ const TotalStock = ({ shipment }: TotalStockProps) => {
         <Table>
           <TableHead className="bg-gray-50">
             <TableRow>
-              <TableCell>
-                <div className="text-text-primary">Material</div>
-              </TableCell>
-              <TableCell>
-                <div className="text-text-primary">Quantity</div>
-              </TableCell>
+              <TableCell>Part Number</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Quantity</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

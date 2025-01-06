@@ -45,7 +45,7 @@ export const columns: GridColDef[] = [
     headerName: 'Square Feet',
     flex: 1,
     valueGetter: (_value, row) => {
-      if (row.squareFeet) return `${row.squareFeet}'`
+      if (row.squareFeet) return Math.ceil(row.squareFeet)
     },
   },
 ]

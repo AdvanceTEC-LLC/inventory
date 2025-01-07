@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Request, Project } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const requestsRouter = Router()
 
 export const requestFindOptions = {
@@ -21,7 +22,11 @@ const requestFinder = async (req, _response, next) => {
   const request = await Request.findByPk(id, requestFindOptions)
 
   if (!request) {
-    throw new NotFoundError(`request with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Request with id ${id} not found`,
+      404,
+    )
   }
   req.request = request
   next()
@@ -43,9 +48,11 @@ requestsRouter.post('/', async (req, response) => {
   const projectExists = await Project.findByPk(projectId)
 
   if (!projectExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching project with id ${projectId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found.`,
+      404,
+    )
   }
 
   const request = await Request.create({

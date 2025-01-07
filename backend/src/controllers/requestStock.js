@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { RequestStock, Request, Stock } from '../models/index.js'
 import { requestFindOptions } from './requests.js'
 import { stockFindOptions } from './stock.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const requestStockRouter = Router()
 
 const requestStockFindOptions = {
@@ -25,7 +26,11 @@ const requestStockFinder = async (request, _response, next) => {
   const requestStock = await RequestStock.findByPk(id, requestStockFindOptions)
 
   if (!requestStock) {
-    throw new NotFoundError(`Request stock with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Request Stock with id ${id} not found`,
+      404,
+    )
   }
   request.requestStock = requestStock
   next()
@@ -51,9 +56,11 @@ requestStockRouter.post('/', async (request, response) => {
   const requestExists = await Request.findByPk(requestId)
 
   if (!requestExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching request with id ${requestId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Request with id ${requestId} not found.`,
+      404,
+    )
   }
 
   const stockExists = await Stock.findByPk(stockId)

@@ -17,6 +17,7 @@ import { Header, Subtext, Text } from '../../../Text'
 import ContentsTable from './ContentsTable'
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
+import Button from '../../../Button'
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -208,17 +209,16 @@ const UploadShipment = () => {
 
           {file && shipment ? (
             <div>
-              <div>
+              <div className="flex flex-col gap-y-2">
                 <Text text={file.name} />
-                <button
-                  className="w-fit text-red-500"
+                <Button
+                  type="reset"
+                  text="Remove file"
                   onClick={() => {
                     setFile(null)
                     setShipment(null)
                   }}
-                >
-                  Remove file
-                </button>
+                />
               </div>
             </div>
           ) : (

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { ShipmentCrate, Crate, Shipment } from '../models/index.js'
 import { crateFindOptions } from './crates.js'
 import { shipmentFindOptions } from './shipments.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const shipmentCratesRouter = Router()
 
 const shipmentCrateFindOptions = {
@@ -28,7 +29,11 @@ const shipmentCrateFinder = async (request, _response, next) => {
   )
 
   if (!shipmentCrate) {
-    throw new NotFoundError(`Shipment crate with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Shipment Crate with id ${id} not found`,
+      404,
+    )
   }
   request.shipmentCrate = shipmentCrate
   next()
@@ -54,17 +59,21 @@ shipmentCratesRouter.post('/', async (request, response) => {
   const crateExists = await Crate.findByPk(crateId)
 
   if (!crateExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching crate with id ${crateId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Crate with id ${crateId} not found.`,
+      404,
+    )
   }
 
   const shipmentExists = await Shipment.findByPk(shipmentId)
 
   if (!shipmentExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching shipment with id ${shipmentId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Shipment with id ${shipmentId} not found.`,
+      404,
+    )
   }
 
   const shipmentCrate = await ShipmentCrate.create({

@@ -12,6 +12,9 @@ import store from './store'
 // Provides React Query hooks like useQuery and useMutation
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+// Intercepts axios errors and returns the error details provided by the server
+import './utils/axiosInterceptor'
+
 const queryClient = new QueryClient()
 
 const rootElement = document.getElementById('root')

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { Location } from '../models/index.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const locationsRouter = Router()
 
 export const locationFindOptions = {
@@ -11,7 +12,11 @@ const locationFinder = async (request, _response, next) => {
   const location = await Location.findByPk(id, locationFindOptions)
 
   if (!location) {
-    throw new NotFoundError(`Location with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Location with id ${id} not found`,
+      404,
+    )
   }
   request.location = location
   next()

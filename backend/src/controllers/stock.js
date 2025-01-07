@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Material, Stock, Vendor } from '../models/index.js'
 import { materialFindOptions } from './materials.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const stockRouter = Router()
 
 export const stockFindOptions = {
@@ -21,8 +22,9 @@ const stockFinder = async (request, response, next) => {
   const stock = await Stock.findByPk(id, stockFindOptions)
 
   if (!stock) {
-    return response.status(404).json({ error: 'Stock not found' })
+    throw new CustomError('NotFoundError', `Stock with id ${id} not found`, 404)
   }
+
   request.stock = stock
   next()
 }
@@ -63,9 +65,11 @@ stockRouter.post('/', async (request, response) => {
   const materialExists = await Material.findByPk(materialId)
 
   if (!materialExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching material with id ${materialId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Material with id ${materialId} not found.`,
+      404,
+    )
   }
 
   const stock = await Stock.create({

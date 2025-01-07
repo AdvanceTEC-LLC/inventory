@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Material, Vendor } from '../models/index.js'
 import { vendorFindOptions } from './vendors.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const materialsRouter = Router()
 
 export const materialFindOptions = {
@@ -19,7 +20,11 @@ const materialFinder = async (request, _response, next) => {
   const material = await Material.findByPk(id, materialFindOptions)
 
   if (!material) {
-    throw new NotFoundError(`Material with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Material with id ${id} not found`,
+      404,
+    )
   }
   request.material = material
   next()
@@ -50,9 +55,11 @@ materialsRouter.post('/', async (request, response) => {
   const vendorExists = await Vendor.findByPk(vendorId)
 
   if (!vendorExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching vendor with id ${vendorId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Vendor with id ${vendorId} not found`,
+      404,
+    )
   }
 
   const material = await Material.create({

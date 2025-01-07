@@ -9,12 +9,11 @@ import {
   Stock,
   Material,
 } from '../models/index.js'
-import projectsRouter, { projectFindOptions } from './projects.js'
-import vendorsRouter, { vendorFindOptions } from './vendors.js'
+import { projectFindOptions } from './projects.js'
+import { vendorFindOptions } from './vendors.js'
 import { crateFindOptions } from './crates.js'
-import { stockFindOptions } from './stock.js'
-import { info } from '../util/logger.js'
 import { sequelize } from '../util/db.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
@@ -46,7 +45,11 @@ const shipmentFinder = async (request, _response, next) => {
   const shipment = await Shipment.findByPk(id, shipmentFindOptions)
 
   if (!shipment) {
-    throw new NotFoundError(`Shipment with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Shipment with id ${id} not found`,
+      404,
+    )
   }
 
   const shipmentCrates = await ShipmentCrate.findAll({
@@ -107,7 +110,7 @@ shipmentsRouter.post('/', async (request, response) => {
   }
 })
 
-shipmentsRouter.post('/received/', async (request, response) => {
+shipmentsRouter.post('/received/', async (request, response, next) => {
   const { project, vendor, crates } = request.body
 
   const transaction = await sequelize.transaction()
@@ -145,7 +148,20 @@ shipmentsRouter.post('/received/', async (request, response) => {
 
     // Create crates and stock entries
     for (const crate of crates) {
-      const crateInDb = await Crate.create(
+      let crateInDb = await Crate.findOne(
+        { attributes: { where: { number: crate.number } } },
+        { transaction },
+      )
+
+      if (crateInDb) {
+        throw new CustomError(
+          'ValidationError',
+          `Crate with number ${crate.number} already exists.`,
+          400,
+        )
+      }
+
+      crateInDb = await Crate.create(
         {
           number: crate.number,
           locationId: null,
@@ -169,8 +185,6 @@ shipmentsRouter.post('/received/', async (request, response) => {
           transaction,
         })
 
-        info('Material in the database', materialInDb)
-
         if (!materialInDb) {
           materialInDb = await Material.create(
             {
@@ -185,7 +199,6 @@ shipmentsRouter.post('/received/', async (request, response) => {
             },
             { transaction },
           )
-          info('Newly inserted material', materialInDb)
         }
 
         const stockInDb = await Stock.create(
@@ -212,8 +225,7 @@ shipmentsRouter.post('/received/', async (request, response) => {
     response.status(201).send(shipment)
   } catch (error) {
     await transaction.rollback()
-    info(error)
-    return response.status(500)
+    next(error)
   }
 })
 

@@ -3,6 +3,7 @@ import { Crate, Location, Project, Stock } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { locationFindOptions } from './locations.js'
 import { stockFindOptions } from './stock.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
@@ -34,7 +35,7 @@ const crateFinder = async (request, _response, next) => {
   const crate = await Crate.findByPk(id, crateFindOptions)
 
   if (!crate) {
-    throw new NotFoundError(`Crate with id ${id} not found`)
+    throw new CustomError('NotFoundError', `Crate with id ${id} not found`, 404)
   }
   request.crate = crate
   next()
@@ -56,17 +57,21 @@ cratesRouter.post('/', async (request, response) => {
   const projectExists = await Project.findByPk(projectId)
 
   if (!projectExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching project with id ${projectId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found`,
+      404,
+    )
   }
 
   const locationExists = await Location.findByPk(locationId)
 
   if (!locationExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching location with id ${locationId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Location with id ${locationId} not found`,
+      404,
+    )
   }
 
   const crate = await Crate.create({

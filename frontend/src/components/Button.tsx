@@ -6,6 +6,17 @@ interface ButtonProps {
 }
 
 const Button = ({ text, onClick, disabled, type }: ButtonProps) => {
+  if (type === 'reset')
+    return (
+      <button
+        type={type ?? 'button'}
+        onClick={onClick}
+        className="w-fit border-2 border-red-500 text-red-500 px-4 py-1 rounded-full"
+      >
+        {text}
+      </button>
+    )
+
   if (disabled)
     return (
       <button

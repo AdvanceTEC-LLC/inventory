@@ -54,12 +54,8 @@ export const notifyWithTimeout = (
   return (dispatch: AppDispatch) => {
     // Clear any previous timeout if it exists
     if (timeoutId) {
-      return
-      /*
-      Uncomment this if notifications should override eachother
       clearTimeout(timeoutId)
       timeoutId = null
-      */
     }
 
     // Dispatch the notification

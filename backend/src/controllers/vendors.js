@@ -11,8 +11,13 @@ const vendorFinder = async (request, _response, next) => {
   const vendor = await Vendor.findByPk(id, vendorFindOptions)
 
   if (!vendor) {
-    throw new NotFoundError(`Vendor with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Vendor with id ${id} not found`,
+      404,
+    )
   }
+
   request.vendor = vendor
   next()
 }

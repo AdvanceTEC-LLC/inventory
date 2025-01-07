@@ -21,16 +21,10 @@ const errorHandler = (error, request, response, next) => {
     return next(error)
   }
 
-  // Handle known errors
-  if (statusCode) {
-    response.status(statusCode).json({ error: message })
-  } else {
-    // Handle unexpected errors
-    response.status(500).send({
-      message: 'An unexpected error occurred while creating the project.',
-      error: error.name,
-    })
-  }
+  response.status(statusCode || 500).json({
+    error: name || 'Error',
+    message: message || 'An unexpected error has occurred.',
+  })
 }
 
 export default { requestLogger, unknownEndpoint, errorHandler }

@@ -5,6 +5,7 @@ import { AppDispatch } from '../../../../store'
 import Button from '../../../Button'
 import { ReceivedShipment } from './types'
 import shipmentsService from '../../../../services/shipmentsService'
+import { AxiosError } from 'axios'
 
 interface ConfirmShipmentButtonProps {
   shipment: ReceivedShipment
@@ -17,6 +18,15 @@ const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
   const createShipmentMutation = useMutation({
     mutationFn: (shipment: ReceivedShipment) =>
       shipmentsService.createReceived(shipment),
+    onMutate: () => {
+      dispatch(
+        notifyWithTimeout({
+          title: 'Processing...',
+          message: 'Your shipment is being processed.',
+          status: 'info',
+        })
+      )
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['shipments'] })
       dispatch(
@@ -26,11 +36,12 @@ const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
         })
       )
     },
-    onError: () => {
+    onError: (error) => {
+      const { name, message } = error
       dispatch(
         notifyWithTimeout({
-          title: 'Error',
-          message: 'Failed to confirm shipment',
+          title: name,
+          message: message,
           status: 'error',
         })
       )

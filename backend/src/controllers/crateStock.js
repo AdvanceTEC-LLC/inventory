@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { CrateStock, Crate, Stock } from '../models/index.js'
 import { crateFindOptions } from './crates.js'
 import { stockFindOptions } from './stock.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const crateStockRouter = Router()
 
 const crateStockFindOptions = {
@@ -25,7 +26,11 @@ const crateStockFinder = async (request, _response, next) => {
   const crateStock = await CrateStock.findByPk(id, crateStockFindOptions)
 
   if (!crateStock) {
-    throw new NotFoundError(`Crate stock with id ${id} not found`)
+    throw new CustomError(
+      'NotFoundError',
+      `Crate Stock with id ${id} not found`,
+      404,
+    )
   }
   request.crateStock = crateStock
   next()
@@ -47,17 +52,21 @@ crateStockRouter.post('/', async (request, response) => {
   const crateExists = await Crate.findByPk(crateId)
 
   if (!crateExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching crate with id ${crateId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Crate with id ${crateId} not found`,
+      404,
+    )
   }
 
   const stockExists = await Stock.findByPk(stockId)
 
   if (!stockExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching stock with id ${stockId}` })
+    throw new CustomError(
+      'NotFoundError',
+      `Stock with id ${stockId} not found`,
+      404,
+    )
   }
 
   const crateStock = await CrateStock.create({

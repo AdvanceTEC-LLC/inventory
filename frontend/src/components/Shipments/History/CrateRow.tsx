@@ -11,7 +11,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import React from 'react'
 import { CrateType } from '../../../types/crate'
-import StockRow from './StockRow'
+import StockRow from '../../Inventory/Crates/StockRow'
 import { Header, Subtext } from '../../Text'
 
 interface CrateRowProps {
@@ -48,11 +48,6 @@ const CrateRow = ({ crate }: CrateRowProps) => {
         </TableCell>
         <TableCell>
           <div className="text-text-secondary">{formatLocation(crate)}</div>
-        </TableCell>
-        <TableCell>
-          <div className="text-text-secondary">
-            {crate.project.number} {crate.project.name}
-          </div>
         </TableCell>
       </TableRow>
       <TableRow>

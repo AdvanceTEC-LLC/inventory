@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppDispatch } from '../store'
-import { NotificationStatus, NotificationType } from '../types'
+import { NotificationStatus, NotificationType } from '../types/notification'
 
 const initialState: NotificationType = {
   title: undefined,

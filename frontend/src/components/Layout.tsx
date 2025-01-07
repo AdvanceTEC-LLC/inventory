@@ -9,9 +9,9 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen">
       <Nav />
       <Body>
-        <Notification />
         <Outlet />
       </Body>
+      <Notification />
       <Footer />
     </div>
   )

@@ -3,6 +3,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../store'
 import { clearNotification } from '../reducers/notificationReducer'
+import { NotificationType } from '../types/notification'
 
 const notificaionStyles = {
   success: {
@@ -124,7 +125,7 @@ const notifications: Notificationstatus[] = [
 
 const Notification: React.FC = () => {
   const { title, message, status, symbol, border, closable } = useSelector(
-    (state: RootState) => state.notification
+    (state: RootState) => state.notification as NotificationType
   )
   const dispatch = useDispatch()
 
@@ -136,7 +137,7 @@ const Notification: React.FC = () => {
 
   return (
     <div
-      className={`flex gap-x-4 justify-between p-4 ${
+      className={`fixed bottom-8 right-8 z-50 flex gap-x-4 justify-between p-4 ${
         border
           ? `rounded-r-lg border-l-2 ${notificaionStyles[status].borderColor}`
           : 'rounded-lg'

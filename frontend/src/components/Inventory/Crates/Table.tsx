@@ -114,7 +114,7 @@ const CratesTable = () => {
           <optgroup label="Contains...">
             {materials.map((material) => (
               <option key={material.id} value={material.id}>
-                {material.description} {}
+                {material.partNumber} {material.description}
               </option>
             ))}
           </optgroup>

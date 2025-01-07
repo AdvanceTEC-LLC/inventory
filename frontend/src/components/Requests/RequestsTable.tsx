@@ -1,6 +1,6 @@
 // Table
 import { createColumnHelper } from '@tanstack/react-table'
-import Table from '../Table'
+import Table from '../ATEC UI/Table'
 
 // Queries
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

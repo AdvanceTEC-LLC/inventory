@@ -13,7 +13,7 @@ import React from 'react'
 import { ShipmentType } from '../../../types/shipment'
 import CrateRow from './CrateRow'
 import TotalStock from './TotalStock'
-import { Header, Subtext } from '../../Text'
+import { Header, Subtext } from '../../ATEC UI/Text'
 
 interface ShipmentRowProps {
   shipment: ShipmentType

@@ -1,11 +1,10 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../../../reducers/notificationReducer'
+import { notifyWithTimeout } from '../../../../reducers/notificationsReducer'
 import { AppDispatch } from '../../../../store'
-import Button from '../../../Button'
+import Button from '../../../ATEC UI/Button'
 import { ReceivedShipment } from './types'
 import shipmentsService from '../../../../services/shipmentsService'
-import { AxiosError } from 'axios'
 
 interface ConfirmShipmentButtonProps {
   shipment: ReceivedShipment

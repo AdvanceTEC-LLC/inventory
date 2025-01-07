@@ -12,7 +12,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import React from 'react'
 import { CrateType } from '../../../types/crate'
 import StockRow from '../../Inventory/Crates/StockRow'
-import { Header, Subtext } from '../../Text'
+import { Header, Subtext } from '../../ATEC UI/Text'
 
 interface CrateRowProps {
   crate: CrateType

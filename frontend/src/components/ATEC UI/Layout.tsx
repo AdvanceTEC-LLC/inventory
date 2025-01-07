@@ -1,8 +1,8 @@
-import Nav from './Nav/Nav'
+import Nav from '../Nav/Nav'
 import { Outlet } from 'react-router-dom'
 import Footer from './Footer'
 import Body from './Body'
-import Notification from './Notification'
+import NotificationList from '../Notifications/NotificationList'
 
 const Layout = () => {
   return (
@@ -11,7 +11,7 @@ const Layout = () => {
       <Body>
         <Outlet />
       </Body>
-      <Notification />
+      <NotificationList />
       <Footer />
     </div>
   )

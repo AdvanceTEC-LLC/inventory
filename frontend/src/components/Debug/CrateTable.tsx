@@ -1,16 +1,16 @@
 // Table
 import { createColumnHelper } from '@tanstack/react-table'
-import Table from '../Table'
+import Table from '../ATEC UI/Table'
 
 // Queries
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import cratesService from '../../services/cratesService'
 import { CreateCrateType, CrateType } from '../../types/crate'
-import Button from '../Button'
+import Button from '../ATEC UI/Button'
 
 // Notifications
 import { useDispatch } from '../../hooks/hooks'
-import { notifyWithTimeout } from '../../reducers/notificationReducer'
+import { notifyWithTimeout } from '../../reducers/notificationsReducer'
 import { AppDispatch } from '../../store'
 
 const columnHelper = createColumnHelper<CrateType>()

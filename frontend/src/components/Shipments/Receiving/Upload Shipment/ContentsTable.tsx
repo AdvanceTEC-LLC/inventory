@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import { Crate, Stock } from './types'
 import { useState } from 'react'
-import { Header } from '../../../Text'
+import { Header } from '../../../ATEC UI/Text'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 

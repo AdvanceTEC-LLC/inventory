@@ -30,11 +30,11 @@ export const routes: LinkType[] = [
         path: 'crates',
         element: <Crates />,
       },
-      {
+      /*{
         name: 'Materials',
         path: 'materials',
         element: <Materials />,
-      },
+      },*/
     ],
   },
   {

@@ -1,7 +1,7 @@
 // Style
-import Container from '../../Container'
-import Button from '../../Button'
-import { Header, Subtitle, Text, Title } from '../../Text'
+import Container from '../../ATEC UI/Container'
+import Button from '../../ATEC UI/Button'
+import { Header, Subtitle, Text, Title } from '../../ATEC UI/Text'
 // Form and input validation
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'

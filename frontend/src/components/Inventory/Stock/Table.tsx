@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { columns } from './columns'
 import { StockType } from '../../../types/stock'
-import { Header } from '../../Text'
+import { Header } from '../../ATEC UI/Text'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'

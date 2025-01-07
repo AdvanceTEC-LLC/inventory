@@ -1,4 +1,4 @@
-import { Header, Text } from '../../../Text'
+import { Header, Text } from '../../../ATEC UI/Text'
 import { ReceivedShipment } from './types'
 
 interface ShipmentDetailsProps {

@@ -1,5 +1,5 @@
-import Container from '../../Container'
-import { Subtitle, Title } from '../../Text'
+import Container from '../../ATEC UI/Container'
+import { Subtitle, Title } from '../../ATEC UI/Text'
 import StockTable from './Table'
 
 const Stock = () => {

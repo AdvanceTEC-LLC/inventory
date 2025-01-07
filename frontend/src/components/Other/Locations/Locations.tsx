@@ -1,5 +1,5 @@
-import Container from '../../Container'
-import { Title, Subtitle } from '../../Text'
+import Container from '../../ATEC UI/Container'
+import { Title, Subtitle } from '../../ATEC UI/Text'
 import LocationsTable from './Table'
 
 const Locations = () => {

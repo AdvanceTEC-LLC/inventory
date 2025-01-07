@@ -1,5 +1,5 @@
-import Container from '../Container'
-import Button from '../Button'
+import Container from '../ATEC UI/Container'
+import Button from '../ATEC UI/Button'
 
 import { QueryClient } from '@tanstack/react-query'
 import materialsService from '../../services/materialsService'

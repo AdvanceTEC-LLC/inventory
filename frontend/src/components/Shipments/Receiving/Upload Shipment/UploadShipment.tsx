@@ -12,12 +12,12 @@ import {
 } from './types'
 
 // Styled Components
-import { Header, Subtext, Text } from '../../../Text'
+import { Header, Subtext, Text } from '../../../ATEC UI/Text'
 
 import ContentsTable from './ContentsTable'
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
-import Button from '../../../Button'
+import Button from '../../../ATEC UI/Button'
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)

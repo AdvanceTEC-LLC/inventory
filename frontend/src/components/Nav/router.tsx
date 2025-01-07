@@ -1,7 +1,7 @@
 // router.tsx
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from '../Layout'
-import ErrorPage from '../ErrorPage'
+import Layout from '../ATEC UI/Layout'
+import ErrorPage from '../ATEC UI/ErrorPage'
 import Debug from '../Debug/Debug'
 import { routes } from './routes'
 import { LinkType } from '../../types/link'

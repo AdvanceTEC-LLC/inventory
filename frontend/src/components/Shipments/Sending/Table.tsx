@@ -1,7 +1,7 @@
 import { TableRow, TableCell, Table, TableHead, TableBody } from '@mui/material'
 import { useEffect, useState } from 'react'
 import CrateRow from '../../Inventory/Crates/CrateRow'
-import { Header, Subtext } from '../../Text'
+import { Header, Subtext } from '../../ATEC UI/Text'
 import { useQuery } from '@tanstack/react-query'
 import { CrateType } from '../../../types/crate'
 import { MaterialType } from '../../../types/material'

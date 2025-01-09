@@ -1,28 +1,34 @@
+import DebugCard from './DebugCard'
+import { QueryClient } from '@tanstack/react-query'
 import Container from '../ATEC UI/Container'
 import Button from '../ATEC UI/Button'
 
-import { QueryClient } from '@tanstack/react-query'
 import materialsService from '../../services/materialsService'
-import stockService from '../../services/stockService'
-import projectsService from '../../services/projectsService'
-import vendorsService from '../../services/vendorsService'
+import { materialColumns } from './Materials'
 
-import MaterialTable from './MaterialTable'
-import StockTable from './StockTable'
-import ProjectTable from './ProjectTable'
-import VendorTable from './VendorTable'
-import CrateTable from './CrateTable'
-import LocationTable from './LocationTable'
+import stockService from '../../services/stockService'
+import { stockColumns } from './Stock'
+
+import projectsService from '../../services/projectsService'
+import { projectColumns } from './Projects'
+
+import vendorsService from '../../services/vendorsService'
+import { vendorColumns } from './Vendors'
+
+import storagesService from '../../services/storagesService'
+import { storageColumns } from './Storages'
+
 import cratesService from '../../services/cratesService'
-import locationsService from '../../services/locationsService'
-import ShipmentTable from './ShipmentTable'
-import RequestTable from './RequestTable'
-import RequestStockTable from './RequestStockTable'
-import CrateStockTable from './CrateStockTable'
-import ShipmentCrateTable from './ShipmentCratesTable'
-import crateStockService from '../../services/crateStockService'
+import { crateColumns } from './Crates'
+
+import shipmentsService from '../../services/shipmentsService'
+import { shipmentColumns } from './Shipments'
+
 import shipmentCratesService from '../../services/shipmentCratesService'
-import requestStockService from '../../services/requestStockService'
+import { shipmentCrateColumns } from './ShipmentCrates'
+
+import crateStockService from '../../services/crateStockService'
+import { crateStockColumns } from './CrateStock'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -34,20 +40,20 @@ const Debug = () => {
       await projectsService.removeAll()
       await vendorsService.removeAll()
       await cratesService.removeAll()
-      await locationsService.removeAll()
+      await storagesService.removeAll()
+      await shipmentsService.removeAll()
       await crateStockService.removeAll()
       await shipmentCratesService.removeAll()
-      await requestStockService.removeAll()
 
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['vendors'] })
       queryClient.invalidateQueries({ queryKey: ['crates'] })
-      queryClient.invalidateQueries({ queryKey: ['locations'] })
+      queryClient.invalidateQueries({ queryKey: ['storages'] })
+      queryClient.invalidateQueries({ queryKey: ['shipments'] })
       queryClient.invalidateQueries({ queryKey: ['crateStock'] })
       queryClient.invalidateQueries({ queryKey: ['shipmentCrates'] })
-      queryClient.invalidateQueries({ queryKey: ['requestStock'] })
     } catch (error) {
       console.log(error)
     }
@@ -64,49 +70,77 @@ const Debug = () => {
         />
       </Container>
 
-      <Container>
-        <MaterialTable />
-      </Container>
+      <DebugCard
+        title={'Materials'}
+        columns={materialColumns}
+        service={{
+          getAll: materialsService.getAll,
+        }}
+      />
 
-      <Container>
-        <StockTable />
-      </Container>
+      <DebugCard
+        title={'Stock'}
+        columns={stockColumns}
+        service={{
+          getAll: stockService.getAll,
+        }}
+      />
 
-      <Container>
-        <ProjectTable />
-      </Container>
+      <DebugCard
+        title={'Projects'}
+        columns={projectColumns}
+        service={{
+          getAll: projectsService.getAll,
+        }}
+      />
 
-      <Container>
-        <VendorTable />
-      </Container>
+      <DebugCard
+        title={'Vendors'}
+        columns={vendorColumns}
+        service={{
+          getAll: vendorsService.getAll,
+        }}
+      />
 
-      <Container>
-        <LocationTable />
-      </Container>
+      <DebugCard
+        title={'Storages'}
+        columns={storageColumns}
+        service={{
+          getAll: storagesService.getAll,
+        }}
+      />
 
-      <Container>
-        <CrateTable />
-      </Container>
+      <DebugCard
+        title={'Crates'}
+        columns={crateColumns}
+        service={{
+          getAll: cratesService.getAll,
+        }}
+      />
 
-      <Container>
-        <CrateStockTable />
-      </Container>
+      <DebugCard
+        title={'Shipments'}
+        columns={shipmentColumns}
+        service={{
+          getAll: shipmentsService.getAll,
+        }}
+      />
 
-      <Container>
-        <ShipmentTable />
-      </Container>
+      <DebugCard
+        title={'Shipment Crates'}
+        columns={shipmentCrateColumns}
+        service={{
+          getAll: shipmentCratesService.getAll,
+        }}
+      />
 
-      <Container>
-        <ShipmentCrateTable />
-      </Container>
-
-      <Container>
-        <RequestTable />
-      </Container>
-
-      <Container>
-        <RequestStockTable />
-      </Container>
+      <DebugCard
+        title={'Crate Stock'}
+        columns={crateStockColumns}
+        service={{
+          getAll: crateStockService.getAll,
+        }}
+      />
     </div>
   )
 }

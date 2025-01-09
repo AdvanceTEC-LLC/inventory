@@ -21,10 +21,10 @@ interface CrateRowProps {
 const CrateRow = ({ crate }: CrateRowProps) => {
   const [open, setOpen] = React.useState(false)
 
-  const formatLocation = (crate: CrateType) => {
-    if (!crate.location) return ''
+  const formatStorage = (crate: CrateType) => {
+    if (!crate.storage) return 'Not on shelves'
 
-    return `Aisle ${crate.location.aisle} ${crate.location.col}x${crate.location.shelf}`
+    return `Aisle ${crate.storage.aisle} ${crate.storage.col}x${crate.storage.shelf}`
   }
 
   return (
@@ -47,7 +47,10 @@ const CrateRow = ({ crate }: CrateRowProps) => {
           <div className="text-text-secondary">{crate.number}</div>
         </TableCell>
         <TableCell>
-          <div className="text-text-secondary">{formatLocation(crate)}</div>
+          <div className="text-text-secondary">{crate.location}</div>
+        </TableCell>
+        <TableCell>
+          <div className="text-text-secondary">{formatStorage(crate)}</div>
         </TableCell>
       </TableRow>
       <TableRow>

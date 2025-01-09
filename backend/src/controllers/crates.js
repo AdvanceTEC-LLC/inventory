@@ -1,25 +1,31 @@
 import { Router } from 'express'
-import { Crate, Location, Project, Stock } from '../models/index.js'
+import { Crate, Storage, Project, Stock, Vendor } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { locationFindOptions } from './locations.js'
+import { storageFindOptions } from './storages.js'
 import { stockFindOptions } from './stock.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { vendorFindOptions } from './vendors.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
   attributes: {
-    exclude: ['locationId', 'projectId', 'createdAt', 'updatedAt'],
+    exclude: ['storageId', 'projectId', 'vendorId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
-      model: Location,
-      as: 'location',
-      ...locationFindOptions,
+      model: Storage,
+      as: 'storage',
+      ...storageFindOptions,
     },
     {
       model: Project,
       as: 'project',
       ...projectFindOptions,
+    },
+    {
+      model: Vendor,
+      as: 'vendor',
+      ...vendorFindOptions,
     },
     {
       model: Stock,
@@ -52,7 +58,7 @@ cratesRouter.get('/:id', crateFinder, async (request, response) => {
 })
 
 cratesRouter.post('/', async (request, response) => {
-  const { number, locationId, projectId } = request.body
+  const { number, storageId, projectId } = request.body
 
   const projectExists = await Project.findByPk(projectId)
 
@@ -64,19 +70,19 @@ cratesRouter.post('/', async (request, response) => {
     )
   }
 
-  const locationExists = await Location.findByPk(locationId)
+  const storageExists = await storage.findByPk(storageId)
 
-  if (!locationExists) {
+  if (!storageExists) {
     throw new CustomError(
       'NotFoundError',
-      `Location with id ${locationId} not found`,
+      `storage with id ${storageId} not found`,
       404,
     )
   }
 
   const crate = await Crate.create({
     number,
-    locationId,
+    storageId,
     projectId,
   })
 

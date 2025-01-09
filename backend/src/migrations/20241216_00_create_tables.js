@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Sequelize } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
   // Drop tables with CASCADE to handle dependencies
@@ -23,9 +23,9 @@ export const up = async ({ context: queryInterface }) => {
   await queryInterface.sequelize.query(`
       DO $$
       BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'shipment_type') THEN
-          CREATE TYPE shipment_type AS ENUM (
-            'Vendor to Warehouse', 'Warehouse to Project'
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'crate_location') THEN
+          CREATE TYPE crate_location AS ENUM (
+            'Shipping Bay', 'Storage', 'Staging Zone 1', 'Staging Zone 2', 'In Transit', 'Delivered'
           );
         END IF;
       END
@@ -35,9 +35,9 @@ export const up = async ({ context: queryInterface }) => {
   await queryInterface.sequelize.query(`
       DO $$
       BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'shipment_status') THEN
-          CREATE TYPE shipment_status AS ENUM (
-            'Received', 'Shipped'
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'shipment_direction') THEN
+          CREATE TYPE shipment_direction AS ENUM (
+            'In', 'Out'
           );
         END IF;
       END
@@ -45,15 +45,24 @@ export const up = async ({ context: queryInterface }) => {
     `)
 
   // Create tables
-  await queryInterface.createTable('locations', {
+  await queryInterface.createTable('storages', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    aisle: DataTypes.INTEGER,
-    col: DataTypes.CHAR,
-    shelf: DataTypes.INTEGER,
+    aisle: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    col: {
+      type: DataTypes.CHAR,
+      allowNull: false,
+    },
+    shelf: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -92,17 +101,69 @@ export const up = async ({ context: queryInterface }) => {
     },
     part_number: {
       type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    thickness_inches: DataTypes.FLOAT,
-    width_inches: DataTypes.FLOAT,
-    length_inches: DataTypes.FLOAT,
-    square_feet: DataTypes.FLOAT,
-    color: DataTypes.STRING,
+    thickness: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isPositive(value) {
+          if (value !== null && value < 0) {
+            throw new Error('Thickness must be positive if provided')
+          }
+        },
+      },
+    },
+    width: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isPositive(value) {
+          if (value !== null && value < 0) {
+            throw new Error('Width must be positive if provided')
+          }
+        },
+      },
+    },
+    length: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isPositive(value) {
+          if (value !== null && value < 0) {
+            throw new Error('Length must be positive if provided')
+          }
+        },
+      },
+    },
+    square_feet: {
+      type: DataTypes.FLOAT,
+      validate: {
+        isPositive(value) {
+          if (value !== null && value < 0) {
+            throw new Error('Square feet must be positive if provided')
+          }
+        },
+      },
+    },
+    top_finish: DataTypes.STRING,
+    bottom_finish: DataTypes.STRING,
+    x_dimension: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isPositive(value) {
+          if (value !== null && value < 0) {
+            throw new Error('X Dimension must be positive if provided')
+          }
+        },
+      },
+    },
+    cutout: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     tag: DataTypes.STRING,
     vendor_id: {
       type: DataTypes.INTEGER,
@@ -124,15 +185,7 @@ export const up = async ({ context: queryInterface }) => {
 
   await queryInterface.addIndex('materials', ['part_number'], {
     unique: true,
-    name: 'idx_part_number',
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+    name: 'idx_materials_part_number',
   })
 
   await queryInterface.createTable('projects', {
@@ -160,42 +213,18 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
-  await queryInterface.createTable('requests', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    project_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'projects',
-        key: 'id',
-      },
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-  })
-
   await queryInterface.createTable('shipments', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: 'shipment_type',
+    direction: {
+      type: 'shipment_direction',
+      allowNull: false,
     },
-    status: {
-      type: 'shipment_status',
-    },
+    send_date: { type: DataTypes.DATE, allowNull: false },
+    received_date: DataTypes.DATE,
     project_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -258,10 +287,13 @@ export const up = async ({ context: queryInterface }) => {
       type: DataTypes.STRING,
       unique: true,
     },
-    location_id: {
+    location: {
+      type: 'crate_location',
+    },
+    storage_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'locations',
+        model: 'storages',
         key: 'id',
       },
     },
@@ -270,6 +302,14 @@ export const up = async ({ context: queryInterface }) => {
       allowNull: false,
       references: {
         model: 'projects',
+        key: 'id',
+      },
+    },
+    vendor_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'vendors',
         key: 'id',
       },
     },
@@ -347,46 +387,14 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
-  await queryInterface.createTable('request_stock', {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    request_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'requests',
-        key: 'id',
-      },
-    },
-    stock_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'stock',
-        key: 'id',
-      },
-    },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-  })
-
   // Create the trigger to calculate `square_feet` for materials
   await queryInterface.sequelize.query(`
       CREATE OR REPLACE FUNCTION calculate_square_feet()
       RETURNS TRIGGER AS $$
       BEGIN
           IF NEW.square_feet IS NULL THEN
-              IF NEW.width_inches IS NOT NULL AND NEW.length_inches IS NOT NULL THEN
-                  NEW.square_feet := (NEW.width_inches * NEW.length_inches) / 144;
+              IF NEW.width IS NOT NULL AND NEW.length IS NOT NULL THEN
+                  NEW.square_feet := (NEW.width * NEW.length) / 144;
               ELSE
                   NEW.square_feet := NULL;
               END IF;
@@ -395,17 +403,34 @@ export const up = async ({ context: queryInterface }) => {
       END;
       $$ LANGUAGE plpgsql;
 
-      CREATE TRIGGER set_square_feet
+      CREATE TRIGGER trigger_calculate_material_square_feet
       BEFORE INSERT ON materials
       FOR EACH ROW
       EXECUTE FUNCTION calculate_square_feet();
+    `)
+
+  // Add checks
+  await queryInterface.sequelize.query(`
+      ALTER TABLE shipments
+      ADD CONSTRAINT send_date_before_received_date
+      CHECK ( 
+        send_date < received_date OR send_date IS NULL OR received_date IS NULL
+      );
+    `)
+
+  await queryInterface.sequelize.query(`
+      ALTER TABLE crates
+      ADD CONSTRAINT check_storage_requires_storage_id
+      CHECK (
+        NOT (location = 'Storage' AND storage_id IS NULL)
+      );
     `)
 }
 
 export const down = async ({ context: queryInterface }) => {
   // Drop triggers
   await queryInterface.sequelize.query(
-    'DROP TRIGGER IF EXISTS set_square_feet ON materials',
+    'DROP TRIGGER IF EXISTS trigger_calculate_material_square_feet ON materials',
   )
 
   // Drop tables in reverse order of dependencies
@@ -418,13 +443,13 @@ export const down = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('projects', { cascade: true })
   await queryInterface.dropTable('materials', { cascade: true })
   await queryInterface.dropTable('vendors', { cascade: true })
-  await queryInterface.dropTable('locations', { cascade: true })
+  await queryInterface.dropTable('storages', { cascade: true })
 
-  // Drop enums if needed
+  // Drop enums
   await queryInterface.sequelize.query(
-    'DROP TYPE IF EXISTS shipment_type CASCADE;',
+    'DROP TYPE IF EXISTS shipment_direction CASCADE;',
   )
   await queryInterface.sequelize.query(
-    'DROP TYPE IF EXISTS shipment_status CASCADE;',
+    'DROP TYPE IF EXISTS crate_location CASCADE;',
   )
 }

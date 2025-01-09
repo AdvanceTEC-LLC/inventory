@@ -9,14 +9,12 @@ Shipment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: DataTypes.ENUM('Vendor to Warehouse', 'Warehouse to Project'),
+    direction: {
+      type: DataTypes.ENUM('In', 'Out'),
       allowNull: false,
     },
-    status: {
-      type: DataTypes.ENUM('Received', 'Shipped'),
-      allowNull: false,
-    },
+    sendDate: { type: DataTypes.DATE, allowNull: false },
+    receivedDate: DataTypes.DATE,
     projectId: {
       type: DataTypes.INTEGER,
       references: { model: 'projects', key: 'id' },

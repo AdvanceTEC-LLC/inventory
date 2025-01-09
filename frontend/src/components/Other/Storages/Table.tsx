@@ -3,20 +3,20 @@ import { columns } from './columns'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
-import locationsService from '../../../services/locationsService'
-import { LocationType } from '../../../types/location'
+import storagesService from '../../../services/storagesService'
+import { StorageType } from '../../../types/storage'
 import { DataGrid } from '@mui/x-data-grid'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
-const LocationsTable = () => {
+const StoragesTable = () => {
   const {
-    data: locations = [],
+    data: storages = [],
     isLoading,
     isError,
-  } = useQuery<LocationType[]>({
-    queryKey: ['locations'],
-    queryFn: locationsService.getAll,
+  } = useQuery<StorageType[]>({
+    queryKey: ['storages'],
+    queryFn: storagesService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
@@ -25,12 +25,12 @@ const LocationsTable = () => {
   }
 
   if (isError) {
-    return <div>Error fetching locations data.</div>
+    return <div>Error fetching storages data.</div>
   }
 
   return (
     <DataGrid
-      rows={locations}
+      rows={storages}
       columns={columns}
       initialState={{ pagination: { paginationModel } }}
       pageSizeOptions={[5, 10]}
@@ -40,4 +40,4 @@ const LocationsTable = () => {
   )
 }
 
-export default LocationsTable
+export default StoragesTable

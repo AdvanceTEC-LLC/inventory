@@ -7,14 +7,15 @@ import {
   Collapse,
   IconButton,
 } from '@mui/material'
-import { Crate, Stock } from './types'
 import { useState } from 'react'
 import { Header } from '../../../ATEC UI/Text'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { CreateCrateType } from '../../../../types/crate'
+import { CreateStockType } from '../../../../types/stock'
 
 interface ContentsTableProps {
-  crates: Crate[]
+  crates: CreateCrateType[]
 }
 
 const ContentsTable = ({ crates }: ContentsTableProps) => {
@@ -40,7 +41,7 @@ const ContentsTable = ({ crates }: ContentsTableProps) => {
 export default ContentsTable
 
 interface CrateRowProps {
-  crate: Crate
+  crate: CreateCrateType
 }
 
 const CrateRow = ({ crate }: CrateRowProps) => {
@@ -74,7 +75,6 @@ const CrateRow = ({ crate }: CrateRowProps) => {
                     <TableCell>Part Number</TableCell>
                     <TableCell>Description</TableCell>
                     <TableCell>Dimensions</TableCell>
-                    <TableCell>Square Feet</TableCell>
                     <TableCell>Color</TableCell>
                     <TableCell>Tag</TableCell>
                     <TableCell>Quantity</TableCell>
@@ -95,11 +95,11 @@ const CrateRow = ({ crate }: CrateRowProps) => {
 }
 
 interface StockRowProps {
-  stock: Stock
+  stock: CreateStockType
 }
 
 const StockRow = ({ stock }: StockRowProps) => {
-  const formatDimensions = (stock: Stock) => {
+  const formatDimensions = (stock: CreateStockType) => {
     const dimensions = []
 
     if (stock.material.thickness)
@@ -112,30 +112,18 @@ const StockRow = ({ stock }: StockRowProps) => {
     return dimensions.join(' x ')
   }
 
-  const formatSquareFeet = (stock: Stock) => {
-    if (stock.material.squareFeet) {
-      const roundedSquareFeet = Math.ceil(stock.material.squareFeet)
-      return `${roundedSquareFeet}`
-    }
-  }
+  const formatFinish = (stock: CreateStockType) => {
+    let finish = ''
 
-  const formatColor = (stock: Stock) => {
-    let color = ''
-
-    if (stock.material.topColor) color.concat(stock.material.topColor)
-    if (stock.material.bottomColor) color.concat(stock.material.bottomColor)
-    return color
-  }
-
-  const formatTag = (stock: Stock) => {
-    if (stock.material.tag && stock.material.additionalTagInformation)
-      return `${stock.material.tag}${stock.material.additionalTagInformation}`
+    if (stock.material.topFinish) finish.concat(stock.material.topFinish)
+    if (stock.material.bottomFinish) finish.concat(stock.material.bottomFinish)
+    return finish
   }
 
   return (
     <TableRow>
       <TableCell>
-        <div className="text-text-secondary">{stock.material.number}</div>
+        <div className="text-text-secondary">{stock.material.partNumber}</div>
       </TableCell>
       <TableCell>
         <div className="text-text-secondary">{stock.material.description}</div>
@@ -144,13 +132,10 @@ const StockRow = ({ stock }: StockRowProps) => {
         <div className="text-text-secondary">{formatDimensions(stock)}</div>
       </TableCell>
       <TableCell>
-        <div className="text-text-secondary">{formatSquareFeet(stock)}</div>
+        <div className="text-text-secondary">{formatFinish(stock)}</div>
       </TableCell>
       <TableCell>
-        <div className="text-text-secondary">{formatColor(stock)}</div>
-      </TableCell>
-      <TableCell>
-        <div className="text-text-secondary">{formatTag(stock)}</div>
+        <div className="text-text-secondary">{stock.material.tag}</div>
       </TableCell>
       <TableCell>
         <div className="text-text-secondary">{stock.quantity}</div>

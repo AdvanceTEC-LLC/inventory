@@ -44,13 +44,24 @@ materialsRouter.post('/', async (request, response) => {
   const {
     partNumber,
     description,
-    thicknessInches,
-    widthInches,
-    lengthInches,
-    color,
+    thickness,
+    width,
+    length,
+    topFinish,
+    bottomFinish,
+    xDimension,
+    cutout,
     tag,
     vendorId,
   } = request.body
+
+  if (thickness < 0 || width < 0 || length < 0) {
+    throw new CustomError(
+      'BadRequest',
+      'Material cannot have negative dimensions.',
+      400,
+    )
+  }
 
   const vendorExists = await Vendor.findByPk(vendorId)
 
@@ -65,10 +76,13 @@ materialsRouter.post('/', async (request, response) => {
   const material = await Material.create({
     partNumber,
     description,
-    thicknessInches,
-    widthInches,
-    lengthInches,
-    color,
+    thickness,
+    width,
+    length,
+    topFinish,
+    bottomFinish,
+    xDimension,
+    cutout,
     tag,
     vendorId,
   })

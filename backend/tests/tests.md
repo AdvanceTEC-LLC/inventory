@@ -12,3 +12,7 @@ Post a material with...
 - negative dimension for length,
 - negative dimension for squareFeet,
 - negative dimension for xDimension
+
+## Crates
+
+- crates with location of 'Storage' must have a storageId

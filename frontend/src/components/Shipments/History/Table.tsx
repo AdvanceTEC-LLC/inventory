@@ -33,8 +33,9 @@ const ShipmentsTable = () => {
         <TableHead>
           <TableRow className="bg-gray-50">
             <TableCell />
-            <TableCell>Type</TableCell>
-            <TableCell>Status</TableCell>
+            <TableCell>Direction</TableCell>
+            <TableCell>Send Date</TableCell>
+            <TableCell>Received Date</TableCell>
             <TableCell>Project</TableCell>
             <TableCell>Vendor</TableCell>
           </TableRow>

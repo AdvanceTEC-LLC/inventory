@@ -2,14 +2,6 @@ import { useState } from 'react'
 
 // Parsing
 import Papa from 'papaparse'
-import {
-  Crate,
-  Project,
-  ReceivedShipment,
-  ShipmentMaterial,
-  Stock,
-  Vendor,
-} from './types'
 
 // Styled Components
 import { Header, Subtext, Text } from '../../../ATEC UI/Text'
@@ -18,10 +10,19 @@ import ContentsTable from './ContentsTable'
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
 import Button from '../../../ATEC UI/Button'
+import {
+  CreateShipmentType,
+  ShipmentDirectionEnum,
+} from '../../../../types/shipment'
+import { CrateLocationEnum, CreateCrateType } from '../../../../types/crate'
+import { CreateStockType } from '../../../../types/stock'
+import { CreateMaterialType } from '../../../../types/material'
+import { CreateVendorType } from '../../../../types/vendor'
+import { CreateProjectType } from '../../../../types/project'
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)
-  const [shipment, setShipment] = useState<ReceivedShipment | null>(null)
+  const [shipment, setShipment] = useState<CreateShipmentType | null>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.[0]) {
@@ -60,41 +61,43 @@ const UploadShipment = () => {
   }
 
   const getDetails = (rows: string[][]) => {
-    const company = rows[1][0]?.trim()
+    const direction: ShipmentDirectionEnum = ShipmentDirectionEnum.In
 
-    const projectNumber: number = parseInt(rows[1][1]?.trim())
-    const projectName: string = rows[1][2]?.trim()
+    const vendorName = rows[1][1]?.trim()
 
-    const vendorName = rows[1][3]?.trim()
+    const projectNumber: number = parseInt(rows[1][2]?.trim())
+    const projectName: string = rows[1][3]?.trim()
 
-    const sendDate = rows[1][4]?.trim()
-    const receivedDate = rows[1][5]?.trim()
+    const sendDate = new Date(rows[1][4]?.trim())
+    const receivedDate = new Date(rows[1][5]?.trim())
 
-    const project: Project = {
+    console.log(sendDate)
+
+    const vendor: CreateVendorType = {
+      name: vendorName,
+    }
+
+    const project: CreateProjectType = {
       number: projectNumber,
       name: projectName,
     }
 
-    const vendor: Vendor = {
-      name: vendorName,
-    }
-
-    if (!company || !project || !vendor || !sendDate || !receivedDate) {
+    if (!project || !vendor || !sendDate || !receivedDate) {
       console.error('Error: Missing details in the shipment')
       return null
     }
 
     return {
-      company,
-      project,
+      direction,
       vendor,
+      project,
       sendDate,
       receivedDate,
     }
   }
 
-  const getMaterial = (row: string[]) => {
-    const number = row[0]?.trim()
+  const getMaterial = (row: string[], vendor: CreateVendorType) => {
+    const partNumber = row[0]?.trim()
     const description = row[1]?.trim()
     const thickness = isNaN(parseInt(row[2]?.trim()))
       ? undefined
@@ -105,45 +108,40 @@ const UploadShipment = () => {
     const length = isNaN(parseInt(row[4]?.trim()))
       ? undefined
       : parseInt(row[4]?.trim())
-    const squareFeet = isNaN(parseInt(row[5]?.trim()))
+    const topFinish = row[5]?.trim()
+    const bottomFinish = row[6]?.trim()
+    const xDimension = isNaN(parseInt(row[7]?.trim()))
       ? undefined
-      : parseFloat(row[5]?.trim())
-    const topColor = row[6]?.trim()
-    const bottomColor = row[7]?.trim()
-    const xDimension = isNaN(parseInt(row[8]?.trim()))
-      ? undefined
-      : parseInt(row[8]?.trim())
-    const cutout = row[9]?.trim()
-    const tag = row[10]?.trim()
-    const additionalTagInformation = row[11]?.trim()
+      : parseInt(row[7]?.trim())
+    const cutout = row[8]?.trim() === 'Y'
+    const tag = row[9]?.trim()
 
-    const material: ShipmentMaterial = {
-      number,
+    const material: CreateMaterialType = {
+      partNumber,
       description,
       thickness,
       width,
       length,
-      squareFeet,
-      topColor,
-      bottomColor,
+      topFinish,
+      bottomFinish,
       xDimension,
       cutout,
       tag,
-      additionalTagInformation,
+      vendor,
     }
 
     return material
   }
 
-  const getCrates = (rows: string[][]) => {
+  const getCrates = (rows: string[][], details: any) => {
     const materialRows = rows.slice(4)
 
-    let crates: Crate[] = []
+    let crates: CreateCrateType[] = []
 
     materialRows.map((row) => {
-      const material = getMaterial(row)
+      const material = getMaterial(row, details.vendor)
 
-      let crateColumnIndex = 14
+      let crateColumnIndex = 12
 
       while (
         row[crateColumnIndex]?.trim() !== undefined &&
@@ -152,14 +150,20 @@ const UploadShipment = () => {
         const crateNumber = row[crateColumnIndex]?.trim()
         const quantity = parseInt(row[crateColumnIndex - 1]?.trim() || '0', 10)
 
-        const stock: Stock = { material, quantity }
+        const stock: CreateStockType = { material, quantity }
 
         // Add stock to existing crate or create a new crate
         if (crates.find((crate) => crate.number === crateNumber)) {
           const crate = crates.find((crate) => crate.number === crateNumber)
           crate?.stock.push(stock)
         } else {
-          crates.push({ number: crateNumber, stock: [stock] })
+          crates.push({
+            number: crateNumber,
+            location: CrateLocationEnum.ShippingBay,
+            project: details.project,
+            vendor: details.vendor,
+            stock: [stock],
+          })
         }
 
         crateColumnIndex += 2
@@ -188,7 +192,7 @@ const UploadShipment = () => {
           return
         }
 
-        const crates: Crate[] | null = getCrates(rows)
+        const crates: CreateCrateType[] | null = getCrates(rows, details)
         if (!crates) {
           return
         }

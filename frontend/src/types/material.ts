@@ -1,26 +1,31 @@
-import { VendorType } from './vendor'
+import { CreateVendorType, VendorType } from './vendor'
 
 export interface MaterialType {
   id: number
   partNumber: string
   description: string
-  thicknessInches: number | null
-  widthInches: number | null
-  lengthInches: number | null
-  squareFeet: number | null
-  color: string | null
-  tag: string | null
+  thickness?: number
+  width?: number
+  length?: number
+  squareFeet?: number
+  topFinish?: string
+  bottomFinish?: string
+  xDimension?: number
+  cutout?: boolean
+  tag?: string
   vendor: VendorType
 }
 
 export interface CreateMaterialType {
   partNumber: string
   description: string
-  thicknessInches?: number
-  widthInches?: number
-  lengthInches?: number
-  squareFeet?: number
-  color?: string
+  thickness?: number
+  width?: number
+  length?: number
+  topFinish?: string
+  bottomFinish?: string
+  xDimension?: number
+  cutout?: boolean
   tag?: string
-  vendorId: number
+  vendor: CreateVendorType
 }

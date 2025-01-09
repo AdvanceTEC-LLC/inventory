@@ -35,10 +35,17 @@ const ShipmentRow = ({ shipment }: ShipmentRowProps) => {
           </IconButton>
         </TableCell>
         <TableCell>
-          <div className="text-text-secondary">{shipment.type}</div>
+          <div className="text-text-secondary">{shipment.direction}</div>
         </TableCell>
         <TableCell>
-          <div className="text-text-secondary">{shipment.status}</div>
+          <div className="text-text-secondary">
+            {new Date(shipment.sendDate).toLocaleDateString()}
+          </div>
+        </TableCell>
+        <TableCell>
+          <div className="text-text-secondary">
+            {new Date(shipment.receivedDate).toLocaleDateString()}
+          </div>
         </TableCell>
         <TableCell>
           <div className="text-text-secondary">
@@ -63,6 +70,7 @@ const ShipmentRow = ({ shipment }: ShipmentRowProps) => {
                         <TableCell />
                         <TableCell>Number</TableCell>
                         <TableCell>Location</TableCell>
+                        <TableCell>Storage</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

@@ -11,7 +11,7 @@ const crateStockFindOptions = {
     {
       model: Crate,
       as: 'crate',
-      ...crateFindOptions,
+      //...crateFindOptions,
     },
     {
       model: Stock,

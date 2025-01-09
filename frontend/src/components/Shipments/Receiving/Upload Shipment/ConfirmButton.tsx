@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux'
 import { notifyWithTimeout } from '../../../../reducers/notificationsReducer'
 import { AppDispatch } from '../../../../store'
 import Button from '../../../ATEC UI/Button'
-import { ReceivedShipment } from './types'
 import shipmentsService from '../../../../services/shipmentsService'
+import { CreateShipmentType } from '../../../../types/shipment'
 
 interface ConfirmShipmentButtonProps {
-  shipment: ReceivedShipment
+  shipment: CreateShipmentType
 }
 
 const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
@@ -15,8 +15,8 @@ const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
   const dispatch: AppDispatch = useDispatch()
 
   const createShipmentMutation = useMutation({
-    mutationFn: (shipment: ReceivedShipment) =>
-      shipmentsService.createReceived(shipment),
+    mutationFn: (shipment: CreateShipmentType) =>
+      shipmentsService.create(shipment),
     onMutate: () => {
       dispatch(
         notifyWithTimeout({

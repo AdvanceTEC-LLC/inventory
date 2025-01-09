@@ -1,8 +1,8 @@
+import { CreateShipmentType } from '../../../../types/shipment'
 import { Header, Text } from '../../../ATEC UI/Text'
-import { ReceivedShipment } from './types'
 
 interface ShipmentDetailsProps {
-  shipment: ReceivedShipment
+  shipment: CreateShipmentType
 }
 
 const ShipmentDetails = ({ shipment }: ShipmentDetailsProps) => {
@@ -18,10 +18,10 @@ const ShipmentDetails = ({ shipment }: ShipmentDetailsProps) => {
         <Text text={shipment.vendor.name} />
 
         <Text text="Send Date" />
-        <Text text={shipment.sendDate} />
+        <Text text={shipment.sendDate.toLocaleDateString()} />
 
         <Text text="Received Date" />
-        <Text text={shipment.receivedDate} />
+        <Text text={shipment.receivedDate.toLocaleDateString()} />
 
         <Text text="Number of Crates" />
         <Text text={shipment.crates.length.toString()} />

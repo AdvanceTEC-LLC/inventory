@@ -1,4 +1,4 @@
-import { MaterialType } from './material'
+import { CreateMaterialType, MaterialType } from './material'
 
 export interface StockType {
   id: number
@@ -7,6 +7,6 @@ export interface StockType {
 }
 
 export interface CreateStockType {
-  materialId: number
+  material: CreateMaterialType
   quantity: number
 }

@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { ShipmentCrate, Crate, Shipment } from '../models/index.js'
-import { crateFindOptions } from './crates.js'
-import { shipmentFindOptions } from './shipments.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { shipmentFindOptions } from './shipments.js'
+
 const shipmentCratesRouter = Router()
 
 const shipmentCrateFindOptions = {
@@ -16,7 +16,7 @@ const shipmentCrateFindOptions = {
     {
       model: Crate,
       as: 'crate',
-      ...crateFindOptions,
+      //...crateFindOptions,
     },
   ],
 }

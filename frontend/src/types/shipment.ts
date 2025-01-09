@@ -1,29 +1,27 @@
-import { CrateType } from './crate'
-import { ProjectType } from './project'
-import { VendorType } from './vendor'
+import { CrateType, CreateCrateType } from './crate'
+import { CreateProjectType, ProjectType } from './project'
+import { CreateVendorType, VendorType } from './vendor'
 
-export enum ShipmentTypeEnum {
-  VendorToWarehouse = 'Vendor to Warehouse',
-  WarehouseToProject = 'Warehouse to Project',
-}
-
-export enum ShipmentStatusEnum {
-  Received = 'Received',
-  Shipped = 'Shipped',
+export enum ShipmentDirectionEnum {
+  In = 'In',
+  Out = 'Out',
 }
 
 export interface ShipmentType {
   id: number
-  type: ShipmentTypeEnum
-  status: ShipmentStatusEnum
+  direction: ShipmentDirectionEnum
+  sendDate: Date
+  receivedDate: Date
   project: ProjectType
   vendor: VendorType
   crates: CrateType[]
 }
 
 export interface CreateShipmentType {
-  type: ShipmentTypeEnum
-  status: ShipmentStatusEnum
-  projectId: number
-  vendorId: number
+  direction: ShipmentDirectionEnum
+  sendDate: Date
+  receivedDate: Date
+  project: CreateProjectType
+  vendor: CreateVendorType
+  crates: CreateCrateType[]
 }

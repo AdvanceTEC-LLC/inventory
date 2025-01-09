@@ -1,15 +1,15 @@
 import Container from '../../ATEC UI/Container'
 import { Title, Subtitle } from '../../ATEC UI/Text'
-import LocationsTable from './Table'
+import StoragesTable from './Table'
 
-const Locations = () => {
+const Storages = () => {
   return (
     <Container className="overflow-x-auto">
-      <Title text={'Locations'} />
+      <Title text={'Storages'} />
       <Subtitle text="View the storage locations in the warehouse" />
-      <LocationsTable />
+      <StoragesTable />
     </Container>
   )
 }
 
-export default Locations
+export default Storages

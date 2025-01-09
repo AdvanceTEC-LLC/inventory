@@ -17,7 +17,7 @@ ShipmentCrate.init(
     crateId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'crate', key: 'id' },
+      references: { model: 'crates', key: 'id' },
     },
   },
   {

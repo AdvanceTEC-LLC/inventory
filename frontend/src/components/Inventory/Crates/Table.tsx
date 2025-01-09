@@ -128,7 +128,9 @@ const CratesTable = () => {
               <TableCell />
               <TableCell>Number</TableCell>
               <TableCell>Location</TableCell>
+              <TableCell>Storage</TableCell>
               <TableCell>Project</TableCell>
+              <TableCell>Vendor</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

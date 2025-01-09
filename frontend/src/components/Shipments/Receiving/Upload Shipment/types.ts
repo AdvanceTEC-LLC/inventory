@@ -19,12 +19,11 @@ export interface ShipmentMaterial {
   width?: number
   length?: number
   squareFeet?: number
-  topColor?: string
-  bottomColor?: string
+  topFinish?: string
+  bottomFinish?: string
   xDimension?: number
   cutout?: string
   tag?: string
-  additionalTagInformation?: string
 }
 
 export interface Crate {

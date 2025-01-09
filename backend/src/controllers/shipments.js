@@ -14,6 +14,7 @@ import { vendorFindOptions } from './vendors.js'
 import { crateFindOptions } from './crates.js'
 import { sequelize } from '../util/db.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { info } from '../util/logger.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
@@ -78,40 +79,42 @@ shipmentsRouter.get('/:id', shipmentFinder, async (request, response) => {
   response.status(200).send(request.shipment)
 })
 
-shipmentsRouter.post('/', async (request, response) => {
-  const { type, status, projectId, vendorId } = request.body
+shipmentsRouter.post('/', async (request, response, next) => {
+  const { direction, sendDate, receivedDate, project, vendor, crates } =
+    request.body
 
-  const projectExists = await Project.findByPk(projectId)
-
-  if (!projectExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching project with id ${projectId}` })
+  if (!['In', 'Out'].includes(direction)) {
+    throw new CustomError(
+      'ValidationError',
+      `Shipment direction of ${direction} is neither 'In' nor 'Out'.`,
+      400,
+    )
   }
 
-  const vendorExists = await Vendor.findByPk(vendorId)
+  // Convert sendDate and receivedDate to Date objects
+  const parsedSendDate = new Date(sendDate)
+  const parsedReceivedDate = new Date(receivedDate)
 
-  if (!vendorExists) {
-    return response
-      .status(404)
-      .send({ error: `No matching vendor with id ${vendorId}` })
+  if (
+    (sendDate !== null && isNaN(parsedSendDate.getTime())) ||
+    isNaN(parsedReceivedDate.getTime())
+  ) {
+    throw new CustomError(
+      'ValidationError',
+      'One or both of the provided dates are invalid.',
+      400,
+    )
   }
 
-  try {
-    const shipment = await Shipment.create({
-      type,
-      status,
-      projectId,
-      vendorId,
-    })
-    response.status(201).send(shipment)
-  } catch (error) {
-    return response.status(400).send({ error: error })
+  if (parsedSendDate > parsedReceivedDate) {
+    const formattedSendDate = sendDate.toLocaleDateString()
+    const formattedReceivedDate = receivedDate.toLocaleDateString()
+    throw new CustomError(
+      'ValidationError',
+      `Shipment can not be received on ${formattedReceivedDate} if sent on ${formattedSendDate}`,
+      400,
+    )
   }
-})
-
-shipmentsRouter.post('/received/', async (request, response, next) => {
-  const { project, vendor, crates } = request.body
 
   const transaction = await sequelize.transaction()
 
@@ -135,11 +138,14 @@ shipmentsRouter.post('/received/', async (request, response, next) => {
       vendorInDb = await Vendor.create(vendor, { transaction })
     }
 
+    info(sendDate)
+
     // Create shipment entry
     const shipment = await Shipment.create(
       {
-        type: 'Vendor to Warehouse',
-        status: 'Received',
+        direction,
+        sendDate: parsedSendDate,
+        receivedDate: parsedReceivedDate,
         projectId: projectInDb.id,
         vendorId: vendorInDb.id,
       },
@@ -164,8 +170,10 @@ shipmentsRouter.post('/received/', async (request, response, next) => {
       crateInDb = await Crate.create(
         {
           number: crate.number,
-          locationId: null,
+          location: crate.location,
+          storageId: null,
           projectId: projectInDb.id,
+          vendorId: vendorInDb.id,
         },
         { transaction },
       )
@@ -181,20 +189,23 @@ shipmentsRouter.post('/received/', async (request, response, next) => {
       // Create stock entries for each crate
       for (const stock of crate.stock) {
         let materialInDb = await Material.findOne({
-          where: { partNumber: stock.material.number },
+          where: { partNumber: stock.material.partNumber },
           transaction,
         })
 
         if (!materialInDb) {
           materialInDb = await Material.create(
             {
-              partNumber: stock.material.number,
+              partNumber: stock.material.partNumber,
               description: stock.material.description,
-              thicknessInches: stock.material.thickness,
-              widthInches: stock.material.width,
-              lengthInches: stock.material.length,
-              color: `${stock.material.topColor} ${stock.material.bottomColor}`,
-              tag: `${stock.material.tag}${stock.material.additionalTagInformation}`,
+              thickness: stock.material.thickness,
+              width: stock.material.width,
+              length: stock.material.length,
+              topFinish: stock.material.topFinish,
+              bottomFinish: stock.material.bottomFinish,
+              xDimension: stock.material.xDimension,
+              cutout: stock.material.cutout,
+              tag: stock.material.tag,
               vendorId: vendorInDb.id,
             },
             { transaction },

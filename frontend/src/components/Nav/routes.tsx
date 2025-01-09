@@ -1,16 +1,13 @@
 import { LinkType } from '../../types/link'
 
 import Inventory from '../Inventory/Stock/Stock'
-import Materials from '../Inventory/Materials/Materials'
 import Crates from '../Inventory/Crates/Crates'
 
 import Receiving from '../Shipments/Receiving/Receiving'
 import History from '../Shipments/History/History'
 
-import Requests from '../Requests/Requests'
-
 import Projects from '../Other/Projects/Projects'
-import Locations from '../Other/Locations/Locations'
+import Storages from '../Other/Storages/Storages'
 import Vendors from '../Other/Vendors/Vendors'
 import Sending from '../Shipments/Sending/Sending'
 
@@ -21,20 +18,19 @@ export const routes: LinkType[] = [
     element: <Inventory />,
     dropdown: [
       {
-        name: 'Stock',
-        path: '',
+        name: 'Materials',
+        path: 'materials',
         element: <Inventory />,
+      },
+      {
+        name: 'Prefabrications',
+        path: 'prefabrications',
       },
       {
         name: 'Crates',
         path: 'crates',
         element: <Crates />,
       },
-      /*{
-        name: 'Materials',
-        path: 'materials',
-        element: <Materials />,
-      },*/
     ],
   },
   {
@@ -53,6 +49,11 @@ export const routes: LinkType[] = [
         element: <Sending />,
       },
       {
+        name: 'Receiving at Site',
+        path: 'receiving-at-site',
+        //element: <ReceivingAtSite />,
+      },
+      {
         name: 'History',
         path: '',
         element: <History />,
@@ -60,21 +61,14 @@ export const routes: LinkType[] = [
     ],
   },
   {
-    name: 'Requests',
-    path: 'requests',
-    element: <Requests />,
+    name: 'Prefabrication',
+    path: 'prefabrication',
+    //element: <Prefabrication />,
     dropdown: [
       {
-        name: 'Request to Site',
-        path: 'request-to-site',
-      },
-      {
-        name: 'Outstanding Requests',
-        path: 'outstanding-requests',
-      },
-      {
-        name: 'Request History',
-        path: 'request-history',
+        name: 'Prefabricate',
+        path: 'prefabricate',
+        //element: <Prefabricate />,
       },
     ],
   },
@@ -85,18 +79,18 @@ export const routes: LinkType[] = [
     dropdown: [
       {
         name: 'Projects',
-        path: 'Projects',
+        path: 'projects',
         element: <Projects />,
       },
       {
         name: 'Vendors',
-        path: 'Vendors',
+        path: 'vendors',
         element: <Vendors />,
       },
       {
-        name: 'Locations',
-        path: 'Locations',
-        element: <Locations />,
+        name: 'Storages',
+        path: 'storages',
+        element: <Storages />,
       },
     ],
   },

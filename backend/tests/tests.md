@@ -16,3 +16,7 @@ Post a material with...
 ## Crates
 
 - crates with location of 'Storage' must have a storageId
+
+## Shipments
+
+- uploading a shipment without the necessary information

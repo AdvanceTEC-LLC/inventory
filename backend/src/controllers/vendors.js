@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { Vendor } from '../models/index.js'
+import { info } from '../util/logger.js'
+import { CustomError } from '../util/errors/CustomError.js'
 const vendorsRouter = Router()
 
 export const vendorFindOptions = {
@@ -32,14 +34,18 @@ vendorsRouter.get('/:id', vendorFinder, async (request, response) => {
   response.status(200).send(request.vendor)
 })
 
-vendorsRouter.post('/', async (request, response) => {
+vendorsRouter.post('/', async (request, response, next) => {
   const { name } = request.body
 
-  const vendor = await Vendor.create({
-    name,
-  })
+  try {
+    const vendor = await Vendor.create({
+      name,
+    })
 
-  response.status(201).send(vendor)
+    response.status(201).send(vendor)
+  } catch (error) {
+    next(error)
+  }
 })
 
 vendorsRouter.delete('/:id', vendorFinder, async (request, response) => {

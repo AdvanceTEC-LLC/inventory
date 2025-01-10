@@ -15,15 +15,19 @@ const unknownEndpoint = (request, response) => {
 const errorHandler = (error, request, response, next) => {
   const { name, message, statusCode } = error
 
-  logger.error(`${name}: ${message}`)
+  const status = name.includes('Sequelize') ? 400 : statusCode || 500
+
+  logger.error(`Name ${name}`)
+  logger.error(`Message: ${message}`)
+  logger.error(`Status Code: ${status}`)
 
   if (response.headersSent) {
     return next(error)
   }
 
-  response.status(statusCode || 500).json({
-    error: name || 'Error',
-    message: message || 'An unexpected error has occurred.',
+  response.status(status).json({
+    error: name,
+    message: message,
   })
 }
 

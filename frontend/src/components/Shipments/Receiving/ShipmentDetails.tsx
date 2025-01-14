@@ -1,5 +1,5 @@
-import { CreateShipmentType } from '../../../../types/shipment'
-import { Header, Text } from '../../../ATEC UI/Text'
+import { CreateShipmentType } from '../../../types/shipment'
+import { Header, Text } from '../../ATEC UI/Text'
 
 interface ShipmentDetailsProps {
   shipment: CreateShipmentType

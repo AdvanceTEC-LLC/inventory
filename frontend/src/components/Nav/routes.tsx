@@ -1,30 +1,35 @@
 import { LinkType } from '../../types/link'
 
-import Inventory from '../Inventory/Stock/Stock'
 import Crates from '../Inventory/Crates/Crates'
-
-import Receiving from '../Shipments/Receiving/Receiving'
-import History from '../Shipments/History/History'
+import MaterialStock from '../Inventory/Materials/Materials'
+import AssemblyStock from '../Inventory/Assemblies/Assemblies'
 
 import Projects from '../Other/Projects/Projects'
 import Storages from '../Other/Storages/Storages'
 import Vendors from '../Other/Vendors/Vendors'
+
+import Prefabricate from '../Prefabrication/Prefabricate/Prefabricate'
+import Assemblies from '../Prefabrication/Assemblies/Assemblies'
+
+import History from '../Shipments/History/History'
+import Receiving from '../Shipments/Receiving/Receiving'
 import Sending from '../Shipments/Sending/Sending'
 
 export const routes: LinkType[] = [
   {
     name: 'Inventory',
     path: 'inventory',
-    element: <Inventory />,
+    element: <MaterialStock />,
     dropdown: [
       {
         name: 'Materials',
         path: 'materials',
-        element: <Inventory />,
+        element: <MaterialStock />,
       },
       {
-        name: 'Prefabrications',
-        path: 'prefabrications',
+        name: 'Assemblies',
+        path: 'Assemblies',
+        element: <AssemblyStock />,
       },
       {
         name: 'Crates',
@@ -63,12 +68,17 @@ export const routes: LinkType[] = [
   {
     name: 'Prefabrication',
     path: 'prefabrication',
-    //element: <Prefabrication />,
+    element: <Prefabricate />,
     dropdown: [
       {
         name: 'Prefabricate',
         path: 'prefabricate',
-        //element: <Prefabricate />,
+        element: <Prefabricate />,
+      },
+      {
+        name: 'Assemblies',
+        path: 'assemblies',
+        element: <Assemblies />,
       },
     ],
   },

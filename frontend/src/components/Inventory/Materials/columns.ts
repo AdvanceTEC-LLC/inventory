@@ -5,39 +5,43 @@ export const columns: GridColDef[] = [
     field: 'partNumber',
     headerName: 'Part Number',
     flex: 1,
-    valueGetter: (_value, row) => row.partNumber,
+    valueGetter: (_value, row) => row.material.partNumber,
   },
   {
     field: 'description',
     headerName: 'Description',
     flex: 1,
-    valueGetter: (_value, row) => row.description,
+    valueGetter: (_value, row) => row.material.description,
   },
   {
     field: 'vendor',
     headerName: 'Vendor',
     flex: 1,
-    valueGetter: (_value, row) => row.vendor.name,
+    valueGetter: (_value, row) => row.material.vendor.name,
   },
   {
     field: 'color',
     headerName: 'Color',
     flex: 1,
-    valueGetter: (_value, row) => row.color,
+    valueGetter: (_value, row) => row.material.color,
   },
   {
     field: 'tag',
     headerName: 'Tag',
     flex: 1,
-    valueGetter: (_value, row) => row.tag,
+    valueGetter: (_value, row) => row.material.tag,
   },
   {
     field: 'size',
     headerName: 'Size',
     flex: 1,
     valueGetter: (_value, row) => {
-      if (row.thicknessInches && row.widthInches && row.lengthInches)
-        return `${row.thicknessInches}"T x ${row.widthInches}"W x ${row.lengthInches}"L`
+      if (
+        row.material.thicknessInches &&
+        row.material.widthInches &&
+        row.material.lengthInches
+      )
+        return `${row.material.thicknessInches}"T x ${row.material.widthInches}"W x ${row.material.lengthInches}"L`
     },
   },
   {
@@ -45,7 +49,13 @@ export const columns: GridColDef[] = [
     headerName: 'Square Feet',
     flex: 1,
     valueGetter: (_value, row) => {
-      if (row.squareFeet) return Math.ceil(row.squareFeet)
+      if (row.material.squareFeet) return Math.ceil(row.material.squareFeet)
     },
+  },
+  {
+    field: 'quantity',
+    headerName: 'Quantity',
+    flex: 1,
+    valueGetter: (_value, row) => row.quantity,
   },
 ]

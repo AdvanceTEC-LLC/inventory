@@ -26,8 +26,8 @@ const update = async (
   return response.data
 }
 
-const remove = async (sku: string): Promise<MaterialType> => {
-  const response = await axios.delete<MaterialType>(`${baseURL}/${sku}`)
+const remove = async (id: number): Promise<MaterialType> => {
+  const response = await axios.delete<MaterialType>(`${baseURL}/${id}`)
   return response.data
 }
 

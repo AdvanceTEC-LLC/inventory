@@ -8,11 +8,11 @@ import {
   IconButton,
 } from '@mui/material'
 import { useState } from 'react'
-import { Header } from '../../../ATEC UI/Text'
+import { Header } from '../../ATEC UI/Text'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import { CreateCrateType } from '../../../../types/crate'
-import { CreateStockType } from '../../../../types/stock'
+import { CreateCrateType } from '../../../types/crate'
+import { CreateStockType } from '../../../types/stock'
 
 interface ContentsTableProps {
   crates: CreateCrateType[]

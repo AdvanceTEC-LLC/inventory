@@ -4,21 +4,21 @@ import { useState } from 'react'
 import Papa from 'papaparse'
 
 // Styled Components
-import { Header, Subtext, Text } from '../../../ATEC UI/Text'
+import { Header, Subtext, Text } from '../../ATEC UI/Text'
 
 import ContentsTable from './ContentsTable'
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
-import Button from '../../../ATEC UI/Button'
+import Button from '../../ATEC UI/Button'
 import {
   CreateShipmentType,
   ShipmentDirectionEnum,
-} from '../../../../types/shipment'
-import { CrateLocationEnum, CreateCrateType } from '../../../../types/crate'
-import { CreateStockType } from '../../../../types/stock'
-import { CreateMaterialType } from '../../../../types/material'
-import { CreateVendorType } from '../../../../types/vendor'
-import { CreateProjectType } from '../../../../types/project'
+} from '../../../types/shipment'
+import { CrateLocationEnum, CreateCrateType } from '../../../types/crate'
+import { CreateStockType } from '../../../types/stock'
+import { CreateMaterialType } from '../../../types/material'
+import { CreateVendorType } from '../../../types/vendor'
+import { CreateProjectType } from '../../../types/project'
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)

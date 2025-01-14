@@ -1,6 +1,6 @@
 import Container from '../../ATEC UI/Container'
 import { Subtitle, Title } from '../../ATEC UI/Text'
-import UploadShipment from './Upload Shipment/UploadShipment'
+import UploadShipment from './UploadShipment'
 
 const Receiving = () => {
   return (

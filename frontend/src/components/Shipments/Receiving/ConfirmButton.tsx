@@ -1,10 +1,10 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../../../reducers/notificationsReducer'
-import { AppDispatch } from '../../../../store'
-import Button from '../../../ATEC UI/Button'
-import shipmentsService from '../../../../services/shipmentsService'
-import { CreateShipmentType } from '../../../../types/shipment'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import { AppDispatch } from '../../../store'
+import Button from '../../ATEC UI/Button'
+import shipmentsService from '../../../services/shipmentsService'
+import { CreateShipmentType } from '../../../types/shipment'
 
 interface ConfirmShipmentButtonProps {
   shipment: CreateShipmentType

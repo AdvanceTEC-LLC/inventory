@@ -131,7 +131,9 @@ const Prefabricate = () => {
         <>
           <Autocomplete
             fullWidth
-            options={assemblies}
+            options={assemblies.filter(
+              (assembly) => assembly.project.number === project.number
+            )}
             getOptionLabel={(option) => option.identifier || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             value={assembly}

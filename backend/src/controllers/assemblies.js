@@ -9,40 +9,10 @@ import { CustomError } from '../util/errors/CustomError.js'
 import { projectFindOptions } from './projects.js'
 import { materialFindOptions } from './materials.js'
 import { sequelize } from '../util/db.js'
-import { info } from '../util/logger.js'
 const assembliesRouter = Router()
 
-export const assemblyFindOptions = {
-  attributes: {
-    exclude: ['projectId', 'createdAt', 'updatedAt'],
-  },
-  include: [
-    {
-      model: Project,
-      as: 'project',
-      ...projectFindOptions,
-    },
-    {
-      model: Material,
-      as: 'materials',
-      through: { attributes: ['quantity'] },
-      ...materialFindOptions,
-    },
-  ],
-}
-
-const assemblyFinder = async (request, _response, next) => {
-  const { id } = request.params
-  const assembly = await Assembly.findByPk(id, assemblyFindOptions)
-
-  if (!assembly) {
-    throw new CustomError(
-      'NotFoundError',
-      `Assembly with id ${id} not found`,
-      404,
-    )
-  }
-  const transformedAssembly = {
+const transformAssembly = (assembly) => {
+  return {
     id: assembly.id,
     identifier: assembly.identifier,
     project: assembly.project,
@@ -80,6 +50,39 @@ const assemblyFinder = async (request, _response, next) => {
       }),
     ),
   }
+}
+
+export const assemblyFindOptions = {
+  attributes: {
+    exclude: ['projectId', 'createdAt', 'updatedAt'],
+  },
+  include: [
+    {
+      model: Project,
+      as: 'project',
+      ...projectFindOptions,
+    },
+    {
+      model: Material,
+      as: 'materials',
+      through: { attributes: ['quantity'] },
+      ...materialFindOptions,
+    },
+  ],
+}
+
+const assemblyFinder = async (request, _response, next) => {
+  const { id } = request.params
+  const assembly = await Assembly.findByPk(id, assemblyFindOptions)
+
+  if (!assembly) {
+    throw new CustomError(
+      'NotFoundError',
+      `Assembly with id ${id} not found`,
+      404,
+    )
+  }
+  const transformedAssembly = transformAssembly(assembly)
 
   request.assembly = transformedAssembly
   next()
@@ -88,46 +91,9 @@ const assemblyFinder = async (request, _response, next) => {
 assembliesRouter.get('/', async (_request, response) => {
   const assemblies = await Assembly.findAll(assemblyFindOptions)
 
-  const transformedAssemblies = assemblies.map(
-    ({ id, identifier, project, materials }) => ({
-      id,
-      identifier,
-      project,
-      billOfMaterials: materials.map(
-        ({
-          id,
-          partNumber,
-          description,
-          thickness,
-          width,
-          length,
-          topFinish,
-          bottomFinish,
-          xDimension,
-          cutout,
-          tag,
-          vendor,
-          assemblyMaterial,
-        }) => ({
-          id,
-          material: {
-            partNumber,
-            description,
-            thickness,
-            width,
-            length,
-            topFinish,
-            bottomFinish,
-            xDimension,
-            cutout,
-            tag,
-            vendor,
-          },
-          quantity: assemblyMaterial.quantity,
-        }),
-      ),
-    }),
-  )
+  const transformedAssemblies = assemblies.map((assembly) => {
+    return transformAssembly(assembly)
+  })
 
   response.status(200).send(transformedAssemblies)
 })

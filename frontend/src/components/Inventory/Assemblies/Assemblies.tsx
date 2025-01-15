@@ -6,7 +6,7 @@ const AssemblyStock = () => {
   return (
     <Container>
       <Title text={'Assemblies'} />
-      <Subtitle text="View assemblies in inventory" />
+      <Subtitle text="View the list of assemblies for each project" />
       <AssembliesTable />
     </Container>
   )

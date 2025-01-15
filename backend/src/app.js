@@ -12,6 +12,8 @@ import projectsRouter from './controllers/projects.js'
 import vendorsRouter from './controllers/vendors.js'
 import cratesRouter from './controllers/crates.js'
 import storagesRouter from './controllers/storages.js'
+import assembliesRouter from './controllers/assemblies.js'
+import assemblyMaterialsRouter from './controllers/assemblyMaterials.js'
 import crateStockRouter from './controllers/crateStock.js'
 import shipmentsRouter from './controllers/shipments.js'
 import shipmentCratesRouter from './controllers/shipmentCrates.js'
@@ -31,9 +33,11 @@ app.use('/api/projects', projectsRouter)
 app.use('/api/vendors', vendorsRouter)
 app.use('/api/crates', cratesRouter)
 app.use('/api/storages', storagesRouter)
+app.use('/api/assemblies', assembliesRouter)
 app.use('/api/crateStock', crateStockRouter)
 app.use('/api/shipments', shipmentsRouter)
 app.use('/api/shipmentCrates', shipmentCratesRouter)
+app.use('/api/assemblyMaterials', assemblyMaterialsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

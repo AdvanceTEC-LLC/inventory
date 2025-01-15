@@ -15,6 +15,8 @@ DROP TABLE IF EXISTS materials;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS shipments;
 DROP TABLE IF EXISTS stock;
+DROP TABLE IF EXISTS assemblies;
+DROP TABLE IF EXISTS assembly_material;
 DROP TABLE IF EXISTS shipment_crate;
 DROP TABLE IF EXISTS crate_stock;
 
@@ -91,6 +93,22 @@ CREATE TABLE IF NOT EXISTS crates(
     FOREIGN KEY (storage_id) REFERENCES storages(storage_id),
     FOREIGN KEY (project_id) REFERENCES projects(project_id),
     FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id),
+);
+
+CREATE TABLE IF NOT EXISTS assemblies(
+    assembly_id INT AUTO_INCREMENT PRIMARY KEY,
+    identifier VARCHAR(255) UNIQUE,
+    project_id INT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(project_id),
+);
+
+CREATE TABLE IF NOT EXISTS assembly_material(
+    assembly_material_id INT AUTO_INCREMENT PRIMARY KEY,
+    assembly_id INT NOT NULL,
+    material_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (assembly_id) REFERENCES assemblies(assembly_id),
+    FOREIGN KEY (material_id) REFERENCES materials(material_id),
 );
 
 CREATE TABLE IF NOT EXISTS crate_stock(

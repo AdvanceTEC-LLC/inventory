@@ -71,8 +71,6 @@ const UploadShipment = () => {
     const sendDate = new Date(rows[1][4]?.trim())
     const receivedDate = new Date(rows[1][5]?.trim())
 
-    console.log(sendDate)
-
     const vendor: CreateVendorType = {
       name: vendorName,
     }

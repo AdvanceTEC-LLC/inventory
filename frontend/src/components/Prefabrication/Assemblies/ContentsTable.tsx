@@ -60,7 +60,7 @@ const AssemblyRow = ({ assembly }: AssemblyRowProps) => {
           </IconButton>
         </TableCell>
         <TableCell>
-          <div className="text-text-secondary">{assembly.assemblyId}</div>
+          <div className="text-text-secondary">{assembly.identifier}</div>
         </TableCell>
       </TableRow>
       <TableRow>

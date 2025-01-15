@@ -1,4 +1,4 @@
-import { DataTypes, Sequelize } from 'sequelize'
+import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
   // Drop tables with CASCADE to handle dependencies
@@ -8,16 +8,17 @@ export const up = async ({ context: queryInterface }) => {
   await queryInterface.sequelize.query(
     'DROP TABLE IF EXISTS "shipment_stock" CASCADE;',
   )
-  await queryInterface.sequelize.query(
-    'DROP TABLE IF EXISTS "request_stock" CASCADE;',
-  )
   await queryInterface.sequelize.query('DROP TABLE IF EXISTS "crates" CASCADE;')
   await queryInterface.sequelize.query(
-    'DROP TABLE IF EXISTS "locations" CASCADE;',
+    'DROP TABLE IF EXISTS "storages" CASCADE;',
   )
   await queryInterface.sequelize.query(
     'DROP TABLE IF EXISTS "materials" CASCADE;',
   )
+  await queryInterface.sequelize.query(
+    'DROP TABLE IF EXISTS "vendors" CASCADE;',
+  )
+  await queryInterface.sequelize.query('DROP TABLE IF EXISTS "stock" CASCADE;')
 
   // Create ENUMs for PostgreSQL
   await queryInterface.sequelize.query(`
@@ -323,6 +324,71 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
+  await queryInterface.createTable('assemblies', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    identifier: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    project_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'projects',
+        key: 'id',
+      },
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+  })
+
+  await queryInterface.createTable('assembly_materials', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    assembly_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'assemblies',
+        key: 'id',
+      },
+    },
+    material_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'materials',
+        key: 'id',
+      },
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+  })
+
   await queryInterface.createTable('crate_stock', {
     id: {
       type: DataTypes.INTEGER,
@@ -436,6 +502,8 @@ export const down = async ({ context: queryInterface }) => {
   // Drop tables in reverse order of dependencies
   await queryInterface.dropTable('shipment_crates', { cascade: true })
   await queryInterface.dropTable('crate_stock', { cascade: true })
+  await queryInterface.dropTable('assembly_materials', { cascade: true })
+  await queryInterface.dropTable('assemblies', { cascade: true })
   await queryInterface.dropTable('crates', { cascade: true })
   await queryInterface.dropTable('stock', { cascade: true })
   await queryInterface.dropTable('shipments', { cascade: true })

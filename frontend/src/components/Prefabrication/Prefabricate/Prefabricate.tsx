@@ -3,8 +3,6 @@ import { AssemblyType } from '../../../types/assembly'
 import Container from '../../ATEC UI/Container'
 import { Header, Subtitle, Title } from '../../ATEC UI/Text'
 import { SyntheticEvent, useState } from 'react'
-import { MaterialType } from '../../../types/material'
-import { VendorType } from '../../../types/vendor'
 import { ProjectType } from '../../../types/project'
 import { DataGrid } from '@mui/x-data-grid'
 
@@ -12,6 +10,7 @@ import { GridColDef } from '@mui/x-data-grid'
 import Button from '../../ATEC UI/Button'
 import { useQuery } from '@tanstack/react-query'
 import projectsService from '../../../services/projectsService'
+import assembliesService from '../../../services/assembliesService'
 
 export const billOfMaterialsColumns: GridColDef[] = [
   {
@@ -62,57 +61,6 @@ export const billOfMaterialsColumns: GridColDef[] = [
   },
 ]
 
-const vendors: VendorType[] = [
-  {
-    id: 0,
-    name: 'Plascore',
-  },
-  {
-    id: 0,
-    name: 'Titus',
-  },
-]
-
-const materials: MaterialType[] = [
-  {
-    id: 0,
-    partNumber: 'M21760028_000',
-    description: 'Pharma Ceiling Panel',
-    width: 58,
-    length: 120,
-    tag: 'CP1',
-    vendor: vendors[0],
-  },
-  {
-    id: 0,
-    partNumber: 'SD9812',
-    description: 'Supply Air Diffuser',
-    tag: 'SD1',
-    width: 24,
-    length: 24,
-    vendor: vendors[1],
-  },
-]
-
-const assemblies: AssemblyType[] = [
-  {
-    id: 0,
-    assemblyId: 'FC - 1.0698-CP1',
-    billOfMaterials: [
-      {
-        id: 0,
-        material: materials[0],
-        quantity: 1,
-      },
-      {
-        id: 1,
-        material: materials[1],
-        quantity: 1,
-      },
-    ],
-  },
-]
-
 const paginationModel = { page: 0, pageSize: 5 }
 
 const Prefabricate = () => {
@@ -121,11 +69,21 @@ const Prefabricate = () => {
 
   const {
     data: projects = [],
-    //isLoading: isLoading,
-    //isError: isError,
+    isLoading: isProjectsLoading,
+    isError: isProjectsError,
   } = useQuery<ProjectType[]>({
     queryKey: ['projects'],
     queryFn: projectsService.getAll,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+
+  const {
+    data: assemblies = [],
+    isLoading: isAssembliesLoading,
+    isError: isAssembliesError,
+  } = useQuery<AssemblyType[]>({
+    queryKey: ['assemblies'],
+    queryFn: assembliesService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
@@ -144,7 +102,7 @@ const Prefabricate = () => {
   }
 
   const createAssembly = () => {
-    console.log(`Creating assembly ${assembly?.assemblyId}`)
+    console.log(`Creating assembly ${assembly?.identifier}`)
   }
 
   return (
@@ -160,7 +118,13 @@ const Prefabricate = () => {
         value={project}
         onChange={handleProjectChange}
         renderInput={(params) => <TextField {...params} label="Project" />}
-        noOptionsText="No projects available"
+        noOptionsText={
+          isProjectsLoading
+            ? 'Loading'
+            : isProjectsError
+            ? 'Error'
+            : 'No projects available'
+        }
       />
 
       {project && (
@@ -168,12 +132,18 @@ const Prefabricate = () => {
           <Autocomplete
             fullWidth
             options={assemblies}
-            getOptionLabel={(option) => option.assemblyId || ''}
+            getOptionLabel={(option) => option.identifier || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             value={assembly}
             onChange={handleAssemblyChange}
             renderInput={(params) => <TextField {...params} label="Assembly" />}
-            noOptionsText="No assemblies available"
+            noOptionsText={
+              isAssembliesLoading
+                ? 'Loading'
+                : isAssembliesError
+                ? 'Error'
+                : 'No assemblies available'
+            }
           />
 
           <Header className="mt-8" text="Bill Of Materials" />

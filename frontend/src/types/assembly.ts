@@ -1,12 +1,15 @@
+import { CreateProjectType, ProjectType } from './project'
 import { CreateStockType, StockType } from './stock'
 
 export interface AssemblyType {
   id: number
-  assemblyId: string
+  identifier: string
   billOfMaterials: StockType[]
+  project: ProjectType
 }
 
 export interface CreateAssemblyType {
-  assemblyId: string
+  identifier: string
   billOfMaterials: CreateStockType[]
+  project: CreateProjectType
 }

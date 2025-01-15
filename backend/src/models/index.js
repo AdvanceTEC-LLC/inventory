@@ -7,6 +7,8 @@ import Crate from './crate.js'
 import CrateStock from './crateStock.js'
 import Shipment from './shipment.js'
 import ShipmentCrate from './shipmentCrate.js'
+import Assembly from './assembly.js'
+import AssemblyMaterial from './assemblyMaterials.js'
 
 // Define relationships
 const defineRelationships = () => {
@@ -38,6 +40,10 @@ const defineRelationships = () => {
   Shipment.belongsTo(Vendor, { foreignKey: 'vendorId', as: 'vendor' })
   Vendor.hasMany(Shipment, { foreignKey: 'vendorId', as: 'shipments' })
 
+  // Assembly to Project relationship
+  Assembly.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
+  Project.hasMany(Assembly, { foreignKey: 'projectId', as: 'assemblies' })
+
   // Shipment to Crate relationship
   Shipment.belongsToMany(Crate, {
     through: ShipmentCrate,
@@ -64,6 +70,20 @@ const defineRelationships = () => {
     foreignKey: 'stockId',
     otherKey: 'crateId',
     as: 'crates',
+  })
+
+  // Assembly to Material through AssemblyMaterial
+  Assembly.belongsToMany(Material, {
+    through: AssemblyMaterial,
+    foreignKey: 'assemblyId',
+    otherKey: 'materialId',
+    as: 'materials',
+  })
+  Material.belongsToMany(Assembly, {
+    through: AssemblyMaterial,
+    foreignKey: 'materialId',
+    otherKey: 'assemblyId',
+    as: 'assemblies',
   })
 
   // ShipmentCrate to Shipment relationship
@@ -105,6 +125,26 @@ const defineRelationships = () => {
     foreignKey: 'crateId',
     as: 'crateStock',
   })
+
+  // AssemblyMaterial to Assembly relationship
+  AssemblyMaterial.belongsTo(Assembly, {
+    foreignKey: 'assemblyId',
+    as: 'assembly',
+  })
+  Assembly.hasMany(AssemblyMaterial, {
+    foreignKey: 'assemblyId',
+    as: 'assemblyMaterial',
+  })
+
+  // AssemblyMaterial to Material relationship
+  AssemblyMaterial.belongsTo(Material, {
+    foreignKey: 'materialId',
+    as: 'material',
+  })
+  Material.hasMany(AssemblyMaterial, {
+    foreignKey: 'materialId',
+    as: 'assemblyMaterial',
+  })
 }
 
 defineRelationships()
@@ -117,6 +157,8 @@ export {
   Shipment,
   Stock,
   Crate,
+  Assembly,
   ShipmentCrate,
   CrateStock,
+  AssemblyMaterial,
 }

@@ -69,18 +69,36 @@ const UploadAssemblies = () => {
       .join('\n')
   }
 
-  const getAssemblies = (rows: string[][]) => {
+  const getProject = (rows: string[][]): CreateProjectType => {
+    const projectNumber: number = parseInt(rows[1][0]?.trim())
+    const projectName: string = rows[1][1]?.trim()
+
+    const parsedProject: CreateProjectType = {
+      number: projectNumber,
+      name: projectName,
+    }
+
+    setProject(parsedProject)
+
+    return parsedProject
+  }
+
+  const getAssemblies = (
+    rows: string[][],
+    parsedProject: CreateProjectType
+  ) => {
     const assemblyRows = rows.slice(4)
 
     let parsedAssemblies: CreateAssemblyType[] = []
 
     assemblyRows.map((row) => {
-      const assemblyId = row[0]?.trim()
+      const identifier = row[0]?.trim()
 
-      if (!assemblyId) return
+      if (!identifier) return
 
       let assembly: CreateAssemblyType = {
-        assemblyId,
+        identifier,
+        project: parsedProject,
         billOfMaterials: [],
       }
 
@@ -92,7 +110,7 @@ const UploadAssemblies = () => {
       ) {
         const partNumber = row[materialColumnIndex]?.trim()
         const quantity = parseInt(
-          row[materialColumnIndex - 1]?.trim() || '0',
+          row[materialColumnIndex + 1]?.trim() || '0',
           10
         )
 
@@ -119,6 +137,8 @@ const UploadAssemblies = () => {
       return null
     }
 
+    console.log(parsedAssemblies)
+
     return parsedAssemblies
   }
 
@@ -131,17 +151,9 @@ const UploadAssemblies = () => {
       complete: (results) => {
         const rows = results.data as string[][]
 
-        const projectNumber: number = parseInt(rows[1][0]?.trim())
-        const projectName: string = rows[1][1]?.trim()
+        const parsedProject = getProject(rows)
 
-        const parsedProject: CreateProjectType = {
-          number: projectNumber,
-          name: projectName,
-        }
-
-        setProject(parsedProject)
-
-        const parsedAssemblies = getAssemblies(rows)
+        const parsedAssemblies = getAssemblies(rows, parsedProject)
         if (!parsedAssemblies) {
           return
         }

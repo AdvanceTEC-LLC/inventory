@@ -21,7 +21,10 @@ const create = async (assembly: CreateAssemblyType): Promise<AssemblyType> => {
 const createAll = async (
   assemblies: CreateAssemblyType[]
 ): Promise<AssemblyType[]> => {
-  const response = await axios.post<AssemblyType[]>(baseURL, assemblies)
+  const response = await axios.post<AssemblyType[]>(
+    `${baseURL}/all`,
+    assemblies
+  )
   return response.data
 }
 

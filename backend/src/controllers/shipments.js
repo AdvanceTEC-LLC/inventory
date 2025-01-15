@@ -138,8 +138,6 @@ shipmentsRouter.post('/', async (request, response, next) => {
       vendorInDb = await Vendor.create(vendor, { transaction })
     }
 
-    info(sendDate)
-
     // Create shipment entry
     const shipment = await Shipment.create(
       {
@@ -154,10 +152,10 @@ shipmentsRouter.post('/', async (request, response, next) => {
 
     // Create crates and stock entries
     for (const crate of crates) {
-      let crateInDb = await Crate.findOne(
-        { attributes: { where: { number: crate.number } } },
-        { transaction },
-      )
+      let crateInDb = await Crate.findOne({
+        where: { number: crate.number },
+        transaction,
+      })
 
       if (crateInDb) {
         throw new CustomError(

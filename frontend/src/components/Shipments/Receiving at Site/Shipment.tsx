@@ -4,29 +4,13 @@ import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { ShipmentType } from '../../../types/shipment'
-import { useQuery } from '@tanstack/react-query'
-import shipmentsService from '../../../services/shipmentsService'
 import ShipmentRow from './ShipmentRow'
 
-const ShipmentsTable = () => {
-  const {
-    data: shipments = [],
-    isLoading,
-    isError,
-  } = useQuery<ShipmentType[]>({
-    queryKey: ['shipments'],
-    queryFn: shipmentsService.getAll,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  })
+interface ShipmentProps {
+  shipment: ShipmentType
+}
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (isError) {
-    return <div>Error fetching shipment data.</div>
-  }
-
+const Shipment = ({ shipment }: ShipmentProps) => {
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -36,18 +20,15 @@ const ShipmentsTable = () => {
             <TableCell>Direction</TableCell>
             <TableCell>Send Date</TableCell>
             <TableCell>Received Date</TableCell>
-            <TableCell>Project</TableCell>
             <TableCell>Vendor</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {shipments.map((shipment) => (
-            <ShipmentRow key={shipment.id} shipment={shipment} />
-          ))}
+          <ShipmentRow shipment={shipment} />
         </TableBody>
       </Table>
     </div>
   )
 }
 
-export default ShipmentsTable
+export default Shipment

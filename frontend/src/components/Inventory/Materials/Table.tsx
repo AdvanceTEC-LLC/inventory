@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react'
 
 // Table
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { columns } from './columns'
 import { StockType } from '../../../types/stock'
-import { Header } from '../../ATEC UI/Text'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
 import cratesService from '../../../services/cratesService'
 import { CrateType } from '../../../types/crate'
-import projectsService from '../../../services/projectsService'
 import { ProjectType } from '../../../types/project'
 import stockService from '../../../services/stockService'
+import FetchAutocomplete from '../../FetchAutocomplete'
+import projectsService from '../../../services/projectsService'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
 const MaterialsTable = () => {
   const [filteredStock, setFilteredStock] = useState<StockType[]>([])
-  const [totalStock, setTotalStock] = useState<StockType[]>([])
 
   const {
     data: stock = [],
@@ -37,16 +36,6 @@ const MaterialsTable = () => {
   } = useQuery<CrateType[]>({
     queryKey: ['crates'],
     queryFn: cratesService.getAll,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  })
-
-  const {
-    data: projects = [],
-    isLoading: isProjectsLoading,
-    isError: isProjectsError,
-  } = useQuery<ProjectType[]>({
-    queryKey: ['projects'],
-    queryFn: projectsService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
@@ -76,14 +65,6 @@ const MaterialsTable = () => {
       // Convert the grouped object back into an array
       const totalStockArray = Object.values(groupedStock)
 
-      setTotalStock((prevState) => {
-        // Avoid unnecessary state update if the totalStock is the same
-        if (JSON.stringify(prevState) !== JSON.stringify(totalStockArray)) {
-          return totalStockArray
-        }
-        return prevState
-      })
-
       setFilteredStock((prevState) => {
         // Avoid unnecessary state update if the filteredStock is the same
         if (JSON.stringify(prevState) !== JSON.stringify(totalStockArray)) {
@@ -94,87 +75,41 @@ const MaterialsTable = () => {
     }
   }, [stock])
 
-  if (isStockLoading || isCratesLoading || isProjectsLoading) {
+  if (isStockLoading || isCratesLoading) {
     return <div>Loading...</div>
   }
 
-  if (isStockError || isCratesError || isProjectsError) {
+  if (isStockError || isCratesError) {
     return <div>Error fetching data.</div>
   }
 
-  const handleFilterChange = (filter: string) => {
-    if (typeof filter === 'string') {
-      filterStock(filter)
+  const setFilter = (filter: ProjectType | null) => {
+    if (!filter) {
+      setFilteredStock(crates.flatMap((crate) => crate.stock))
       return
     }
 
-    const projectId = parseInt(filter)
-    if (!isNaN(projectId)) {
-      const project = projects.find((project) => project.id === projectId)
-
-      if (!project) {
-        console.log(
-          `Could not find a project with the id ${projectId} in the projects list`
-        )
-        return
-      }
-
-      filterStock(project)
-      return
-    } else {
-      filterStock('total')
-    }
-  }
-
-  const filterStock = (filter: ProjectType | string) => {
-    if (filter === 'total') {
-      setFilteredStock(totalStock)
-      return
-    }
-
-    let filteredCrates: CrateType[] = crates
-
-    if (filter === 'unassigned') {
-      filteredCrates = crates.filter((crate) => crate.project.id === null)
-    }
-
-    if (typeof filter === 'object' && 'id' in filter) {
-      filteredCrates = crates.filter((crate) => crate.project.id === filter.id)
-    }
+    const filteredCrates = crates.filter(
+      (crate) => crate.project.id === filter.id
+    )
 
     setFilteredStock(filteredCrates.flatMap((crate) => crate.stock))
   }
 
   return (
     <div className="flex flex-col gap-y-4">
-      <div className="grid grid-cols-[1fr_1fr_1fr] justify-items-end items-center gap-x-4">
-        <Header text="Filter" className="col-span-2" />
-
-        <select
-          name="filter"
-          className="border border-gray-300 rounded p-2 w-full"
-          onChange={(event) => {
-            handleFilterChange(event.target.value)
-          }}
-        >
-          <optgroup label="Stock Types">
-            <option key={'total'} value={'total'}>
-              Total Stock
-            </option>
-            <option key={'unassigned'} value={'unassigned'}>
-              Unassigned Stock
-            </option>
-          </optgroup>
-
-          <optgroup label="Projects">
-            {projects.map((project) => (
-              <option key={project.id} value={project.id}>
-                {project.number} {project.name}
-              </option>
-            ))}
-          </optgroup>
-        </select>
-      </div>
+      <FetchAutocomplete
+        setFilter={setFilter}
+        service={projectsService}
+        queryKey={'projects'}
+        label={'Projects'}
+        getOptionLabel={(option: ProjectType): string =>
+          `${option.number} ${option.name}`
+        }
+        isOptionEqualToValue={(option: ProjectType, value: ProjectType) =>
+          option.id === value.id
+        }
+      />
 
       <DataGrid
         rows={filteredStock}
@@ -183,6 +118,7 @@ const MaterialsTable = () => {
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
         disableRowSelectionOnClick
+        slots={{ toolbar: GridToolbar }}
       />
     </div>
   )

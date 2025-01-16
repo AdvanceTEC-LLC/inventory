@@ -1,5 +1,5 @@
 // Table
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { columns } from './columns'
 import { AssemblyType } from '../../../types/assembly'
 
@@ -8,7 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 import assembliesService from '../../../services/assembliesService'
 import { ProjectType } from '../../../types/project'
 import { useState } from 'react'
-import ProjectFilter from './ProjectFilter'
+import projectsService from '../../../services/projectsService'
+import FetchAutocomplete from '../../FetchAutocomplete'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
@@ -35,7 +36,18 @@ const AssembliesTable = () => {
 
   return (
     <div className="flex flex-col gap-y-4">
-      <ProjectFilter setProject={setProject} />
+      <FetchAutocomplete
+        setFilter={setProject}
+        service={projectsService}
+        queryKey={'projects'}
+        label={'Projects'}
+        getOptionLabel={(option: ProjectType): string =>
+          `${option.number} ${option.name}`
+        }
+        isOptionEqualToValue={(option: ProjectType, value: ProjectType) =>
+          option.id === value.id
+        }
+      />
 
       <DataGrid
         rows={
@@ -50,6 +62,7 @@ const AssembliesTable = () => {
         pageSizeOptions={[5, 10]}
         sx={{ border: 0 }}
         disableRowSelectionOnClick
+        slots={{ toolbar: GridToolbar }}
       />
     </div>
   )

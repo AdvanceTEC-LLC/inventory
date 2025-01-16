@@ -4,7 +4,7 @@ import { columns } from './columns'
 // Queries
 import { useQuery } from '@tanstack/react-query'
 import vendorsService from '../../../services/vendorsService'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { VendorType } from '../../../types/vendor'
 
 const paginationModel = { page: 0, pageSize: 5 }
@@ -36,6 +36,7 @@ const VendorsTable = () => {
       pageSizeOptions={[5, 10]}
       sx={{ border: 0 }}
       disableRowSelectionOnClick
+      slots={{ toolbar: GridToolbar }}
     />
   )
 }

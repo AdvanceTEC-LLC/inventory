@@ -22,7 +22,7 @@ const ContentsTable = ({ crates }: ContentsTableProps) => {
   return (
     <div className="overflow-x-auto">
       <Table>
-        <TableHead className="bg-gray-50">
+        <TableHead>
           <TableRow>
             <TableCell />
             <TableCell>Crate Number</TableCell>
@@ -70,7 +70,7 @@ const CrateRow = ({ crate }: CrateRowProps) => {
               <Header text="Stock" />
 
               <Table>
-                <TableHead className="bg-gray-50">
+                <TableHead>
                   <TableRow>
                     <TableCell>Part Number</TableCell>
                     <TableCell>Description</TableCell>

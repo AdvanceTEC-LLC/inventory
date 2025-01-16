@@ -12,8 +12,9 @@ import Prefabricate from '../Prefabrication/Prefabricate/Prefabricate'
 import Assemblies from '../Prefabrication/Assemblies/Assemblies'
 
 import History from '../Shipments/History/History'
-import Receiving from '../Shipments/Receiving/Receiving'
-import Sending from '../Shipments/Sending/Sending'
+import ReceivingAtSite from '../Shipments/Receiving at Site/ReceivingAtSite'
+import ReceivingAtWarehouse from '../Shipments/Receiving at Warehouse/ReceivingAtWarehouse'
+import SendingToSite from '../Shipments/Sending/SendingToSite'
 
 export const routes: LinkType[] = [
   {
@@ -46,17 +47,17 @@ export const routes: LinkType[] = [
       {
         name: 'Receiving at Warehouse',
         path: 'receiving-at-warehouse',
-        element: <Receiving />,
+        element: <ReceivingAtWarehouse />,
       },
       {
         name: 'Sending to Site',
         path: 'sending-to-site',
-        element: <Sending />,
+        element: <SendingToSite />,
       },
       {
         name: 'Receiving at Site',
         path: 'receiving-at-site',
-        //element: <ReceivingAtSite />,
+        element: <ReceivingAtSite />,
       },
       {
         name: 'History',

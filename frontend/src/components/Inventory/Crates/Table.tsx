@@ -1,12 +1,13 @@
 import { TableRow, TableCell, Table, TableHead, TableBody } from '@mui/material'
 import { useEffect, useState } from 'react'
 import CrateRow from './CrateRow'
-import { Header, Subtext } from '../../ATEC UI/Text'
+import { Subtext } from '../../ATEC UI/Text'
 import { useQuery } from '@tanstack/react-query'
 import cratesService from '../../../services/cratesService'
 import { CrateType } from '../../../types/crate'
 import { MaterialType } from '../../../types/material'
 import materialsService from '../../../services/materialsService'
+import FetchAutocomplete from '../../FetchAutocomplete'
 
 const CratesTable = () => {
   const [filteredCrates, setFilteredCrates] = useState<CrateType[]>([])
@@ -21,109 +22,51 @@ const CratesTable = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
-  const {
-    data: materials = [],
-    isLoading: isMaterialsLoading,
-    isError: isMaterialsError,
-  } = useQuery<MaterialType[]>({
-    queryKey: ['materials'],
-    queryFn: materialsService.getAll,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  })
-
   useEffect(() => {
     if (crates.length > 0) {
       setFilteredCrates(crates)
     }
   }, [crates])
 
-  if (isCratesLoading || isMaterialsLoading) {
+  const setFilter = (material: MaterialType | null) => {
+    if (!material) {
+      setFilteredCrates(crates)
+      return
+    }
+
+    const cratesContainingMaterial = crates.filter((crate) =>
+      crate.stock.some((stock) => stock.material.id === material.id)
+    )
+
+    setFilteredCrates(cratesContainingMaterial)
+  }
+
+  if (isCratesLoading) {
     return <div>Loading...</div>
   }
 
-  if (isCratesError || isMaterialsError) {
+  if (isCratesError) {
     return <div>Error fetching data.</div>
-  }
-
-  const handleFilterChange = (filter: string) => {
-    if (filter === 'empty') {
-      filterCrates(filter)
-      return
-    }
-
-    const materialId = parseInt(filter)
-    if (!isNaN(materialId)) {
-      const material = materials.find((material) => material.id === materialId)
-
-      if (!material) {
-        console.log(
-          `Could not find a material with the id ${materialId} in the materials list`
-        )
-        return
-      }
-
-      filterCrates(material)
-      return
-    } else {
-      filterCrates('all')
-    }
-  }
-
-  const filterCrates = (filter: MaterialType | string) => {
-    let filteredCrates: CrateType[] = crates
-
-    // Filter for empty crates
-    if (filter === 'empty') {
-      filteredCrates = crates.filter((crate) => crate.stock.length === 0)
-    }
-
-    // Filter by material
-    if (typeof filter === 'object' && 'id' in filter) {
-      filteredCrates = crates.filter((crate) =>
-        crate.stock.some((stock) => stock.material.id === filter.id)
-      )
-    }
-
-    // Reset to show all crates when 'all' is selected
-    if (filter === 'all') {
-      filteredCrates = crates
-    }
-
-    setFilteredCrates(filteredCrates)
   }
 
   return (
     <>
-      <div className="grid grid-cols-[1fr_1fr_1fr] justify-items-end items-center gap-x-4">
-        <Header text="Filter" className="col-span-2" />
-
-        <select
-          name="filter"
-          className="border border-gray-300 rounded p-2 w-full"
-          onChange={(event) => {
-            handleFilterChange(event.target.value)
-          }}
-        >
-          <option key={'all'} value={'all'}>
-            All crates
-          </option>
-          <option key={'empty'} value={'empty'}>
-            Empty crates
-          </option>
-
-          <optgroup label="Contains...">
-            {materials.map((material) => (
-              <option key={material.id} value={material.id}>
-                {material.partNumber} {material.description}
-              </option>
-            ))}
-          </optgroup>
-        </select>
-      </div>
+      <FetchAutocomplete
+        setFilter={setFilter}
+        service={materialsService}
+        queryKey={'materials'}
+        label={'Materials'}
+        getOptionLabel={(option: MaterialType): string =>
+          `${option.partNumber} ${option.description}`
+        }
+        isOptionEqualToValue={(option: MaterialType, value: MaterialType) =>
+          option.id === value.id
+        }
+      />
 
       {filteredCrates.length ? (
         <Table>
-          <TableHead className="bg-gray-50">
+          <TableHead>
             <TableRow>
               <TableCell />
               <TableCell>Number</TableCell>

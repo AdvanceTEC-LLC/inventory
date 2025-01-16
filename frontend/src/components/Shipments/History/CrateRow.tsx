@@ -61,7 +61,7 @@ const CrateRow = ({ crate }: CrateRowProps) => {
 
               {crate.stock.length ? (
                 <Table>
-                  <TableHead className="bg-gray-50">
+                  <TableHead>
                     <TableRow>
                       <TableCell>Part Number</TableCell>
                       <TableCell>Description</TableCell>

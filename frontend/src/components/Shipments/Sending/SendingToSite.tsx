@@ -1,8 +1,8 @@
 import Container from '../../ATEC UI/Container'
 import { Title, Subtitle } from '../../ATEC UI/Text'
-import SendingShipmentForm from './Form'
+import SendingShipmentForm from './SendingShipmentForm'
 
-const Sending = () => {
+const SendingToSite = () => {
   return (
     <Container className="overflow-x-auto">
       <Title text={'Sending to Site'} />
@@ -12,4 +12,4 @@ const Sending = () => {
   )
 }
 
-export default Sending
+export default SendingToSite

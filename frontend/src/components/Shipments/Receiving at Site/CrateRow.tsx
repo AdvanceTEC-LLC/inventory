@@ -52,14 +52,6 @@ const CrateRow = ({ crate }: CrateRowProps) => {
         <TableCell>
           <div className="text-text-secondary">{formatStorage(crate)}</div>
         </TableCell>
-        <TableCell>
-          <div className="text-text-secondary">
-            {crate.project.number} {crate.project.name}
-          </div>
-        </TableCell>
-        <TableCell>
-          <div className="text-text-secondary">{crate.vendor.name}</div>
-        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ padding: 0 }} colSpan={6}>

@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid'
 import { Title } from '../ATEC UI/Text'
-import Table from './Table'
+import FetchTable from '../FetchTable'
 import Container from '../ATEC UI/Container'
 
 interface DebugCardProps<T extends object> {
@@ -19,7 +19,7 @@ const DebugCard = <T extends object>({
   return (
     <Container>
       <Title text={title} />
-      <Table
+      <FetchTable
         title={title}
         columns={columns}
         service={{

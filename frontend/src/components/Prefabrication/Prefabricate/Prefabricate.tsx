@@ -4,7 +4,7 @@ import Container from '../../ATEC UI/Container'
 import { Header, Subtitle, Title } from '../../ATEC UI/Text'
 import { SyntheticEvent, useState } from 'react'
 import { ProjectType } from '../../../types/project'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 
 import { GridColDef } from '@mui/x-data-grid'
 import Button from '../../ATEC UI/Button'
@@ -157,6 +157,7 @@ const Prefabricate = () => {
             pageSizeOptions={[5, 10]}
             sx={{ border: 0 }}
             disableRowSelectionOnClick
+            slots={{ toolbar: GridToolbar }}
           />
 
           <Button

@@ -1,5 +1,5 @@
 // Table
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid'
 import { useQuery } from '@tanstack/react-query'
 
 const paginationModel = { page: 0, pageSize: 5 }
@@ -12,7 +12,7 @@ interface TableProps<T extends object> {
   }
 }
 
-const Table = <T extends object>({
+const FetchTable = <T extends object>({
   title,
   columns,
   service,
@@ -39,8 +39,9 @@ const Table = <T extends object>({
       pageSizeOptions={[5, 10]}
       sx={{ border: 0 }}
       disableRowSelectionOnClick
+      slots={{ toolbar: GridToolbar }}
     />
   )
 }
 
-export default Table
+export default FetchTable

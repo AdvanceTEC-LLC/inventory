@@ -22,7 +22,7 @@ const ContentsTable = ({ assemblies }: ContentsTableProps) => {
   return (
     <div className="overflow-x-auto">
       <Table>
-        <TableHead className="bg-gray-50">
+        <TableHead>
           <TableRow>
             <TableCell />
             <TableCell>Assembly ID</TableCell>
@@ -70,7 +70,7 @@ const AssemblyRow = ({ assembly }: AssemblyRowProps) => {
               <Header text="Bill of Materials" />
 
               <Table>
-                <TableHead className="bg-gray-50">
+                <TableHead>
                   <TableRow>
                     <TableCell>Part Number</TableCell>
                     <TableCell>Description</TableCell>

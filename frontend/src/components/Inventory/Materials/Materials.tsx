@@ -6,7 +6,7 @@ const MaterialStock = () => {
   return (
     <Container>
       <Title text={'Materials'} />
-      <Subtitle text="View material stock and filter by project" />
+      <Subtitle text="Materials available for each project" />
       <MaterialsTable />
     </Container>
   )

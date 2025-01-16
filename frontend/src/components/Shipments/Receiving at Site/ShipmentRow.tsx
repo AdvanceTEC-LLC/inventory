@@ -11,9 +11,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import React from 'react'
 import { ShipmentType } from '../../../types/shipment'
+import { Header, Subtext } from '../../ATEC UI/Text'
 import CrateRow from './CrateRow'
 import TotalStock from './TotalStock'
-import { Header, Subtext } from '../../ATEC UI/Text'
 
 interface ShipmentRowProps {
   shipment: ShipmentType
@@ -45,11 +45,6 @@ const ShipmentRow = ({ shipment }: ShipmentRowProps) => {
         <TableCell>
           <div className="text-text-secondary">
             {new Date(shipment.receivedDate).toLocaleDateString()}
-          </div>
-        </TableCell>
-        <TableCell>
-          <div className="text-text-secondary">
-            {shipment.project.number} {shipment.project.name}
           </div>
         </TableCell>
         <TableCell>

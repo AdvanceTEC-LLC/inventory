@@ -4,7 +4,7 @@ import projectsService from '../../../services/projectsService'
 import { useState } from 'react'
 import CratesTable from './CratesTable'
 import FetchAutocomplete from '../../FetchAutocomplete'
-import { CrateType } from '../../../types/crate'
+import { CrateLocationEnum, CrateType } from '../../../types/crate'
 import cratesService from '../../../services/cratesService'
 import { Autocomplete, TextField } from '@mui/material'
 import Button from '../../ATEC UI/Button'
@@ -36,7 +36,9 @@ const SendingShipmentForm = () => {
 
     // TODO: Consider limiting crates to only those in the staging areas
     const cratesInWarehouse = projectCrates.filter((crate) =>
-      ['Staging Area 1', 'Staging Area 2'].includes(crate.location)
+      [CrateLocationEnum.StagingZone1, CrateLocationEnum.StagingZone2].includes(
+        crate.location
+      )
     )
 
     setFilteredCrates(cratesInWarehouse)

@@ -1,6 +1,6 @@
 import Container from '../../ATEC UI/Container'
 import { Title, Subtitle } from '../../ATEC UI/Text'
-import ShipmentsTable from './Table'
+import ShipmentsTable from './ShipmentsTable'
 
 const History = () => {
   return (

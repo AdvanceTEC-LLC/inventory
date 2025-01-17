@@ -6,7 +6,6 @@ import Papa from 'papaparse'
 // Styled Components
 import { Header, Subtext, Text } from '../../ATEC UI/Text'
 
-import ContentsTable from './ContentsTable'
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
 import Button from '../../ATEC UI/Button'
@@ -19,6 +18,7 @@ import { CreateStockType } from '../../../types/stock'
 import { CreateMaterialType } from '../../../types/material'
 import { CreateVendorType } from '../../../types/vendor'
 import { CreateProjectType } from '../../../types/project'
+import ReceivingShipmentTable from './ReceivingShipmentTable'
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -235,7 +235,7 @@ const UploadShipment = () => {
 
       {shipment && (
         <div className="flex flex-col gap-y-8">
-          <ContentsTable crates={shipment.crates} />
+          <ReceivingShipmentTable shipment={shipment} />
           <ConfirmShipmentButton shipment={shipment} />
         </div>
       )}

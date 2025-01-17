@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { ShipmentType } from '../../../types/shipment'
 import Container from '../../ATEC UI/Container'
-import { Subtext, Subtitle, Title } from '../../ATEC UI/Text'
+import { Subtitle, Title } from '../../ATEC UI/Text'
 import FetchAutocomplete from '../../FetchAutocomplete'
 import shipmentsService from '../../../services/shipmentsService'
-import Shipment from './Shipment'
+import ShipmentTable from './ShipmentTable'
 import projectsService from '../../../services/projectsService'
 import { ProjectType } from '../../../types/project'
 import { Autocomplete, TextField } from '@mui/material'
@@ -82,7 +82,7 @@ const ReceivingAtSite = () => {
         />
       )}
 
-      {shipment && <Shipment shipment={shipment} />}
+      {shipment && <ShipmentTable shipment={shipment} />}
 
       <Button
         text={'Shipment Received'}

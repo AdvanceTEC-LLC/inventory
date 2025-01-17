@@ -7,11 +7,14 @@ import FetchAutocomplete from '../../FetchAutocomplete'
 import { CrateType } from '../../../types/crate'
 import cratesService from '../../../services/cratesService'
 import { Autocomplete, TextField } from '@mui/material'
+import Button from '../../ATEC UI/Button'
+import { CreateShipmentType } from '../../../types/shipment'
 
 const SendingShipmentForm = () => {
   const [project, setProject] = useState<ProjectType | null>(null)
   const [crate, setCrate] = useState<CrateType | null>(null)
   const [filteredCrates, setFilteredCrates] = useState<CrateType[] | null>(null)
+  const [shipment, setShipment] = useState<CreateShipmentType>()
 
   const {
     data: crates = [],
@@ -88,6 +91,14 @@ const SendingShipmentForm = () => {
           <CratesTable crates={filteredCrates ?? []} />
         )
       )}
+
+      <Button
+        text={'Send Shipment'}
+        onClick={() => {
+          console.log('DEBUG: Shipment sent')
+        }}
+        disabled={shipment === undefined}
+      />
     </>
   )
 }

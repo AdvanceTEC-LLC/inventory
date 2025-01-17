@@ -2,7 +2,7 @@ import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
 import { MaterialType } from '../../../types/material'
 import { ShipmentType } from '../../../types/shipment'
 import StockRow from '../../Inventory/Crates/StockRow'
-import { Header, Subtext } from '../../ATEC UI/Text'
+import { Subtext } from '../../ATEC UI/Text'
 
 interface TotalStockProps {
   shipment: ShipmentType
@@ -27,8 +27,7 @@ const TotalStock = ({ shipment }: TotalStockProps) => {
   const totalStock = Object.values(groupedStock)
 
   return (
-    <div className="flex flex-col gap-y-2">
-      <Header text="Total Stock" />
+    <div>
       {shipment.crates.length ? (
         <Table>
           <TableHead>

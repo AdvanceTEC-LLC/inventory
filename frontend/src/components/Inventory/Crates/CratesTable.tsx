@@ -4,10 +4,12 @@ import CrateRow from './CrateRow'
 import { Subtext } from '../../ATEC UI/Text'
 import { useQuery } from '@tanstack/react-query'
 import cratesService from '../../../services/cratesService'
-import { CrateType } from '../../../types/crate'
+import { CrateLocationEnum, CrateType } from '../../../types/crate'
 import { MaterialType } from '../../../types/material'
 import materialsService from '../../../services/materialsService'
 import FetchAutocomplete from '../../FetchAutocomplete'
+import projectsService from '../../../services/projectsService'
+import { ProjectType } from '../../../types/project'
 
 const CratesTable = () => {
   const [filteredCrates, setFilteredCrates] = useState<CrateType[]>([])
@@ -28,17 +30,14 @@ const CratesTable = () => {
     }
   }, [crates])
 
-  const setFilter = (material: MaterialType | null) => {
-    if (!material) {
-      setFilteredCrates(crates)
-      return
-    }
+  const handleProjectChange = (project: ProjectType | null) => {
+    if (!project) return
 
-    const cratesContainingMaterial = crates.filter((crate) =>
-      crate.stock.some((stock) => stock.material.id === material.id)
+    const projectCrates = crates.filter(
+      (crate) => crate.project.number === project.number
     )
 
-    setFilteredCrates(cratesContainingMaterial)
+    setFilteredCrates(projectCrates)
   }
 
   if (isCratesLoading) {
@@ -52,16 +51,12 @@ const CratesTable = () => {
   return (
     <>
       <FetchAutocomplete
-        setFilter={setFilter}
-        service={materialsService}
-        queryKey={'materials'}
-        label={'Materials'}
-        getOptionLabel={(option: MaterialType): string =>
-          `${option.partNumber} ${option.description}`
-        }
-        isOptionEqualToValue={(option: MaterialType, value: MaterialType) =>
-          option.id === value.id
-        }
+        setFilter={handleProjectChange}
+        service={projectsService}
+        queryKey={'projects'}
+        label={'Project'}
+        getOptionLabel={(option) => `${option.number} ${option.name}` || ''}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
       />
 
       {filteredCrates.length ? (

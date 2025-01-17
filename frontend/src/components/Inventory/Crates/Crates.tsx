@@ -1,6 +1,6 @@
 import Container from '../../ATEC UI/Container'
 import { Title, Subtitle } from '../../ATEC UI/Text'
-import CratesTable from './Table'
+import CratesTable from './CratesTable'
 
 const Crates = () => {
   return (

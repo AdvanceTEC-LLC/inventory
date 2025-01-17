@@ -34,7 +34,6 @@ const SendingShipmentForm = () => {
       (crate) => crate.project.number === destinationProject.number
     )
 
-    // TODO: Consider limiting crates to only those in the staging areas
     const cratesInWarehouse = projectCrates.filter((crate) =>
       [CrateLocationEnum.StagingZone1, CrateLocationEnum.StagingZone2].includes(
         crate.location

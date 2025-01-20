@@ -12,13 +12,13 @@ export const storageColumns: GridColDef[] = [
     field: 'aisle',
     headerName: 'Aisle',
     flex: 1,
-    valueGetter: (_value, row) => row.material.aisle,
+    valueGetter: (_value, row) => row.aisle,
   },
   {
     field: 'col',
     headerName: 'Column',
     flex: 1,
-    valueGetter: (_value, row) => row.material.col,
+    valueGetter: (_value, row) => row.col,
   },
   {
     field: 'shelf',

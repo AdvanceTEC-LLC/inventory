@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateVendorType, VendorType } from '../types/vendor'
+import { CreateVendorType, VendorType } from '../types/manufacturer'
 
 const baseURL = '/api/vendors'
 

@@ -1,16 +1,16 @@
 import { Router } from 'express'
-import { Material, Vendor } from '../models/index.js'
-import { vendorFindOptions } from './vendors.js'
+import { Material, Manufacturer } from '../models/index.js'
+import { manufacturerFindOptions } from './manufacturers.js'
 import { CustomError } from '../util/errors/CustomError.js'
 const materialsRouter = Router()
 
 export const materialFindOptions = {
-  attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
+  attributes: { exclude: ['manufacturerId', 'createdAt', 'updatedAt'] },
   include: [
     {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
+      model: Manufacturer,
+      as: 'manufacturer',
+      ...manufacturerFindOptions,
     },
   ],
 }
@@ -41,34 +41,22 @@ materialsRouter.get('/:id', materialFinder, async (request, response) => {
 })
 
 materialsRouter.post('/', async (request, response) => {
-  const {
-    partNumber,
-    description,
-    thickness,
-    width,
-    length,
-    topFinish,
-    bottomFinish,
-    xDimension,
-    cutout,
-    tag,
-    vendorId,
-  } = request.body
+  const { manufacturerId } = request.body
 
-  if (thickness < 0 || width < 0 || length < 0) {
+  /*if (thickness < 0 || width < 0 || length < 0) {
     throw new CustomError(
       'BadRequest',
       'Material cannot have negative dimensions.',
       400,
     )
-  }
+  }*/
 
-  const vendorExists = await Vendor.findByPk(vendorId)
+  const manufacturerExists = await Manufacturer.findByPk(manufacturerId)
 
-  if (!vendorExists) {
+  if (!manufacturerExists) {
     throw new CustomError(
       'NotFoundError',
-      `Vendor with id ${vendorId} not found`,
+      `Manufacturer with id ${manufacturerId} not found`,
       404,
     )
   }

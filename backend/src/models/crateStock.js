@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+
 class CrateStock extends Model {}
 
 CrateStock.init(

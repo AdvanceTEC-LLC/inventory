@@ -2,7 +2,6 @@ import { Router } from 'express'
 import {
   Shipment,
   Project,
-  Vendor,
   ShipmentCrate,
   Crate,
   CrateStock,
@@ -10,11 +9,9 @@ import {
   Material,
 } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { vendorFindOptions } from './vendors.js'
 import { crateFindOptions } from './crates.js'
 import { sequelize } from '../util/db.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { info } from '../util/logger.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
@@ -26,11 +23,6 @@ export const shipmentFindOptions = {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
     },
     {
       model: Crate,

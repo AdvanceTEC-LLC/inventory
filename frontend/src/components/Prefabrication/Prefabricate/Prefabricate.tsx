@@ -102,7 +102,7 @@ const Prefabricate = () => {
   }
 
   const createAssembly = () => {
-    console.log(`Creating assembly ${assembly?.identifier}`)
+    console.log(`Creating assembly ${assembly?.code}`)
   }
 
   return (
@@ -134,7 +134,7 @@ const Prefabricate = () => {
             options={assemblies.filter(
               (assembly) => assembly.project.number === project.number
             )}
-            getOptionLabel={(option) => option.identifier || ''}
+            getOptionLabel={(option) => option.code || ''}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             value={assembly}
             onChange={handleAssemblyChange}

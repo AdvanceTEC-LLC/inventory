@@ -1,31 +1,31 @@
 import { Router } from 'express'
-import { Crate, Storage, Project, Stock, Vendor } from '../models/index.js'
+import { Crate, ShelfLocation, Project, Stock } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { storageFindOptions } from './storages.js'
+import { shelfLocationFindOptions } from './shelfLocations.js'
 import { stockFindOptions } from './stock.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { vendorFindOptions } from './vendors.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
   attributes: {
-    exclude: ['storageId', 'projectId', 'vendorId', 'createdAt', 'updatedAt'],
+    exclude: [
+      'shelfLocationId',
+      'projectId',
+      'vendorId',
+      'createdAt',
+      'updatedAt',
+    ],
   },
   include: [
     {
-      model: Storage,
-      as: 'storage',
-      ...storageFindOptions,
+      model: ShelfLocation,
+      as: 'shelfLocation',
+      ...shelfLocationFindOptions,
     },
     {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
     },
     {
       model: Stock,
@@ -58,7 +58,7 @@ cratesRouter.get('/:id', crateFinder, async (request, response) => {
 })
 
 cratesRouter.post('/', async (request, response) => {
-  const { number, storageId, projectId } = request.body
+  const { number, shelfLocationId, projectId } = request.body
 
   const projectExists = await Project.findByPk(projectId)
 
@@ -70,19 +70,19 @@ cratesRouter.post('/', async (request, response) => {
     )
   }
 
-  const storageExists = await storage.findByPk(storageId)
+  const shelfLocationExists = await shelfLocation.findByPk(shelfLocationId)
 
-  if (!storageExists) {
+  if (!shelfLocationExists) {
     throw new CustomError(
       'NotFoundError',
-      `storage with id ${storageId} not found`,
+      `Shelf location with id ${shelfLocationId} not found`,
       404,
     )
   }
 
   const crate = await Crate.create({
     number,
-    storageId,
+    shelfLocationId,
     projectId,
   })
 

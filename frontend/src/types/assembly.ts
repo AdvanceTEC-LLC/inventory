@@ -1,15 +1,16 @@
-import { CreateProjectType, ProjectType } from './project'
-import { CreateStockType, StockType } from './stock'
+import { ProjectType } from './project'
+import { StockType } from './stock'
 
 export interface AssemblyType {
   id: number
-  identifier: string
-  billOfMaterials: StockType[]
+  code: string
   project: ProjectType
+  prefabricated: boolean
+  type: string
+  billOfMaterials?: StockType[]
 }
 
-export interface CreateAssemblyType {
-  identifier: string
-  billOfMaterials: CreateStockType[]
-  project: CreateProjectType
+export interface NewAssemblyType
+  extends Omit<AssemblyType, 'id' | 'project' | 'billOfMaterials'> {
+  projectId: number
 }

@@ -16,7 +16,7 @@ import {
 import { CrateLocationEnum, CreateCrateType } from '../../../types/crate'
 import { CreateStockType } from '../../../types/stock'
 import { CreateMaterialType } from '../../../types/material'
-import { CreateVendorType } from '../../../types/vendor'
+import { CreateVendorType } from '../../../types/manufacturer'
 import { CreateProjectType } from '../../../types/project'
 import ReceivingShipmentTable from './ReceivingShipmentTable'
 

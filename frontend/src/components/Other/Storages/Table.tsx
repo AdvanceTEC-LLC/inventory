@@ -4,7 +4,7 @@ import { columns } from './columns'
 // Queries
 import { useQuery } from '@tanstack/react-query'
 import storagesService from '../../../services/storagesService'
-import { StorageType } from '../../../types/storage'
+import { StorageType } from '../../../types/shelfLocation'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 
 const paginationModel = { page: 0, pageSize: 5 }

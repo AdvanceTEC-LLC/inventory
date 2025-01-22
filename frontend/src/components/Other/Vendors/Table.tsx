@@ -5,7 +5,7 @@ import { columns } from './columns'
 import { useQuery } from '@tanstack/react-query'
 import vendorsService from '../../../services/vendorsService'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import { VendorType } from '../../../types/vendor'
+import { VendorType } from '../../../types/manufacturer'
 
 const paginationModel = { page: 0, pageSize: 5 }
 

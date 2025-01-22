@@ -14,7 +14,7 @@ const assembliesRouter = Router()
 const transformAssembly = (assembly) => {
   return {
     id: assembly.id,
-    identifier: assembly.identifier,
+    code: assembly.code,
     project: assembly.project,
     billOfMaterials: assembly.materials.map(
       ({
@@ -202,7 +202,7 @@ assembliesRouter.post('/all/', async (request, response, next) => {
     for (const assembly of assemblies) {
       const assemblyInDb = await Assembly.create(
         {
-          identifier: assembly.identifier,
+          code: assembly.code,
           projectId: projectInDb.id,
         },
         { transaction },

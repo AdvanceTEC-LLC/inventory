@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateStorageType, StorageType } from '../types/storage'
+import { CreateStorageType, StorageType } from '../types/shelfLocation'
 
 const baseURL = '/api/storages'
 

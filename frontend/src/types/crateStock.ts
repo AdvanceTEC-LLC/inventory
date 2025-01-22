@@ -7,7 +7,8 @@ export interface CrateStockType {
   stock: StockType
 }
 
-export interface CreateCrateStockType {
+export interface NewCrateStockType
+  extends Omit<CrateStockType, 'id' | 'crate' | 'stock'> {
   crateId: number
   stockId: number
 }

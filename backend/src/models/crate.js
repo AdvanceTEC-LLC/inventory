@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+
 class Crate extends Model {}
 
 Crate.init(
@@ -13,30 +14,40 @@ Crate.init(
       type: DataTypes.STRING,
       unique: true,
     },
-    location: {
-      type: DataTypes.ENUM(
-        'Shipping Bay',
-        'Storage',
-        'Staging Zone 1',
-        'Staging Zone 2',
-        'In Transit',
-        'Delivered',
-      ),
+    warehouseLocationsId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'warehouse_locations',
+        key: 'id',
+      },
       allowNull: false,
     },
-    storageId: {
+    shelfLocationsId: {
       type: DataTypes.INTEGER,
-      references: { model: 'storages', key: 'id' },
+      references: {
+        model: 'shelf_locations',
+        key: 'id',
+      },
+    },
+    stagingAreaId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'staging_areas',
+        key: 'id',
+      },
     },
     projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'projects', key: 'id' },
+      references: {
+        model: 'projects',
+        key: 'id',
+      },
     },
-    vendorId: {
-      type: DataTypes.INTEGER,
+    opened: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      references: { model: 'vendors', key: 'id' },
+      defaultValue: false,
     },
   },
   {

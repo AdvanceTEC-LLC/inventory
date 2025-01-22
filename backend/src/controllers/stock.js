@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { Material, Stock, Vendor } from '../models/index.js'
+import { Material, Stock } from '../models/index.js'
 import { materialFindOptions } from './materials.js'
 import { CustomError } from '../util/errors/CustomError.js'
 const stockRouter = Router()

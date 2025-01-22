@@ -1,13 +1,18 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-class Storage extends Model {}
 
-Storage.init(
+class ShelfLocation extends Model {}
+
+ShelfLocation.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    side: {
+      type: DataTypes.CHAR,
+      allowNull: false,
     },
     aisle: {
       type: DataTypes.INTEGER,
@@ -16,23 +21,18 @@ Storage.init(
     col: {
       type: DataTypes.CHAR,
       allowNull: false,
-      validate: {
-        isAlpha: true,
-      },
     },
     shelf: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
-  { sequelize, underscored: true, timestamps: true, modelName: 'storage' },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: true,
+    modelName: 'shelfLocation',
+  },
 )
 
-// Add a hook to capitalize all letters
-Storage.addHook('beforeSave', (instance) => {
-  if (instance.col) {
-    instance.col = instance.col.toUpperCase() // Capitalize all letters
-  }
-})
-
-export default Storage
+export default ShelfLocation

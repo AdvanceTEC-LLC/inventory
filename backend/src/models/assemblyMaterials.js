@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+
 class AssemblyMaterial extends Model {}
 
 AssemblyMaterial.init(
@@ -22,6 +23,7 @@ AssemblyMaterial.init(
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
   },
   {

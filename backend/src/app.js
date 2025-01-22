@@ -9,9 +9,9 @@ import 'express-async-errors'
 import materialsRouter from './controllers/materials.js'
 import stockRouter from './controllers/stock.js'
 import projectsRouter from './controllers/projects.js'
-import vendorsRouter from './controllers/vendors.js'
+import manufacturersRouter from './controllers/manufacturers.js'
 import cratesRouter from './controllers/crates.js'
-import storagesRouter from './controllers/storages.js'
+import shelfLocationsRouter from './controllers/shelfLocations.js'
 import assembliesRouter from './controllers/assemblies.js'
 import assemblyMaterialsRouter from './controllers/assemblyMaterials.js'
 import crateStockRouter from './controllers/crateStock.js'
@@ -30,9 +30,9 @@ app.get('/api/health', (req, res) => {
 app.use('/api/materials', materialsRouter)
 app.use('/api/stock', stockRouter)
 app.use('/api/projects', projectsRouter)
-app.use('/api/vendors', vendorsRouter)
+app.use('/api/manufacturers', manufacturersRouter)
 app.use('/api/crates', cratesRouter)
-app.use('/api/storages', storagesRouter)
+app.use('/api/shelfLocations', shelfLocationsRouter)
 app.use('/api/assemblies', assembliesRouter)
 app.use('/api/crateStock', crateStockRouter)
 app.use('/api/shipments', shipmentsRouter)

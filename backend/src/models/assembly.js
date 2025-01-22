@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+
 class Assembly extends Model {}
 
 Assembly.init(
@@ -9,11 +10,24 @@ Assembly.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    identifier: { type: DataTypes.STRING, unique: true, allowNull: false },
+    code: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'projects', key: 'id' },
+    },
+    prefabricated: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {

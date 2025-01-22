@@ -20,8 +20,16 @@ export interface ShipmentType {
 export interface CreateShipmentType {
   direction: ShipmentDirectionEnum
   sendDate: Date
-  receivedDate: Date
+  receivedDate?: Date
   project: CreateProjectType
-  vendor: CreateVendorType
+  vendor?: CreateVendorType
   crates: CreateCrateType[]
+}
+
+export interface CreateSendingShipmentType {
+  direction: ShipmentDirectionEnum.Out
+  sendDate: Date
+  project: ProjectType
+  crates: CrateType[]
+  vendor: CreateVendorType
 }

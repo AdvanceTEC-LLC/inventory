@@ -92,18 +92,18 @@ shipmentsRouter.post('/', async (request, response, next) => {
   }
 
   // Convert sendDate and receivedDate to Date objects
+  info(sendDate)
   const parsedSendDate = new Date(sendDate)
+  info(parsedSendDate)
+
   const parsedReceivedDate = new Date(receivedDate)
 
-  if (
-    (sendDate !== null && isNaN(parsedSendDate.getTime())) ||
-    isNaN(parsedReceivedDate.getTime())
-  ) {
-    throw new CustomError(
-      'ValidationError',
-      'One or both of the provided dates are invalid.',
-      400,
-    )
+  if (sendDate !== null && isNaN(parsedSendDate.getTime())) {
+    throw new CustomError('ValidationError', 'Send date is invalid.', 400)
+  }
+
+  if (receivedDate && isNaN(parsedReceivedDate.getTime())) {
+    throw new CustomError('ValidationError', 'Received date is invalid.', 400)
   }
 
   if (parsedSendDate > parsedReceivedDate) {
@@ -226,6 +226,96 @@ shipmentsRouter.post('/', async (request, response, next) => {
           { transaction },
         )
       }
+    }
+
+    await transaction.commit()
+
+    info(sendDate)
+    info(parsedSendDate)
+
+    // Send the shipment data back as response
+    response.status(201).send(shipment)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
+shipmentsRouter.post('/outbound/', async (request, response, next) => {
+  const { direction, sendDate, project, crates } = request.body
+
+  if ('Out' !== direction) {
+    throw new CustomError(
+      'ValidationError',
+      `Shipment direction of ${direction} is not 'Out'.`,
+      400,
+    )
+  }
+
+  info(sendDate)
+  // Convert sendDate and receivedDate to Date objects
+  const parsedSendDate = new Date(sendDate)
+  info(parsedSendDate)
+
+  if (sendDate !== null && isNaN(parsedSendDate.getTime())) {
+    throw new CustomError('ValidationError', 'Send date is invalid.', 400)
+  }
+
+  if (parsedSendDate > parsedReceivedDate) {
+    const formattedSendDate = sendDate.toLocaleDateString()
+    const formattedReceivedDate = receivedDate.toLocaleDateString()
+    throw new CustomError(
+      'ValidationError',
+      `Shipment can not be received on ${formattedReceivedDate} if sent on ${formattedSendDate}`,
+      400,
+    )
+  }
+
+  const transaction = await sequelize.transaction()
+
+  try {
+    // Check if project and vendor exist in the database
+    let projectInDb = await Project.findOne({
+      where: { number: project.number },
+      transaction,
+    })
+
+    if (!projectInDb) {
+      projectInDb = await Project.create(project, { transaction })
+    }
+
+    // Create shipment entry
+    const shipment = await Shipment.create(
+      {
+        direction,
+        sendDate: parsedSendDate,
+        projectId: projectInDb.id,
+      },
+      { transaction },
+    )
+
+    // Create crate relationships
+    for (const crate of crates) {
+      const crateInDb = await Crate.findOne({
+        where: { number: crate.number },
+        transaction,
+      })
+
+      if (!crateInDb) {
+        throw new CustomError(
+          'ValidationError',
+          `Crate with number ${crate.number} does not exist.`,
+          400,
+        )
+      }
+
+      await ShipmentCrate.create(
+        {
+          crateId: crateInDb.id,
+          shipmentId: shipment.id,
+        },
+        { transaction },
+      )
     }
 
     await transaction.commit()

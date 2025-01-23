@@ -12,3 +12,11 @@ export interface NewShipment
   extends Omit<ShipmentType, 'id' | 'project' | 'crates'> {
   projectId: number
 }
+
+export interface CreateSendingShipmentType {
+  direction: ShipmentDirectionEnum.Out
+  sendDate: Date
+  project: ProjectType
+  crates: CrateType[]
+  vendor: CreateVendorType
+}

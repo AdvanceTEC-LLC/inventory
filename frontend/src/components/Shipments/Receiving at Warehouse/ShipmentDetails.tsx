@@ -15,13 +15,13 @@ const ShipmentDetails = ({ shipment }: ShipmentDetailsProps) => {
         <Text text={`${shipment.project.number} ${shipment.project.name}`} />
 
         <Text text="Vendor" />
-        <Text text={shipment.vendor.name} />
+        <Text text={shipment.vendor?.name ?? ''} />
 
         <Text text="Send Date" />
         <Text text={shipment.sendDate.toLocaleDateString()} />
 
         <Text text="Received Date" />
-        <Text text={shipment.receivedDate.toLocaleDateString()} />
+        <Text text={shipment.receivedDate?.toLocaleDateString() ?? ''} />
 
         <Text text="Number of Crates" />
         <Text text={shipment.crates.length.toString()} />

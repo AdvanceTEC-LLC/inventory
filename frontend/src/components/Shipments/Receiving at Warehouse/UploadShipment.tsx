@@ -8,7 +8,7 @@ import { Header, Subtext, Text } from '../../ATEC UI/Text'
 
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
-import Button from '../../ATEC UI/Button'
+import ATECButton from '../../ATEC UI/Button'
 import {
   CreateShipmentType,
   ShipmentDirectionEnum,
@@ -19,6 +19,20 @@ import { CreateMaterialType } from '../../../types/material'
 import { CreateVendorType } from '../../../types/manufacturer'
 import { CreateProjectType } from '../../../types/project'
 import ReceivingShipmentTable from './ReceivingShipmentTable'
+import { Button, styled } from '@mui/material'
+import DownloadFile from '../../DownloadFile'
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+})
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -213,7 +227,7 @@ const UploadShipment = () => {
             <div>
               <div className="flex flex-col gap-y-2">
                 <Text text={file.name} />
-                <Button
+                <ATECButton
                   type="reset"
                   text="Remove file"
                   onClick={() => {
@@ -224,9 +238,32 @@ const UploadShipment = () => {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-y-2">
-              <input type="file" accept=".csv" onChange={handleFileChange} />
-              <Subtext text="Upload a CSV file with shipment data" />
+            <div className="flex flex-col gap-y-8">
+              <div className="flex flex-col gap-y-2">
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                >
+                  Upload file
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileChange}
+                    multiple
+                  />
+                </Button>
+                <Subtext text="Upload a .csv file using the shipping template" />
+              </div>
+
+              <DownloadFile
+                header={'No shipment?'}
+                file={{
+                  path: '/files/Shipping Template.xlsx',
+                  name: 'Shipping Template.xlsx',
+                }}
+              />
             </div>
           )}
         </div>

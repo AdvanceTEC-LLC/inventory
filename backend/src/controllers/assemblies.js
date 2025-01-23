@@ -200,7 +200,20 @@ assembliesRouter.post('/all/', async (request, response, next) => {
 
   try {
     for (const assembly of assemblies) {
-      const assemblyInDb = await Assembly.create(
+      let assemblyInDb = await Assembly.findOne({
+        where: { identifier: assembly.identifier, projectId: projectInDb.id },
+        transaction,
+      })
+
+      if (assemblyInDb) {
+        throw new CustomError(
+          'ValidationError',
+          `Assembly with identifier ${assembly.identifier} already exists for project ${projectInDb.number} ${projectInDb.name}.`,
+          400,
+        )
+      }
+
+      assemblyInDb = await Assembly.create(
         {
           code: assembly.code,
           projectId: projectInDb.id,

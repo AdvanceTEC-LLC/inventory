@@ -1,5 +1,5 @@
 import { ProjectType } from '../../../types/project'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import projectsService from '../../../services/projectsService'
 import { useState } from 'react'
 import CratesTable from './CratesTable'
@@ -8,13 +8,24 @@ import { CrateLocationEnum, CrateType } from '../../../types/crate'
 import cratesService from '../../../services/cratesService'
 import { Autocomplete, TextField } from '@mui/material'
 import Button from '../../ATEC UI/Button'
-import { CreateShipmentType } from '../../../types/shipment'
+import {
+  CreateSendingShipmentType,
+  CreateShipmentType,
+  ShipmentDirectionEnum,
+} from '../../../types/shipment'
+import shipmentsService from '../../../services/shipmentsService'
+import { useDispatch } from 'react-redux'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import { AppDispatch } from '../../../store'
 
 const SendingShipmentForm = () => {
   const [project, setProject] = useState<ProjectType | null>(null)
   const [crate, setCrate] = useState<CrateType | null>(null)
   const [filteredCrates, setFilteredCrates] = useState<CrateType[] | null>(null)
-  const [shipment, setShipment] = useState<CreateShipmentType>()
+  const [selectedCrates, setSelectedCrates] = useState<CrateType[]>([])
+
+  const queryClient = useQueryClient()
+  const dispatch: AppDispatch = useDispatch()
 
   const {
     data: crates = [],
@@ -41,15 +52,69 @@ const SendingShipmentForm = () => {
     )
 
     setFilteredCrates(cratesInWarehouse)
+    setSelectedCrates([])
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
+  const onCrateSelect = (selectedCrate: CrateType) => {
+    const newSelectedCrates = selectedCrates.includes(selectedCrate)
+      ? selectedCrates.filter((crate) => crate.id !== selectedCrate.id)
+      : [...selectedCrates, selectedCrate]
+
+    setSelectedCrates(newSelectedCrates)
   }
 
-  if (isError) {
-    return <div>Error fetching data.</div>
+  const sendShipment = () => {
+    if (!project) {
+      console.log('Cannot send a shipment without a project')
+      return
+    }
+
+    const date = new Date()
+    console.log(date)
+
+    const shipment: CreateSendingShipmentType = {
+      sendDate: date,
+      direction: ShipmentDirectionEnum.Out,
+      project: project,
+      crates: selectedCrates,
+      vendor: selectedCrates[0].vendor, // REMOVE THIS IN THE FUTURE, WE HAVE TO MAKE SEPARATE SHIPMENT TYPES FOR SENDINGA ND RECEIVING SHIPMENTS THEY ARE JUST TOO DIFFERENT
+    }
+
+    createShipmentMutation.mutate(shipment)
   }
+
+  const createShipmentMutation = useMutation({
+    mutationFn: (shipment: CreateShipmentType) =>
+      shipmentsService.create(shipment),
+    onMutate: () => {
+      dispatch(
+        notifyWithTimeout({
+          title: 'Processing...',
+          message: 'Your shipment is being processed.',
+          status: 'info',
+        })
+      )
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['shipments'] })
+      dispatch(
+        notifyWithTimeout({
+          title: 'Success',
+          status: 'success',
+        })
+      )
+    },
+    onError: (error) => {
+      const { name, message } = error
+      dispatch(
+        notifyWithTimeout({
+          title: name,
+          message: message,
+          status: 'error',
+        })
+      )
+    },
+  })
 
   return (
     <>
@@ -85,20 +150,28 @@ const SendingShipmentForm = () => {
       )}
 
       {crate ? (
-        <CratesTable crates={[crate]} />
+        <CratesTable
+          selectedCrates={selectedCrates}
+          setSelectedCrates={setSelectedCrates}
+          onSelect={onCrateSelect}
+          crates={[crate]}
+        />
       ) : (
         filteredCrates &&
         filteredCrates.length > 0 && (
-          <CratesTable crates={filteredCrates ?? []} />
+          <CratesTable
+            selectedCrates={selectedCrates}
+            setSelectedCrates={setSelectedCrates}
+            onSelect={onCrateSelect}
+            crates={filteredCrates ?? []}
+          />
         )
       )}
 
       <Button
         text={'Send Shipment'}
-        onClick={() => {
-          console.log('DEBUG: Shipment sent')
-        }}
-        disabled={shipment === undefined}
+        onClick={sendShipment}
+        disabled={selectedCrates.length === 0}
       />
     </>
   )

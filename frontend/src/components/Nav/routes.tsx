@@ -15,6 +15,7 @@ import History from '../Shipments/History/History'
 import ReceivingAtSite from '../Shipments/Receiving at Site/ReceivingAtSite'
 import ReceivingAtWarehouse from '../Shipments/Receiving at Warehouse/ReceivingAtWarehouse'
 import SendingToSite from '../Shipments/Sending/SendingToSite'
+import WorkPackages from '../Prefabrication/Work Packages/WorkPackages'
 
 export const routes: LinkType[] = [
   {
@@ -80,6 +81,11 @@ export const routes: LinkType[] = [
         name: 'Assemblies',
         path: 'assemblies',
         element: <Assemblies />,
+      },
+      {
+        name: 'Work Packages',
+        path: 'work-packages',
+        element: <WorkPackages />,
       },
     ],
   },

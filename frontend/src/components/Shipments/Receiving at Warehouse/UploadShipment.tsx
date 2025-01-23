@@ -20,7 +20,7 @@ import { CreateVendorType } from '../../../types/vendor'
 import { CreateProjectType } from '../../../types/project'
 import ReceivingShipmentTable from './ReceivingShipmentTable'
 import { Button, styled } from '@mui/material'
-import DownloadFile from './DownloadFile'
+import DownloadFile from '../../DownloadFile'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -258,8 +258,11 @@ const UploadShipment = () => {
               </div>
 
               <DownloadFile
-                path={'/files/Shipping Template.xlsx'}
-                name={'Shipping Template.xlsx'}
+                header={'No shipment?'}
+                file={{
+                  path: '/files/Shipping Template.xlsx',
+                  name: 'Shipping Template.xlsx',
+                }}
               />
             </div>
           )}

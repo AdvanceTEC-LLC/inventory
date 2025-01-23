@@ -1,4 +1,3 @@
-import { Table, TableBody } from '@mui/material'
 import { useState } from 'react'
 import { CreateShipmentType } from '../../../types/shipment'
 import CrateBreakdown from './CrateBreakdown'

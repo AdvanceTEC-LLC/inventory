@@ -1,16 +1,19 @@
 import Button from '@mui/material/Button'
-import { Header } from '../../ATEC UI/Text'
+import { Header } from './ATEC UI/Text'
 
 interface DownloadFileProps {
-  path: string
-  name: string
+  header: string
+  file: {
+    path: string
+    name: string
+  }
 }
 
-const DownloadFile = ({ path, name }: DownloadFileProps) => {
+const DownloadFile = ({ header, file }: DownloadFileProps) => {
   return (
     <div className="flex flex-col gap-y-2">
-      <Header text="No shipment?" />
-      <a href={path} download={name}>
+      <Header text={header} />
+      <a href={file.path} download={file.name}>
         <Button variant="outlined">Download Template</Button>
       </a>
     </div>

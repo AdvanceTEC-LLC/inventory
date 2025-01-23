@@ -6,7 +6,7 @@ import Papa from 'papaparse'
 // Styled Components
 import { Header, Subtext, Text } from '../../ATEC UI/Text'
 
-import Button from '../../ATEC UI/Button'
+import ATECButton from '../../ATEC UI/Button'
 import { CreateAssemblyType } from '../../../types/assembly'
 import { CreateProjectType } from '../../../types/project'
 import { CreateStockType } from '../../../types/stock'
@@ -15,6 +15,20 @@ import { MaterialType } from '../../../types/material'
 import materialsService from '../../../services/materialsService'
 import ContentsTable from './ContentsTable'
 import ConfirmAssembliesButton from './ConfirmAssembliesButton'
+import DownloadFile from '../../DownloadFile'
+import { Button, styled } from '@mui/material'
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+})
 
 const UploadAssemblies = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -184,7 +198,7 @@ const UploadAssemblies = () => {
             <div>
               <div className="flex flex-col gap-y-2">
                 <Text text={file.name} />
-                <Button
+                <ATECButton
                   type="reset"
                   text="Remove file"
                   onClick={() => {
@@ -195,9 +209,32 @@ const UploadAssemblies = () => {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-y-2">
-              <input type="file" accept=".csv" onChange={handleFileChange} />
-              <Subtext text="Upload a CSV file with assemblies data" />
+            <div className="flex flex-col gap-y-8">
+              <div className="flex flex-col gap-y-2">
+                <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                >
+                  Upload file
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileChange}
+                    multiple
+                  />
+                </Button>
+                <Subtext text="Upload a .csv file using the assemblies template" />
+              </div>
+
+              <DownloadFile
+                header={'No Assemblies?'}
+                file={{
+                  path: '/files/Assemblies Template.xlsx',
+                  name: 'Assemblies Template.xlsx',
+                }}
+              />
             </div>
           )}
         </div>

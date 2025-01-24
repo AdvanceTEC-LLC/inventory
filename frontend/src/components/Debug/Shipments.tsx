@@ -1,5 +1,4 @@
 import { GridColDef } from '@mui/x-data-grid'
-import { ShipmentDirectionEnum } from '../../types/shipment'
 
 export const shipmentColumns: GridColDef[] = [
   {
@@ -48,21 +47,6 @@ export const shipmentColumns: GridColDef[] = [
 
 export const shipmentForm = (
   <div className="flex items-center gap-x-4">
-    <select
-      className="p-2 border-b-2 border-gray-300"
-      name="direction"
-      defaultValue=""
-    >
-      <option value="" disabled>
-        direction
-      </option>
-      {Object.values(ShipmentDirectionEnum).map((direction) => (
-        <option key={direction} value={direction}>
-          {direction}
-        </option>
-      ))}
-    </select>
-
     <input
       className="p-2 border-b-2 border-gray-300"
       type="date"

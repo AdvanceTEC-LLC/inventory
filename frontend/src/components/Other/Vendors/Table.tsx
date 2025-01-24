@@ -3,20 +3,20 @@ import { columns } from './columns'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
-import vendorsService from '../../../services/vendorsService'
+import manufacturersService from '../../../services/manufacturersService'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import { VendorType } from '../../../types/manufacturer'
+import { ManufacturerType } from '../../../types/manufacturer'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
-const VendorsTable = () => {
+const ManufacturersTable = () => {
   const {
-    data: vendors = [],
+    data: manufacturers = [],
     isLoading,
     isError,
-  } = useQuery<VendorType[]>({
-    queryKey: ['vendors'],
-    queryFn: vendorsService.getAll,
+  } = useQuery<ManufacturerType[]>({
+    queryKey: ['manufacturers'],
+    queryFn: manufacturersService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
@@ -25,12 +25,12 @@ const VendorsTable = () => {
   }
 
   if (isError) {
-    return <div>Error fetching vendors data.</div>
+    return <div>Error fetching Manufacturers data.</div>
   }
 
   return (
     <DataGrid
-      rows={vendors}
+      rows={manufacturers}
       columns={columns}
       initialState={{ pagination: { paginationModel } }}
       pageSizeOptions={[5, 10]}
@@ -41,4 +41,4 @@ const VendorsTable = () => {
   )
 }
 
-export default VendorsTable
+export default ManufacturersTable

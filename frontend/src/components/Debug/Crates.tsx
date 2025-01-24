@@ -1,5 +1,4 @@
 import { GridColDef } from '@mui/x-data-grid'
-import { CrateLocationEnum } from '../../types/crate'
 
 export const crateColumns: GridColDef[] = [
   {
@@ -53,21 +52,6 @@ export const crateForm = (
       placeholder="number"
       name="number"
     />
-
-    <select
-      className="p-2 border-b-2 border-gray-300"
-      name="location"
-      defaultValue=""
-    >
-      <option value="" disabled>
-        location
-      </option>
-      {Object.values(CrateLocationEnum).map((location) => (
-        <option key={location} value={location}>
-          {location}
-        </option>
-      ))}
-    </select>
     <input
       className="p-2 border-b-2 border-gray-300"
       type="text"

@@ -1,27 +1,12 @@
 import { useState } from 'react'
-
-// Parsing
-import Papa from 'papaparse'
-
-// Styled Components
 import { Header, Subtext, Text } from '../../ATEC UI/Text'
-
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
 import ATECButton from '../../ATEC UI/Button'
-import { NewShipmentType, ShipmentDirectionEnum } from '../../../types/shipment'
-import { CrateLocationEnum, NewCrateType } from '../../../types/crate'
-import { NewStockType } from '../../../types/stock'
-import { MaterialType, NewMaterialType } from '../../../types/material'
-import {
-  NewManufacturerType,
-  NewmanufacturerType,
-} from '../../../types/manufacturer'
-import { NewProjectType } from '../../../types/project'
+import { NewShipmentType } from '../../../types/shipment'
 import ReceivingShipmentTable from './ReceivingShipmentTable'
 import { Button, styled } from '@mui/material'
 import DownloadFile from '../../DownloadFile'
-import { NewDivisionType } from '../../../types/division'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -47,35 +32,17 @@ const UploadShipment = () => {
 
     const reader = new FileReader()
 
-    reader.onload = (event) => {
+    /*reader.onload = (event) => {
       const content = event.target?.result as string
       parseShipment(content)
-    }
+    }*/
 
     const file = event.target.files[0]
     setFile(file)
     reader.readAsText(file)
   }
 
-  // Handles cells with commas in their data
-  const preprocessData = (data: string): string => {
-    return data
-      .split('\n')
-      .map((line) =>
-        line
-          .split(',')
-          .map((cell) => {
-            if (cell.includes(',') && !cell.startsWith('"')) {
-              return `"${cell.trim()}"`
-            }
-            return cell.trim()
-          })
-          .join(',')
-      )
-      .join('\n')
-  }
-
-  const getDetails = (rows: string[][]) => {
+  /*const getDetails = (rows: string[][]) => {
     const direction: ShipmentDirectionEnum = ShipmentDirectionEnum.In
 
     const manufacturerName = rows[1][0]?.trim()
@@ -180,7 +147,7 @@ const UploadShipment = () => {
   }
 
   const parseShipment = (data: string) => {
-    const preprocessedData = preprocessData(data)
+    const preprocessedData = preprocessCSV(data)
 
     Papa.parse(preprocessedData, {
       header: false,
@@ -204,7 +171,7 @@ const UploadShipment = () => {
         console.error('Error parsing CSV:', error)
       },
     })
-  }
+  }*/
 
   return (
     <div className="flex flex-col gap-y-8">

@@ -9,65 +9,22 @@ export const materialColumns: GridColDef[] = [
     valueGetter: (_value, row) => row.id,
   },
   {
-    field: 'partNumber',
-    headerName: 'Part Number',
+    field: 'name',
+    headerName: 'Name',
     flex: 1,
-    valueGetter: (_value, row) => row.partNumber,
+    valueGetter: (_value, row) => row.name,
   },
   {
-    field: 'description',
-    headerName: 'Description',
+    field: 'manufacturer',
+    headerName: 'Manufacturer',
     flex: 1,
-    valueGetter: (_value, row) => row.description,
+    valueGetter: (_value, row) => row.manufacturer.name,
   },
   {
-    field: 'vendor',
-    headerName: 'Vendor',
+    field: 'division',
+    headerName: 'Division',
     flex: 1,
-    valueGetter: (_value, row) => row.vendor.name,
-  },
-  {
-    field: 'size',
-    headerName: 'Size',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      if (row.thickness && row.width && row.length)
-        return `${row.thickness}"T x ${row.width}"W x ${row.length}"L`
-    },
-  },
-  {
-    field: 'squareFeet',
-    headerName: 'Square Feet',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      if (row.squareFeet) return Math.ceil(row.squareFeet)
-    },
-  },
-  {
-    field: 'finish',
-    headerName: 'Finish',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      return [row.topFinish, row.bottomFinish].filter(Boolean).join(' / ')
-    },
-  },
-  {
-    field: 'xDimension',
-    headerName: 'X Dimension',
-    flex: 1,
-    valueGetter: (_value, row) => row.xDimension,
-  },
-  {
-    field: 'cutout',
-    headerName: 'Cutout',
-    flex: 1,
-    valueGetter: (_value, row) => (row.cutout ? 'yes' : null),
-  },
-  {
-    field: 'tag',
-    headerName: 'Tag',
-    flex: 1,
-    valueGetter: (_value, row) => row.tag,
+    valueGetter: (_value, row) => `${row.division.number} ${row.division.name}`,
   },
 ]
 

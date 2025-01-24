@@ -4,19 +4,15 @@ import projectsService from '../../../services/projectsService'
 import { useState } from 'react'
 import CratesTable from './CratesTable'
 import FetchAutocomplete from '../../FetchAutocomplete'
-import { CrateLocationEnum, CrateType } from '../../../types/crate'
+import { CrateType } from '../../../types/crate'
 import cratesService from '../../../services/cratesService'
 import { Autocomplete, TextField } from '@mui/material'
 import Button from '../../ATEC UI/Button'
-import {
-  CreateSendingShipmentType,
-  CreateShipmentType,
-  ShipmentDirectionEnum,
-} from '../../../types/shipment'
 import shipmentsService from '../../../services/shipmentsService'
 import { useDispatch } from 'react-redux'
 import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
 import { AppDispatch } from '../../../store'
+import { NewSentShipmentType } from '../../../types/sentShipment'
 
 const SendingShipmentForm = () => {
   const [project, setProject] = useState<ProjectType | null>(null)
@@ -37,7 +33,7 @@ const SendingShipmentForm = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
-  const handleProjectChange = (destinationProject: ProjectType | null) => {
+  /*const handleProjectChange = (destinationProject: ProjectType | null) => {
     setProject(destinationProject)
     if (!destinationProject) return
 
@@ -72,9 +68,8 @@ const SendingShipmentForm = () => {
     const date = new Date()
     console.log(date)
 
-    const shipment: CreateSendingShipmentType = {
+    const shipment: NewSentShipmentType = {
       sendDate: date,
-      direction: ShipmentDirectionEnum.Out,
       project: project,
       crates: selectedCrates,
       vendor: selectedCrates[0].vendor, // REMOVE THIS IN THE FUTURE, WE HAVE TO MAKE SEPARATE SHIPMENT TYPES FOR SENDINGA ND RECEIVING SHIPMENTS THEY ARE JUST TOO DIFFERENT
@@ -114,7 +109,7 @@ const SendingShipmentForm = () => {
         })
       )
     },
-  })
+  })*/
 
   return (
     <>

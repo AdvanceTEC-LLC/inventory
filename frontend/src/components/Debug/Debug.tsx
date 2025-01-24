@@ -12,8 +12,8 @@ import { stockColumns } from './Stock'
 import projectsService from '../../services/projectsService'
 import { projectColumns } from './Projects'
 
-import vendorsService from '../../services/vendorsService'
-import { vendorColumns } from './Vendors'
+import manufacturersService from '../../services/manufacturersService'
+import { manufacturerColumns } from './Manufacturers'
 
 import storagesService from '../../services/storagesService'
 import { storageColumns } from './Storages'
@@ -38,7 +38,7 @@ const Debug = () => {
       await materialsService.removeAll()
       await stockService.removeAll()
       await projectsService.removeAll()
-      await vendorsService.removeAll()
+      await manufacturersService.removeAll()
       await cratesService.removeAll()
       await storagesService.removeAll()
       await shipmentsService.removeAll()
@@ -48,7 +48,7 @@ const Debug = () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })
       queryClient.invalidateQueries({ queryKey: ['projects'] })
-      queryClient.invalidateQueries({ queryKey: ['vendors'] })
+      queryClient.invalidateQueries({ queryKey: ['manufacturers'] })
       queryClient.invalidateQueries({ queryKey: ['crates'] })
       queryClient.invalidateQueries({ queryKey: ['storages'] })
       queryClient.invalidateQueries({ queryKey: ['shipments'] })
@@ -95,10 +95,10 @@ const Debug = () => {
       />
 
       <DebugCard
-        title={'Vendors'}
-        columns={vendorColumns}
+        title={'manufacturers'}
+        columns={manufacturerColumns}
         service={{
-          getAll: vendorsService.getAll,
+          getAll: manufacturersService.getAll,
         }}
       />
 

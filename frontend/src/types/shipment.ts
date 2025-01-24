@@ -8,15 +8,7 @@ export interface ShipmentType {
   crates: CrateType[]
 }
 
-export interface NewShipment
+export interface NewShipmentType
   extends Omit<ShipmentType, 'id' | 'project' | 'crates'> {
   projectId: number
-}
-
-export interface CreateSendingShipmentType {
-  direction: ShipmentDirectionEnum.Out
-  sendDate: Date
-  project: ProjectType
-  crates: CrateType[]
-  vendor: CreateVendorType
 }

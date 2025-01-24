@@ -1,5 +1,7 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+import Crate from './crate.js'
+import Assembly from './assembly.js'
 
 class CrateAssemblies extends Model {}
 

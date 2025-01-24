@@ -31,7 +31,6 @@ AssemblyMaterial.init(
     underscored: true,
     timestamps: true,
     modelName: 'assemblyMaterial',
-    tableName: 'assembly_materials',
   },
 )
 

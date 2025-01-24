@@ -9,18 +9,19 @@ import { Header, Subtext, Text } from '../../ATEC UI/Text'
 import ShipmentDetails from './ShipmentDetails'
 import ConfirmShipmentButton from './ConfirmButton'
 import ATECButton from '../../ATEC UI/Button'
+import { NewShipmentType, ShipmentDirectionEnum } from '../../../types/shipment'
+import { CrateLocationEnum, NewCrateType } from '../../../types/crate'
+import { NewStockType } from '../../../types/stock'
+import { MaterialType, NewMaterialType } from '../../../types/material'
 import {
-  CreateShipmentType,
-  ShipmentDirectionEnum,
-} from '../../../types/shipment'
-import { CrateLocationEnum, CreateCrateType } from '../../../types/crate'
-import { CreateStockType } from '../../../types/stock'
-import { CreateMaterialType } from '../../../types/material'
-import { CreateVendorType } from '../../../types/manufacturer'
-import { CreateProjectType } from '../../../types/project'
+  NewManufacturerType,
+  NewmanufacturerType,
+} from '../../../types/manufacturer'
+import { NewProjectType } from '../../../types/project'
 import ReceivingShipmentTable from './ReceivingShipmentTable'
 import { Button, styled } from '@mui/material'
 import DownloadFile from '../../DownloadFile'
+import { NewDivisionType } from '../../../types/division'
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -36,7 +37,7 @@ const VisuallyHiddenInput = styled('input')({
 
 const UploadShipment = () => {
   const [file, setFile] = useState<File | null>(null)
-  const [shipment, setShipment] = useState<CreateShipmentType | null>(null)
+  const [shipment, setShipment] = useState<NewShipmentType | null>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.[0]) {
@@ -77,69 +78,55 @@ const UploadShipment = () => {
   const getDetails = (rows: string[][]) => {
     const direction: ShipmentDirectionEnum = ShipmentDirectionEnum.In
 
-    const vendorName = rows[1][1]?.trim()
+    const manufacturerName = rows[1][0]?.trim()
 
-    const projectNumber: number = parseInt(rows[1][2]?.trim())
-    const projectName: string = rows[1][3]?.trim()
+    const projectNumber: number = parseInt(rows[1][1]?.trim())
+    const projectName: string = rows[1][2]?.trim()
 
-    const sendDate = new Date(rows[1][4]?.trim())
-    const receivedDate = new Date(rows[1][5]?.trim())
+    const receivedDate = new Date(rows[1][3]?.trim())
 
-    const vendor: CreateVendorType = {
-      name: vendorName,
+    const manufacturer: NewManufacturerType = {
+      name: manufacturerName,
     }
 
-    const project: CreateProjectType = {
+    const project: NewProjectType = {
       number: projectNumber,
       name: projectName,
     }
 
-    if (!project || !vendor || !sendDate || !receivedDate) {
+    if (!project || !manufacturer || !receivedDate) {
       console.error('Error: Missing details in the shipment')
       return null
     }
 
     return {
       direction,
-      vendor,
+      manufacturer,
       project,
-      sendDate,
       receivedDate,
     }
   }
 
-  const getMaterial = (row: string[], vendor: CreateVendorType) => {
-    const partNumber = row[0]?.trim()
-    const description = row[1]?.trim()
-    const thickness = isNaN(parseInt(row[2]?.trim()))
+  const getMaterial = (row: string[], manufacturer: NewManufacturerType) => {
+    const name = row[0]?.trim()
+    const divisionNumber = isNaN(parseInt(row[1]?.trim()))
       ? undefined
-      : parseInt(row[2]?.trim())
-    const width = isNaN(parseInt(row[3]?.trim()))
-      ? undefined
-      : parseInt(row[3]?.trim())
-    const length = isNaN(parseInt(row[4]?.trim()))
-      ? undefined
-      : parseInt(row[4]?.trim())
-    const topFinish = row[5]?.trim()
-    const bottomFinish = row[6]?.trim()
-    const xDimension = isNaN(parseInt(row[7]?.trim()))
-      ? undefined
-      : parseInt(row[7]?.trim())
-    const cutout = row[8]?.trim() === 'Y'
-    const tag = row[9]?.trim()
+      : parseInt(row[1]?.trim())
+    const divisionName = row[2]?.trim()
 
-    const material: CreateMaterialType = {
-      partNumber,
-      description,
-      thickness,
-      width,
-      length,
-      topFinish,
-      bottomFinish,
-      xDimension,
-      cutout,
-      tag,
-      vendor,
+    if (!name || !divisionNumber || !divisionName) {
+      return
+    }
+
+    const division: NewDivisionType = {
+      number: divisionNumber,
+      name: divisionName,
+    }
+
+    const material: NewMaterialType = {
+      name,
+      manufacturer,
+      division,
     }
 
     return material
@@ -148,10 +135,10 @@ const UploadShipment = () => {
   const getCrates = (rows: string[][], details: any) => {
     const materialRows = rows.slice(4)
 
-    let crates: CreateCrateType[] = []
+    let crates: NewCrateType[] = []
 
     materialRows.map((row) => {
-      const material = getMaterial(row, details.vendor)
+      const material = getMaterial(row, details.manufacturer)
 
       let crateColumnIndex = 12
 
@@ -162,7 +149,9 @@ const UploadShipment = () => {
         const crateNumber = row[crateColumnIndex]?.trim()
         const quantity = parseInt(row[crateColumnIndex - 1]?.trim() || '0', 10)
 
-        const stock: CreateStockType = { material, quantity }
+        if (!material) break
+
+        const stock: NewStockType = { material, quantity }
 
         // Add stock to existing crate or create a new crate
         if (crates.find((crate) => crate.number === crateNumber)) {
@@ -173,7 +162,7 @@ const UploadShipment = () => {
             number: crateNumber,
             location: CrateLocationEnum.ShippingBay,
             project: details.project,
-            vendor: details.vendor,
+            manufacturer: details.manufacturer,
             stock: [stock],
           })
         }
@@ -204,7 +193,7 @@ const UploadShipment = () => {
           return
         }
 
-        const crates: CreateCrateType[] | null = getCrates(rows, details)
+        const crates: NewCrateType[] | null = getCrates(rows, details)
         if (!crates) {
           return
         }

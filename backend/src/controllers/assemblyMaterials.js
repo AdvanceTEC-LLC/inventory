@@ -8,19 +8,19 @@ const assemblyMaterialsRouter = Router()
 export const assemblyMaterialFindOptions = {
   attributes: {
     exclude: ['assemblyId', 'projectId', 'createdAt', 'updatedAt'],
-    include: [
-      {
-        model: Assembly,
-        as: 'assembly',
-        ...assemblyFindOptions,
-      },
-      {
-        model: Material,
-        as: 'material',
-        ...materialFindOptions,
-      },
-    ],
   },
+  include: [
+    {
+      model: Assembly,
+      as: 'assembly',
+      //...assemblyFindOptions,
+    },
+    {
+      model: Material,
+      as: 'material',
+      ...materialFindOptions,
+    },
+  ],
 }
 
 const assemblyMaterialFinder = async (request, _response, next) => {
@@ -58,7 +58,7 @@ assemblyMaterialsRouter.get(
 )
 
 assemblyMaterialsRouter.post('/', async (request, response) => {
-  const { assemblyId, materialId } = request.body
+  const { assemblyId, materialId, quantity } = request.body
 
   const assemblyExists = await Assembly.findByPk(assemblyId)
 
@@ -80,9 +80,18 @@ assemblyMaterialsRouter.post('/', async (request, response) => {
     )
   }
 
+  if (quantity < 0) {
+    throw new CustomError(
+      'ValidationError',
+      `Quantity ${quantity} cannot be less than 0.`,
+      404,
+    )
+  }
+
   const assemblyMaterial = await AssemblyMaterial.create({
     assemblyId,
     materialId,
+    quantity,
   })
 
   response.status(201).send(assemblyMaterial)

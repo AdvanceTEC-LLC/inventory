@@ -1,18 +1,24 @@
 import { Router } from 'express'
-import { Material, Stock } from '../models/index.js'
+import { Material, Project, Stock } from '../models/index.js'
 import { materialFindOptions } from './materials.js'
+import { projectFindOptions } from './projects.js'
 import { CustomError } from '../util/errors/CustomError.js'
 const stockRouter = Router()
 
 export const stockFindOptions = {
   attributes: {
-    exclude: ['materialId', 'createdAt', 'updatedAt'],
+    exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
       model: Material,
       as: 'material',
       ...materialFindOptions,
+    },
+    {
+      model: Project,
+      as: 'project',
+      ...projectFindOptions,
     },
   ],
 }
@@ -60,7 +66,7 @@ stockRouter.get('/material/:partNumber', async (request, response) => {
 })
 
 stockRouter.post('/', async (request, response) => {
-  const { materialId, quantity } = request.body
+  const { materialId, projectId, quantity } = request.body
 
   const materialExists = await Material.findByPk(materialId)
 
@@ -72,9 +78,20 @@ stockRouter.post('/', async (request, response) => {
     )
   }
 
+  const projectExists = await Project.findByPk(projectId)
+
+  if (!projectExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found.`,
+      404,
+    )
+  }
+
   const stock = await Stock.create({
     materialId,
     quantity,
+    projectId,
   })
 
   response.status(201).send(stock)

@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+import Crate from './crate.js'
 
 class ShelfLocation extends Model {}
 

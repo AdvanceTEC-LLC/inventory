@@ -1,7 +1,7 @@
 import { ProjectType } from './project'
 import { ShelfLocationType } from './shelfLocation'
 import { StagingAreaType } from './stagingArea'
-import { StockType } from './stock'
+import { NewStockType, StockType } from './stock'
 import { WarehouseLocationType } from './warehouseLocation'
 
 export interface CrateType {
@@ -29,4 +29,5 @@ export interface NewCrateType
   shelfLocationId?: number
   stagingAreaId?: number
   projectId: number
+  stock?: NewStockType
 }

@@ -40,9 +40,10 @@ shelfLocationsRouter.get(
 )
 
 shelfLocationsRouter.post('/', async (request, response) => {
-  const { aisle, col, shelf } = request.body
+  const { side, aisle, col, shelf } = request.body
 
   const shelfLocation = await ShelfLocation.create({
+    side,
     aisle,
     col,
     shelf,

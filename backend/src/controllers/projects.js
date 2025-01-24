@@ -33,11 +33,12 @@ projectsRouter.get('/:id', projectFinder, async (request, response) => {
 })
 
 projectsRouter.post('/', async (request, response) => {
-  const { number, name } = request.body
+  const { number, name, active } = request.body
 
   const project = await Project.create({
     number,
     name,
+    active,
   })
 
   response.status(201).send(project)

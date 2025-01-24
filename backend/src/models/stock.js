@@ -1,5 +1,9 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+import Project from './project.js'
+import Material from './material.js'
+import Crate from './crate.js'
+import CrateStock from './crateStock.js'
 
 class Stock extends Model {}
 
@@ -18,7 +22,7 @@ Stock.init(
         key: 'id',
       },
     },
-    project_id: {
+    projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

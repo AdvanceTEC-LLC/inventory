@@ -1,14 +1,8 @@
 import { Router } from 'express'
-import {
-  Assembly,
-  AssemblyMaterial,
-  Material,
-  Project,
-} from '../models/index.js'
+import { Assembly, Material, Project } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { projectFindOptions } from './projects.js'
 import { materialFindOptions } from './materials.js'
-import { sequelize } from '../util/db.js'
 const assembliesRouter = Router()
 
 const transformAssembly = (assembly) => {
@@ -103,85 +97,31 @@ assembliesRouter.get('/:id', assemblyFinder, async (request, response) => {
 })
 
 assembliesRouter.post('/', async (request, response, next) => {
-  const { identifier, project, billOfMaterials } = request.body
+  const { code, type, projectId, prefabricated } = request.body
 
-  const projectInDb = await Project.findOne({
-    attributes: { where: { number: project.number } },
-  })
+  const projectInDb = await Project.findByPk(projectId)
 
   if (!projectInDb) {
     throw new CustomError(
       'NotFoundError',
-      `Project with number ${project.number} not found`,
+      `Project with id ${projectId} not found`,
       404,
     )
   }
 
-  const transaction = await sequelize.transaction()
+  const assembly = await Assembly.create({
+    code,
+    type,
+    projectId,
+    prefabricated,
+  })
 
-  try {
-    const assembly = await Assembly.create(
-      {
-        identifier,
-        projectId: projectInDb.id,
-      },
-      { transaction },
-    )
-
-    // Check if project and vendor exist in the database
-    let projectInDb = await Project.findOne({
-      where: { number: project.number },
-      transaction,
-    })
-
-    if (!projectInDb) {
-      throw new CustomError(
-        'NotFoundError',
-        `Project with number ${project.number} not found`,
-        404,
-      )
-    }
-
-    // Create assemblyMaterial entries
-    for (const assemblyMaterial of billOfMaterials) {
-      let materialInDb = await Material.findOne(
-        {
-          attributes: {
-            where: { partNumber: assemblyMaterial.material.partNumber },
-          },
-        },
-        { transaction },
-      )
-
-      if (materialInDb) {
-        throw new CustomError(
-          'NotFoundError',
-          `Material with partNumber ${assemblyMaterial.material.partNumber} not found`,
-          404,
-        )
-      }
-
-      await AssemblyMaterial.create(
-        {
-          assemblyId: assembly.id,
-          materialId: materialInDb.id,
-          quantity: assemblyMaterial.quantity,
-        },
-        { transaction },
-      )
-    }
-
-    await transaction.commit()
-
-    // Send the assembly data back as response
-    response.status(201).send(assembly)
-  } catch (error) {
-    await transaction.rollback()
-    next(error)
-  }
+  // Send the assembly data back as response
+  response.status(201).send(assembly)
 })
 
-assembliesRouter.post('/all/', async (request, response, next) => {
+/*
+assembliesRouter.post('/batch/', async (request, response, next) => {
   const assemblies = request.body
 
   const projectInDb = await Project.findOne({
@@ -256,6 +196,7 @@ assembliesRouter.post('/all/', async (request, response, next) => {
     next(error)
   }
 })
+*/
 
 assembliesRouter.delete('/:id', assemblyFinder, async (request, response) => {
   await request.assembly.destroy()

@@ -41,19 +41,11 @@ materialsRouter.get('/:id', materialFinder, async (request, response) => {
 })
 
 materialsRouter.post('/', async (request, response) => {
-  const { manufacturerId } = request.body
+  const { manufacturerId, name, divisionId } = request.body
 
-  /*if (thickness < 0 || width < 0 || length < 0) {
-    throw new CustomError(
-      'BadRequest',
-      'Material cannot have negative dimensions.',
-      400,
-    )
-  }*/
+  const manufacturerInDb = await Manufacturer.findByPk(manufacturerId)
 
-  const manufacturerExists = await Manufacturer.findByPk(manufacturerId)
-
-  if (!manufacturerExists) {
+  if (!manufacturerInDb) {
     throw new CustomError(
       'NotFoundError',
       `Manufacturer with id ${manufacturerId} not found`,
@@ -61,18 +53,20 @@ materialsRouter.post('/', async (request, response) => {
     )
   }
 
+  const divisionInDb = await Division.findByPk(divisionId)
+
+  if (!divisionInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Division with id ${divisionId} not found`,
+      404,
+    )
+  }
+
   const material = await Material.create({
-    partNumber,
-    description,
-    thickness,
-    width,
-    length,
-    topFinish,
-    bottomFinish,
-    xDimension,
-    cutout,
-    tag,
-    vendorId,
+    manufacturerId,
+    name,
+    divisionId,
   })
 
   response.status(201).send(material)

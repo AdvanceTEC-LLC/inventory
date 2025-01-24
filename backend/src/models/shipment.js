@@ -1,5 +1,11 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+import Project from './project.js'
+import ShipmentCrate from './shipmentCrate.js'
+import Manufacturer from './manufacturer.js'
+import Crate from './crate.js'
+import ReceivedShipment from './receivedShipment.js'
+import SentShipment from './sentShipment.js'
 
 class Shipment extends Model {}
 
@@ -10,7 +16,7 @@ Shipment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    tracking_number: {
+    trackingNumber: {
       type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,

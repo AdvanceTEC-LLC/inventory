@@ -1,14 +1,22 @@
 import { Router } from 'express'
-import { Crate, ShelfLocation, Project, Stock } from '../models/index.js'
+import {
+  Crate,
+  ShelfLocation,
+  Project,
+  Stock,
+  WarehouseLocation,
+} from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { shelfLocationFindOptions } from './shelfLocations.js'
 import { stockFindOptions } from './stock.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { warehouseLocationFindOptions } from './warehouseLocations.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
   attributes: {
     exclude: [
+      'warehouseLocationId',
       'shelfLocationId',
       'projectId',
       'vendorId',
@@ -21,6 +29,11 @@ export const crateFindOptions = {
       model: ShelfLocation,
       as: 'shelfLocation',
       ...shelfLocationFindOptions,
+    },
+    {
+      model: WarehouseLocation,
+      as: 'warehouseLocation',
+      ...warehouseLocationFindOptions,
     },
     {
       model: Project,
@@ -58,14 +71,22 @@ cratesRouter.get('/:id', crateFinder, async (request, response) => {
 })
 
 cratesRouter.post('/', async (request, response) => {
-  const { number, shelfLocationId, projectId } = request.body
+  const {
+    number,
+    warehouseLocationId,
+    shelfLocationId,
+    stagingAreaId,
+    projectId,
+    opened,
+  } = request.body
 
-  const projectExists = await Project.findByPk(projectId)
+  const warehouseLocationExists =
+    await WarehouseLocation.findByPk(warehouseLocationId)
 
-  if (!projectExists) {
+  if (!warehouseLocationExists) {
     throw new CustomError(
       'NotFoundError',
-      `Project with id ${projectId} not found`,
+      `Warehouse location with id ${warehouseLocationId} not found`,
       404,
     )
   }
@@ -80,10 +101,33 @@ cratesRouter.post('/', async (request, response) => {
     )
   }
 
+  const stagingAreaExists = await StagingArea.findByPk(stagingAreaId)
+
+  if (!stagingAreaExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Staging area with id ${stagingAreaId} not found`,
+      404,
+    )
+  }
+
+  const projectExists = await Project.findByPk(projectId)
+
+  if (!projectExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found`,
+      404,
+    )
+  }
+
   const crate = await Crate.create({
     number,
+    warehouseLocationId,
     shelfLocationId,
+    stagingAreaId,
     projectId,
+    opened,
   })
 
   response.status(201).send(crate)

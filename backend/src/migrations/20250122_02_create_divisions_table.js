@@ -1,23 +1,21 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('materials', {
+  await queryInterface.createTable('divisions', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    manufacturer_id: {
+    number: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'manufacturers',
-        key: 'id',
-      },
+      unique: true,
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -31,5 +29,5 @@ export const up = async ({ context: queryInterface }) => {
 }
 
 export const down = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('materials', { cascade: true })
+  await queryInterface.dropTable('divisions', { cascade: true })
 }

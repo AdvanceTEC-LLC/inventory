@@ -1,4 +1,3 @@
-import Division from './division.js'
 import Manufacturer from './manufacturer.js'
 import Project from './project.js'
 import ShelfLocation from './shelfLocation.js'
@@ -116,10 +115,6 @@ const crateStockRelationships = () => {
   })
 }
 
-const divisionRelationships = () => {
-  Division.hasMany(Material, { foreignKey: 'divisionId', as: 'materials' })
-}
-
 const manufacturerRelationships = () => {
   Manufacturer.hasMany(Material, {
     foreignKey: 'manufacturerId',
@@ -141,10 +136,6 @@ const materialRelationships = () => {
   Material.belongsTo(Manufacturer, {
     foreignKey: 'manufacturerId',
     as: 'manufacturer',
-  })
-  Material.belongsTo(Division, {
-    foreignKey: 'divisionId',
-    as: 'division',
   })
 
   Material.belongsToMany(Assembly, {
@@ -255,7 +246,6 @@ assemblyMaterialsRelationships()
 crateRelationships()
 crateAssembliesRelationships()
 crateStockRelationships()
-divisionRelationships()
 manufacturerRelationships()
 materialRelationships()
 projectRelationships()
@@ -274,7 +264,6 @@ export {
   Crate,
   CrateAssemblies,
   CrateStock,
-  Division,
   Manufacturer,
   Material,
   Project,

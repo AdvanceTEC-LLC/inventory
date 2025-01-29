@@ -19,14 +19,6 @@ export const up = async ({ context: queryInterface }) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    division_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'divisions',
-        key: 'id',
-      },
-    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,

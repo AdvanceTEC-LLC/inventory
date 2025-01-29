@@ -11,7 +11,6 @@ import assemblyMaterialsRouter from './controllers/assemblyMaterials.js'
 import crateAssembliesRouter from './controllers/crateAssemblies.js'
 import cratesRouter from './controllers/crates.js'
 import crateStockRouter from './controllers/crateStock.js'
-import divisionsRouter from './controllers/divisions.js'
 import manufacturersRouter from './controllers/manufacturers.js'
 import materialsRouter from './controllers/materials.js'
 import projectsRouter from './controllers/projects.js'
@@ -38,7 +37,6 @@ app.use('/api/assemblyMaterials', assemblyMaterialsRouter)
 app.use('/api/crateAssemblies', crateAssembliesRouter)
 app.use('/api/crates', cratesRouter)
 app.use('/api/crateStock', crateStockRouter)
-app.use('/api/divisions', divisionsRouter)
 app.use('/api/manufacturers', manufacturersRouter)
 app.use('/api/materials', materialsRouter)
 app.use('/api/projects', projectsRouter)

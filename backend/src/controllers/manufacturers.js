@@ -1,5 +1,8 @@
 import { Router } from 'express'
 import { Manufacturer } from '../models/index.js'
+import { CustomError } from '../util/errors/CustomError.js'
+import { manufacturersService } from '../services/manufacturersService.js'
+import { sequelize } from '../util/db.js'
 const manufacturersRouter = Router()
 
 export const manufacturerFindOptions = {
@@ -44,6 +47,24 @@ manufacturersRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(manufacturer)
+})
+
+manufacturersRouter.post('/bulk/', async (request, response) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const manufacturers = await manufacturersService.bulkCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(manufacturers)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 manufacturersRouter.delete(

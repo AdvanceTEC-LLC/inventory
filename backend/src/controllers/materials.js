@@ -1,26 +1,20 @@
 import { Router } from 'express'
-import { Material, Manufacturer, Division } from '../models/index.js'
+import { Material, Manufacturer } from '../models/index.js'
 import { manufacturerFindOptions } from './manufacturers.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { materialsService } from '../services/materialsService.js'
 import { sequelize } from '../util/db.js'
-import { divisionFindOptions } from './divisions.js'
 const materialsRouter = Router()
 
 export const materialFindOptions = {
   attributes: {
-    exclude: ['manufacturerId', 'divisionId', 'createdAt', 'updatedAt'],
+    exclude: ['manufacturerId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
       model: Manufacturer,
       as: 'manufacturer',
       ...manufacturerFindOptions,
-    },
-    {
-      model: Division,
-      as: 'division',
-      ...divisionFindOptions,
     },
   ],
 }
@@ -51,7 +45,7 @@ materialsRouter.get('/:id', materialFinder, async (request, response) => {
 })
 
 materialsRouter.post('/', async (request, response) => {
-  const { manufacturerId, name, divisionId } = request.body
+  const { manufacturerId, name } = request.body
 
   const manufacturerInDb = await Manufacturer.findByPk(manufacturerId)
 
@@ -63,16 +57,6 @@ materialsRouter.post('/', async (request, response) => {
     )
   }
 
-  const divisionInDb = await Division.findByPk(divisionId)
-
-  if (!divisionInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Division with id ${divisionId} not found`,
-      404,
-    )
-  }
-
   const material = await Material.create({
     manufacturerId,
     name,
@@ -80,6 +64,24 @@ materialsRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(material)
+})
+
+materialsRouter.post('/bulk', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const material = await materialsService.bulkCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(material)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 materialsRouter.post('/deep', async (request, response, next) => {

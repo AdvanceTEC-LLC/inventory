@@ -10,7 +10,6 @@ import Papa, { ParseResult } from 'papaparse'
 import { preprocessCSV } from '../../../utils/preprocessCSV'
 import { NewCrateType } from '../../../types/crate'
 import { NewStockType } from '../../../types/stock'
-import { NewDivisionType } from '../../../types/division'
 import { NewManufacturerType } from '../../../types/manufacturer'
 import { NewMaterialType } from '../../../types/material'
 import { NewProjectType } from '../../../types/project'
@@ -209,14 +208,8 @@ const UploadShipment = () => {
 
     if (!name) throw new Error('Material name cannot be null')
 
-    const division: NewDivisionType = {
-      number: 0,
-      name: 'Material',
-    }
-
     const material: NewMaterialType = {
       name,
-      division,
       manufacturer,
     }
 

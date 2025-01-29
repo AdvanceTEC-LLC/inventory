@@ -13,6 +13,15 @@ const findOrCreate = async (manufacturer, transaction) => {
   return manufacturerInDb
 }
 
+const bulkCreate = async (manufacturers, transaction) => {
+  const manufacturersInDb = await Manufacturer.bulkCreate(manufacturers, {
+    transaction,
+  })
+
+  return manufacturersInDb
+}
+
 export const manufacturersService = {
   findOrCreate,
+  bulkCreate,
 }

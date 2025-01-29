@@ -1,6 +1,5 @@
-import { Division, Manufacturer, Material } from '../models/index.js'
+import { Manufacturer, Material } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { divisionsService } from './divisionsService.js'
 import { manufacturersService } from './manufacturersService.js'
 
 const findOrCreate = async (material, transaction) => {
@@ -23,18 +22,6 @@ const findOrCreate = async (material, transaction) => {
       )
     }
 
-    const divisionInDb = await Division.findByPk(material.divisionId, {
-      transaction,
-    })
-
-    if (!divisionInDb) {
-      throw new CustomError(
-        'NotFoundError',
-        `Division with id ${material.divisionId} not found`,
-        404,
-      )
-    }
-
     materialInDb = await Material.create(material, {
       transaction,
     })
@@ -43,16 +30,35 @@ const findOrCreate = async (material, transaction) => {
   return materialInDb
 }
 
+const bulkCreate = async (materials, transaction) => {
+  await Promise.all(
+    materials.map(async (material) => {
+      const manufacturer = await Manufacturer.findByPk(
+        material.manufacturerId,
+        { transaction },
+      )
+      if (!manufacturer) {
+        throw new CustomError(
+          'NotFoundError',
+          `Manufacturer with id ${material.manufacturerId} not found`,
+          404,
+        )
+      }
+    }),
+  )
+
+  const materialInDb = await Material.bulkCreate(materials, {
+    transaction,
+  })
+
+  return materialInDb
+}
+
 const deepCreate = async (material, transaction) => {
-  const { manufacturer, division } = material
+  const { manufacturer } = material
 
   const manufacturerInDb = await manufacturersService.findOrCreate(
     manufacturer,
-    transaction,
-  )
-
-  const divisionInDb = await divisionsService.findOrCreate(
-    division,
     transaction,
   )
 
@@ -60,7 +66,6 @@ const deepCreate = async (material, transaction) => {
     {
       ...material,
       manufacturerId: manufacturerInDb.id,
-      divisionId: divisionInDb.id,
     },
     transaction,
   )
@@ -68,5 +73,7 @@ const deepCreate = async (material, transaction) => {
 }
 
 export const materialsService = {
+  findOrCreate,
+  bulkCreate,
   deepCreate,
 }

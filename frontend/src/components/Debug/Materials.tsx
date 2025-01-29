@@ -20,15 +20,6 @@ export const materialColumns: GridColDef[] = [
     flex: 1,
     valueGetter: (_value, row) => row.manufacturer.name,
   },
-  {
-    field: 'division',
-    headerName: 'Division',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      if (!row.division) return ''
-      return `${row.division.number} ${row.division.name}`
-    },
-  },
 ]
 
 export const materialForm = (

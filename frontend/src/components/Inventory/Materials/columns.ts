@@ -2,55 +2,23 @@ import { GridColDef } from '@mui/x-data-grid'
 
 export const columns: GridColDef[] = [
   {
-    field: 'partNumber',
-    headerName: 'Part Number',
+    field: 'name',
+    headerName: 'Name',
     flex: 1,
-    valueGetter: (_value, row) => row.material.partNumber,
+    valueGetter: (_value, row) => row.material.name,
   },
   {
-    field: 'description',
-    headerName: 'Description',
+    field: 'manufacturer',
+    headerName: 'Manufacturer',
     flex: 1,
-    valueGetter: (_value, row) => row.material.description,
+    valueGetter: (_value, row) => row.material.manufacturer.name,
   },
   {
-    field: 'vendor',
-    headerName: 'Vendor',
+    field: 'division',
+    headerName: 'Division',
     flex: 1,
-    valueGetter: (_value, row) => row.material.vendor.name,
-  },
-  {
-    field: 'color',
-    headerName: 'Color',
-    flex: 1,
-    valueGetter: (_value, row) => row.material.color,
-  },
-  {
-    field: 'tag',
-    headerName: 'Tag',
-    flex: 1,
-    valueGetter: (_value, row) => row.material.tag,
-  },
-  {
-    field: 'size',
-    headerName: 'Size',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      if (
-        row.material.thicknessInches &&
-        row.material.widthInches &&
-        row.material.lengthInches
-      )
-        return `${row.material.thicknessInches}"T x ${row.material.widthInches}"W x ${row.material.lengthInches}"L`
-    },
-  },
-  {
-    field: 'squareFeet',
-    headerName: 'Square Feet',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      if (row.material.squareFeet) return Math.ceil(row.material.squareFeet)
-    },
+    valueGetter: (_value, row) =>
+      `${row.material.division.number} ${row.material.division.name}`,
   },
   {
     field: 'quantity',

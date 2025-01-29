@@ -1,6 +1,8 @@
 import { Router } from 'express'
-import { Manufacturer, ReceivedShipment, Shipment } from '../models/index.js'
+import { ReceivedShipment } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { sequelize } from '../util/db.js'
+import { receivedShipmentsService } from '../services/receivedShipmentsService.js'
 const receivedShipmentsRouter = Router()
 
 export const receivedShipmentFindOptions = {
@@ -42,48 +44,46 @@ receivedShipmentsRouter.get(
 )
 
 receivedShipmentsRouter.post('/', async (request, response) => {
-  const { shipmentId, receivedDate, manufacturerId } = request.body
+  const transaction = await sequelize.transaction()
 
-  const shipmentInDb = await Shipment.findByPk(shipmentId)
-
-  if (!shipmentInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Shipment with id ${shipmentId} not found`,
-      404,
+  try {
+    const receivedShipment = await receivedShipmentsService.create(
+      request.body,
+      transaction,
     )
+
+    await transaction.commit()
+
+    response.status(201).send(receivedShipment)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
+})
 
-  const parsedReceivedDate = new Date(receivedDate)
+receivedShipmentsRouter.post('/deep/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
 
-  if (receivedDate !== null && isNaN(parsedReceivedDate.getTime())) {
-    throw new CustomError('ValidationError', 'Received date is invalid.', 400)
-  }
-
-  const manufacturerInDb = await Manufacturer.findByPk(manufacturerId)
-
-  if (manufacturerId && !manufacturerInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `manufacturer with id ${manufacturerId} not found`,
-      404,
+  try {
+    const receivedShipment = await receivedShipmentsService.deepCreate(
+      request.body,
+      transaction,
     )
+
+    await transaction.commit()
+
+    response.status(201).send(receivedShipment)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
-
-  const receivedShipment = await ReceivedShipment.create({
-    shipmentId,
-    receivedDate: parsedReceivedDate,
-    manufacturerId,
-  })
-
-  response.status(201).send(receivedShipment)
 })
 
 receivedShipmentsRouter.delete(
   '/:id',
   receivedShipmentFinder,
   async (request, response) => {
-    await request.ReceivedShipment.destroy()
+    await request.receivedShipment.destroy()
     response
       .status(204)
       .json({ message: 'Received shipment entry deleted successfully' })

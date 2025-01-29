@@ -1,23 +1,15 @@
 import { Router } from 'express'
-import {
-  Shipment,
-  Project,
-  ShipmentCrate,
-  Crate,
-  CrateStock,
-  Stock,
-  Material,
-  Manufacturer,
-} from '../models/index.js'
+import { Shipment, Project, ShipmentCrate, Crate } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { crateFindOptions } from './crates.js'
-import { sequelize } from '../util/db.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { sequelize } from '../util/db.js'
+import { shipmentsService } from '../services/shipmentsService.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
   attributes: {
-    exclude: ['projectId', 'manufacturerId', 'createdAt', 'updatedAt'],
+    exclude: ['projectId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
@@ -91,6 +83,24 @@ shipmentsRouter.post('/', async (request, response, next) => {
   })
 
   response.status(201).send(shipment)
+})
+
+shipmentsRouter.post('/deep', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const shipment = await shipmentsService.deepCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(shipment)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 /*

@@ -10,12 +10,12 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import React from 'react'
-import { CreateCrateType } from '../../../types/crate'
+import { NewCrateType } from '../../../types/crate'
 import StockRow from './StockRow'
 import { Header, Subtext } from '../../ATEC UI/Text'
 
 interface CrateRowProps {
-  crate: CreateCrateType
+  crate: NewCrateType
 }
 
 const CrateRow = ({ crate }: CrateRowProps) => {
@@ -51,8 +51,7 @@ const CrateRow = ({ crate }: CrateRowProps) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Part Number</TableCell>
-                      <TableCell>Description</TableCell>
+                      <TableCell>Name</TableCell>
                       <TableCell>Quantity</TableCell>
                     </TableRow>
                   </TableHead>

@@ -129,10 +129,6 @@ const manufacturerRelationships = () => {
     foreignKey: 'manufacturerId',
     as: 'receivedShipments',
   })
-  Manufacturer.hasMany(Shipment, {
-    foreignKey: 'manufacturerId',
-    as: 'shipments',
-  })
 }
 
 const materialRelationships = () => {

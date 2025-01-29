@@ -5,10 +5,10 @@ import MaterialStock from '../Inventory/Materials/Materials'
 import AssemblyStock from '../Inventory/Assemblies/Assemblies'
 
 import Projects from '../Other/Projects/Projects'
-import Storages from '../Other/Storages/Storages'
-import Vendors from '../Other/Vendors/Vendors'
+import Manufacturers from '../Other/Manufacturers/Manufacturers'
 
 import Prefabricate from '../Prefabrication/Prefabricate/Prefabricate'
+import Storage from '../Other/Storage/Storage'
 import Assemblies from '../Prefabrication/Assemblies/Assemblies'
 
 import History from '../Shipments/History/History'
@@ -100,14 +100,14 @@ export const routes: LinkType[] = [
         element: <Projects />,
       },
       {
-        name: 'Vendors',
-        path: 'vendors',
-        element: <Vendors />,
+        name: 'Manufacturers',
+        path: 'manufacturers',
+        element: <Manufacturers />,
       },
       {
-        name: 'Storages',
-        path: 'storages',
-        element: <Storages />,
+        name: 'Storage',
+        path: 'storage',
+        element: <Storage />,
       },
     ],
   },

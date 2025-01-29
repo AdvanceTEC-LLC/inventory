@@ -11,6 +11,8 @@ import { shelfLocationFindOptions } from './shelfLocations.js'
 import { stockFindOptions } from './stock.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { warehouseLocationFindOptions } from './warehouseLocations.js'
+import { sequelize } from '../util/db.js'
+import { cratesService } from '../services/cratesService.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
@@ -131,6 +133,21 @@ cratesRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(crate)
+})
+
+cratesRouter.post('/deep', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const crate = await cratesService.deepCreate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(crate)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 cratesRouter.delete('/:id', crateFinder, async (request, response) => {

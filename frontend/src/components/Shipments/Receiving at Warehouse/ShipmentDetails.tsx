@@ -1,30 +1,33 @@
-import { CreateShipmentType } from '../../../types/shipment'
+import { NewReceivedShipmentType } from '../../../types/receivedShipment'
 import { Header, Text } from '../../ATEC UI/Text'
 
 interface ShipmentDetailsProps {
-  shipment: CreateShipmentType
+  receivedShipment: NewReceivedShipmentType
 }
 
-const ShipmentDetails = ({ shipment }: ShipmentDetailsProps) => {
+const ShipmentDetails = ({ receivedShipment }: ShipmentDetailsProps) => {
   return (
     <div className="flex flex-col gap-y-2">
       <Header text="Upload Details" />
 
       <div className="grid grid-cols-[1fr_1fr] gap-x-4">
         <Text text="Project" />
-        <Text text={`${shipment.project.number} ${shipment.project.name}`} />
+        <Text
+          text={`${receivedShipment.shipment.project.number} ${receivedShipment.shipment.project.name}`}
+        />
 
-        <Text text="Vendor" />
-        <Text text={shipment.vendor?.name ?? ''} />
-
-        <Text text="Send Date" />
-        <Text text={shipment.sendDate.toLocaleDateString()} />
+        <Text text="Manufacturer" />
+        <Text text={receivedShipment.manufacturer.name} />
 
         <Text text="Received Date" />
-        <Text text={shipment.receivedDate?.toLocaleDateString() ?? ''} />
+        <Text
+          text={receivedShipment.receivedDate?.toLocaleDateString() ?? ''}
+        />
 
         <Text text="Number of Crates" />
-        <Text text={shipment.crates.length.toString()} />
+        <Text
+          text={receivedShipment.shipment.crates?.length.toString() ?? '0'}
+        />
       </div>
     </div>
   )

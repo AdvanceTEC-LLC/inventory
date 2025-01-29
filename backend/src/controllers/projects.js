@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import { Project } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { projectsService } from '../services/projectsService.js'
+import { sequelize } from '../util/db.js'
 const projectsRouter = Router()
 
 export const projectFindOptions = {
@@ -32,16 +34,19 @@ projectsRouter.get('/:id', projectFinder, async (request, response) => {
   response.status(200).send(request.project)
 })
 
-projectsRouter.post('/', async (request, response) => {
-  const { number, name, active } = request.body
+projectsRouter.post('/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
 
-  const project = await Project.create({
-    number,
-    name,
-    active,
-  })
+  try {
+    const project = await projectsService.create(request.body, transaction)
 
-  response.status(201).send(project)
+    await transaction.commit()
+
+    response.status(201).send(project)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 projectsRouter.delete('/:id', projectFinder, async (request, response) => {

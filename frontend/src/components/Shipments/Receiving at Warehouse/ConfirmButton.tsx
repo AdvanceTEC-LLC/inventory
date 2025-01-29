@@ -3,20 +3,22 @@ import { useDispatch } from 'react-redux'
 import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
 import { AppDispatch } from '../../../store'
 import Button from '../../ATEC UI/Button'
-import shipmentsService from '../../../services/shipmentsService'
-import { CreateShipmentType } from '../../../types/shipment'
+import receivedShipmentsService from '../../../services/receivedShipmentsService'
+import { NewReceivedShipmentType } from '../../../types/receivedShipment'
 
-interface ConfirmShipmentButtonProps {
-  shipment: CreateShipmentType
+interface ConfirmreceivedShipmentButtonProps {
+  receivedShipment: NewReceivedShipmentType
 }
 
-const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
+const ConfirmReceivedShipmentButton = ({
+  receivedShipment,
+}: ConfirmreceivedShipmentButtonProps) => {
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
 
-  const createShipmentMutation = useMutation({
-    mutationFn: (shipment: CreateShipmentType) =>
-      shipmentsService.create(shipment),
+  const createreceivedShipmentMutation = useMutation({
+    mutationFn: (receivedShipment: NewReceivedShipmentType) =>
+      receivedShipmentsService.deepCreate(receivedShipment),
     onMutate: () => {
       dispatch(
         notifyWithTimeout({
@@ -27,7 +29,7 @@ const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
       )
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shipments'] })
+      queryClient.invalidateQueries({ queryKey: ['receivedShipments'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -47,23 +49,24 @@ const ConfirmShipmentButton = ({ shipment }: ConfirmShipmentButtonProps) => {
     },
   })
 
-  const confirmShipment = async () => {
-    if (!shipment) {
+  const confirmReceivedShipment = async () => {
+    if (!receivedShipment) {
       console.error('Error: No shipment to confirm')
       return
     }
 
-    createShipmentMutation.mutate(shipment)
+    console.log(receivedShipment)
+    createreceivedShipmentMutation.mutate(receivedShipment)
   }
 
   return (
     <Button
-      text="Confirm Shipment"
+      text="Confirm shipment"
       onClick={() => {
-        void confirmShipment()
+        void confirmReceivedShipment()
       }}
     />
   )
 }
 
-export default ConfirmShipmentButton
+export default ConfirmReceivedShipmentButton

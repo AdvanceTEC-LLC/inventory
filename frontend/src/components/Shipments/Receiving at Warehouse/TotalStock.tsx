@@ -1,27 +1,27 @@
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
-import { CreateMaterialType } from '../../../types/material'
-import { CreateShipmentType } from '../../../types/shipment'
+import { NewMaterialType } from '../../../types/material'
+import { NewShipmentType } from '../../../types/shipment'
 import StockRow from './StockRow'
 import { Subtext } from '../../ATEC UI/Text'
 
 interface TotalStockProps {
-  shipment: CreateShipmentType
+  shipment: NewShipmentType
 }
 
 const TotalStock = ({ shipment }: TotalStockProps) => {
   const allCrateStock = shipment.crates.flatMap((crate) => crate.stock)
 
   const groupedStock = allCrateStock.reduce((acc, stock) => {
-    const partNumber = stock.material.partNumber
-    if (!acc[partNumber]) {
-      acc[partNumber] = {
+    const name = stock.material.name
+    if (!acc[name]) {
+      acc[name] = {
         material: stock.material,
         quantity: 0,
       }
     }
-    acc[partNumber].quantity += stock.quantity
+    acc[name].quantity += stock.quantity
     return acc
-  }, {} as Record<string, { material: CreateMaterialType; quantity: number }>)
+  }, {} as Record<string, { material: NewMaterialType; quantity: number }>)
 
   const totalStock = Object.values(groupedStock)
 
@@ -32,8 +32,7 @@ const TotalStock = ({ shipment }: TotalStockProps) => {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Part Number</TableCell>
-          <TableCell>Description</TableCell>
+          <TableCell>Name</TableCell>
           <TableCell>Quantity</TableCell>
         </TableRow>
       </TableHead>

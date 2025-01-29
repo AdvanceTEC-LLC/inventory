@@ -8,32 +8,10 @@ export const shipmentColumns: GridColDef[] = [
     valueGetter: (_value, row) => row.id,
   },
   {
-    field: 'direction',
-    headerName: 'Direction',
+    field: 'trackingNumber',
+    headerName: 'Tracking Number',
     flex: 1,
-    valueGetter: (_value, row) => row.direction,
-  },
-  {
-    field: 'sendDate',
-    headerName: 'Send Date',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      return new Date(row.sendDate).toLocaleDateString()
-    },
-  },
-  {
-    field: 'receivedDate',
-    headerName: 'Received Date',
-    flex: 1,
-    valueGetter: (_value, row) => {
-      return new Date(row.sendDate).toLocaleDateString()
-    },
-  },
-  {
-    field: 'vendor',
-    headerName: 'Vendor',
-    flex: 1,
-    valueGetter: (_value, row) => row.vendor.name,
+    valueGetter: (_value, row) => row.trackingNumber,
   },
   {
     field: 'project',

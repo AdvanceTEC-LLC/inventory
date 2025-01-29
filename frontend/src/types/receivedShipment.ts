@@ -1,5 +1,5 @@
-import { ManufacturerType } from './manufacturer'
-import { ShipmentType } from './shipment'
+import { ManufacturerType, NewManufacturerType } from './manufacturer'
+import { NewShipmentType, ShipmentType } from './shipment'
 
 export interface ReceivedShipmentType {
   id: number
@@ -10,6 +10,6 @@ export interface ReceivedShipmentType {
 
 export interface NewReceivedShipmentType
   extends Omit<ReceivedShipmentType, 'id' | 'shipment' | 'manufacturer'> {
-  shipmentId: number
-  manufacturerId?: number
+  shipment: NewShipmentType
+  manufacturer: NewManufacturerType
 }

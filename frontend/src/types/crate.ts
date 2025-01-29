@@ -1,8 +1,11 @@
-import { ProjectType } from './project'
-import { ShelfLocationType } from './shelfLocation'
-import { StagingAreaType } from './stagingArea'
+import { NewProjectType, ProjectType } from './project'
+import { NewShelfLocationType, ShelfLocationType } from './shelfLocation'
+import { NewStagingAreaType, StagingAreaType } from './stagingArea'
 import { NewStockType, StockType } from './stock'
-import { WarehouseLocationType } from './warehouseLocation'
+import {
+  NewWarehouseLocationType,
+  WarehouseLocationType,
+} from './warehouseLocation'
 
 export interface CrateType {
   id: number
@@ -25,9 +28,9 @@ export interface NewCrateType
     | 'project'
     | 'stock'
   > {
-  warehouseLocationId: number
-  shelfLocationId?: number
-  stagingAreaId?: number
-  projectId: number
-  stock?: NewStockType
+  warehouseLocation: NewWarehouseLocationType | number
+  shelfLocation?: NewShelfLocationType | number
+  stagingArea?: NewStagingAreaType | number
+  project: NewProjectType | number
+  stock: NewStockType[]
 }

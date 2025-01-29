@@ -15,14 +15,17 @@ import { projectColumns } from './Projects'
 import manufacturersService from '../../services/manufacturersService'
 import { manufacturerColumns } from './Manufacturers'
 
-import storagesService from '../../services/storagesService'
-import { storageColumns } from './Storages'
+import shelfLocationsService from '../../services/shelfLocationsService'
+import { shelfLocationColumns } from './ShelfLocations'
 
 import cratesService from '../../services/cratesService'
 import { crateColumns } from './Crates'
 
 import shipmentsService from '../../services/shipmentsService'
 import { shipmentColumns } from './Shipments'
+
+import divisionsService from '../../services/divisionsService'
+import { divisionColumns } from './Division'
 
 import shipmentCratesService from '../../services/shipmentCratesService'
 import { shipmentCrateColumns } from './ShipmentCrates'
@@ -40,20 +43,22 @@ const Debug = () => {
       await projectsService.removeAll()
       await manufacturersService.removeAll()
       await cratesService.removeAll()
-      await storagesService.removeAll()
+      await shelfLocationsService.removeAll()
       await shipmentsService.removeAll()
       await crateStockService.removeAll()
       await shipmentCratesService.removeAll()
+      await divisionsService.removeAll()
 
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['manufacturers'] })
       queryClient.invalidateQueries({ queryKey: ['crates'] })
-      queryClient.invalidateQueries({ queryKey: ['storages'] })
+      queryClient.invalidateQueries({ queryKey: ['shelfLocations'] })
       queryClient.invalidateQueries({ queryKey: ['shipments'] })
       queryClient.invalidateQueries({ queryKey: ['crateStock'] })
       queryClient.invalidateQueries({ queryKey: ['shipmentCrates'] })
+      queryClient.invalidateQueries({ queryKey: ['divisions'] })
     } catch (error) {
       console.log(error)
     }
@@ -95,7 +100,7 @@ const Debug = () => {
       />
 
       <DebugCard
-        title={'manufacturers'}
+        title={'Manufacturers'}
         columns={manufacturerColumns}
         service={{
           getAll: manufacturersService.getAll,
@@ -103,10 +108,10 @@ const Debug = () => {
       />
 
       <DebugCard
-        title={'Storages'}
-        columns={storageColumns}
+        title={'Shelf Locations'}
+        columns={shelfLocationColumns}
         service={{
-          getAll: storagesService.getAll,
+          getAll: shelfLocationsService.getAll,
         }}
       />
 
@@ -123,6 +128,14 @@ const Debug = () => {
         columns={shipmentColumns}
         service={{
           getAll: shipmentsService.getAll,
+        }}
+      />
+
+      <DebugCard
+        title={'Divisions'}
+        columns={divisionColumns}
+        service={{
+          getAll: divisionsService.getAll,
         }}
       />
 

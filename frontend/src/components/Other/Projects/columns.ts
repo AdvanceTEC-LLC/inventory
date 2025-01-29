@@ -13,4 +13,10 @@ export const columns: GridColDef[] = [
     flex: 1,
     valueGetter: (_value, row) => row.name,
   },
+  {
+    field: 'active',
+    headerName: 'Active',
+    flex: 1,
+    valueGetter: (_value, row) => row.active,
+  },
 ]

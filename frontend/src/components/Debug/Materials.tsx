@@ -24,7 +24,10 @@ export const materialColumns: GridColDef[] = [
     field: 'division',
     headerName: 'Division',
     flex: 1,
-    valueGetter: (_value, row) => `${row.division.number} ${row.division.name}`,
+    valueGetter: (_value, row) => {
+      if (!row.division) return ''
+      return `${row.division.number} ${row.division.name}`
+    },
   },
 ]
 

@@ -7,5 +7,5 @@ export interface StockType {
 }
 
 export interface NewStockType extends Omit<StockType, 'id' | 'material'> {
-  material: NewMaterialType | number
+  material: NewMaterialType
 }

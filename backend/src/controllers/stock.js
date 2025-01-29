@@ -3,6 +3,8 @@ import { Material, Project, Stock } from '../models/index.js'
 import { materialFindOptions } from './materials.js'
 import { projectFindOptions } from './projects.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { stockService } from '../services/stockService.js'
+import { sequelize } from '../util/db.js'
 const stockRouter = Router()
 
 export const stockFindOptions = {
@@ -95,6 +97,21 @@ stockRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(stock)
+})
+
+stockRouter.post('/deep/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const stock = await stockService.deepCreate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(stock)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 stockRouter.put('/:id', stockFinder, async (request, response) => {

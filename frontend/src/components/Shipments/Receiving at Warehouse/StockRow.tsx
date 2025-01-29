@@ -1,18 +1,15 @@
 import { TableRow, TableCell } from '@mui/material'
-import { CreateStockType } from '../../../types/stock'
+import { NewStockType } from '../../../types/stock'
 
 interface StockRowProps {
-  stock: CreateStockType
+  stock: NewStockType
 }
 
 const StockRow = ({ stock }: StockRowProps) => {
   return (
     <TableRow>
       <TableCell component="th" scope="row">
-        <div className="text-text-secondary">{stock.material.partNumber}</div>
-      </TableCell>
-      <TableCell component="th" scope="row">
-        <div className="text-text-secondary">{stock.material.description}</div>
+        <div className="text-text-secondary">{stock.material.name}</div>
       </TableCell>
       <TableCell>
         <div className="text-text-secondary">{stock.quantity}</div>

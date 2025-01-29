@@ -1,5 +1,5 @@
-import { CrateType } from './crate'
-import { ProjectType } from './project'
+import { CrateType, NewCrateType } from './crate'
+import { NewProjectType, ProjectType } from './project'
 
 export interface ShipmentType {
   id: number
@@ -10,5 +10,6 @@ export interface ShipmentType {
 
 export interface NewShipmentType
   extends Omit<ShipmentType, 'id' | 'project' | 'crates'> {
-  projectId: number
+  project: NewProjectType
+  crates: NewCrateType[]
 }

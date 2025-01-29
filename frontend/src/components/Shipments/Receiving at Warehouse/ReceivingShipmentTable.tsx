@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { CreateShipmentType } from '../../../types/shipment'
+import { NewShipmentType } from '../../../types/shipment'
 import CrateBreakdown from './CrateBreakdown'
 import TabSwitcher from '../TabSwitcher'
 import TotalStock from './TotalStock'
 
 interface ReceivingShipmentTableProps {
-  shipment: CreateShipmentType
+  shipment: NewShipmentType
 }
 
 const tabs = ['Total Stock', 'Crate Breakdown']

@@ -1,12 +1,18 @@
 import { GridColDef } from '@mui/x-data-grid'
 import { Header } from '../ATEC UI/Text'
 
-export const storageColumns: GridColDef[] = [
+export const shelfLocationColumns: GridColDef[] = [
   {
     field: 'id',
     headerName: 'ID',
     flex: 1,
     valueGetter: (_value, row) => row.id,
+  },
+  {
+    field: 'side',
+    headerName: 'Side',
+    flex: 1,
+    valueGetter: (_value, row) => row.side,
   },
   {
     field: 'aisle',
@@ -28,7 +34,7 @@ export const storageColumns: GridColDef[] = [
   },
 ]
 
-export const storageForm = (
+export const ShelfLocationsForm = (
   <div className="flex flex-col gap-y-4 w-full">
     <div className="grid grid-cols-[1fr_2fr] gap-x-4 items-center">
       <Header text="aisle" />

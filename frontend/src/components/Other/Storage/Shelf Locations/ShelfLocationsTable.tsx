@@ -1,22 +1,22 @@
 // Table
-import { columns } from './columns'
+import { shelfLocationColumns } from './shelfLocationColumns'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
-import storagesService from '../../../services/storagesService'
-import { StorageType } from '../../../types/shelfLocation'
+import shelfLocationsService from '../../../../services/shelfLocationsService'
+import { ShelfLocationType } from '../../../../types/shelfLocation'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 
 const paginationModel = { page: 0, pageSize: 5 }
 
-const StoragesTable = () => {
+const ShelfLocationsTable = () => {
   const {
-    data: storages = [],
+    data: shelfLocations = [],
     isLoading,
     isError,
-  } = useQuery<StorageType[]>({
-    queryKey: ['storages'],
-    queryFn: storagesService.getAll,
+  } = useQuery<ShelfLocationType[]>({
+    queryKey: ['shelfLocations'],
+    queryFn: shelfLocationsService.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
@@ -25,13 +25,13 @@ const StoragesTable = () => {
   }
 
   if (isError) {
-    return <div>Error fetching storages data.</div>
+    return <div>Error fetching shelfLocations data.</div>
   }
 
   return (
     <DataGrid
-      rows={storages}
-      columns={columns}
+      rows={shelfLocations}
+      columns={shelfLocationColumns}
       initialState={{ pagination: { paginationModel } }}
       pageSizeOptions={[5, 10]}
       sx={{ border: 0 }}
@@ -41,4 +41,4 @@ const StoragesTable = () => {
   )
 }
 
-export default StoragesTable
+export default ShelfLocationsTable

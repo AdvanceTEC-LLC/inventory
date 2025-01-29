@@ -1,6 +1,12 @@
 import { GridColDef } from '@mui/x-data-grid'
 
-export const columns: GridColDef[] = [
+export const shelfLocationColumns: GridColDef[] = [
+  {
+    field: 'side',
+    headerName: 'Side',
+    flex: 1,
+    valueGetter: (_value, row) => row.side,
+  },
   {
     field: 'aisle',
     headerName: 'Aisle',

@@ -57,27 +57,24 @@ const CratesTable = () => {
         isOptionEqualToValue={(option, value) => option.id === value.id}
       />
 
-      {filteredCrates.length ? (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Number</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Storage</TableCell>
-              <TableCell>Project</TableCell>
-              <TableCell>Vendor</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredCrates.map((crate) => (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Number</TableCell>
+            <TableCell>Location</TableCell>
+            <TableCell>Storage</TableCell>
+            <TableCell>Project</TableCell>
+            <TableCell>Vendor</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filteredCrates.length > 0 &&
+            filteredCrates.map((crate) => (
               <CrateRow crate={crate} key={crate.id} />
             ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <Subtext text="There are no crates that match the filter criteria" />
-      )}
+        </TableBody>
+      </Table>
     </>
   )
 }

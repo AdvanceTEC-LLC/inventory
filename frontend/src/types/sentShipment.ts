@@ -1,4 +1,4 @@
-import { ShipmentType } from './shipment'
+import { NewShipmentType, ShipmentType } from './shipment'
 
 export interface SentShipmentType {
   id: number
@@ -9,5 +9,5 @@ export interface SentShipmentType {
 
 export interface NewSentShipmentType
   extends Omit<SentShipmentType, 'id' | 'shipment'> {
-  shipmentId: number
+  shipment: NewShipmentType | number
 }

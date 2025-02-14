@@ -1,6 +1,18 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
+  // Ensure at least one warehouse exists before querying it
+  await queryInterface.sequelize.query(
+    `INSERT INTO warehouse_locations (name, is_default, created_at, updated_at)
+     VALUES ('Shipping Bay', true, NOW(), NOW())
+     ON CONFLICT (name) DO NOTHING;`,
+  )
+
+  // Get the default warehouse ID
+  const [[defaultWarehouse]] = await queryInterface.sequelize.query(
+    'SELECT id FROM warehouse_locations WHERE is_default = true LIMIT 1;',
+  )
+
   await queryInterface.createTable('crates', {
     id: {
       type: DataTypes.INTEGER,
@@ -18,6 +30,7 @@ export const up = async ({ context: queryInterface }) => {
         key: 'id',
       },
       allowNull: false,
+      defaultValue: defaultWarehouse.id,
     },
     shelf_location_id: {
       type: DataTypes.INTEGER,

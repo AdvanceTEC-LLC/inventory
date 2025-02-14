@@ -42,10 +42,11 @@ warehouseLocationsRouter.get(
 )
 
 warehouseLocationsRouter.post('/', async (request, response) => {
-  const { name } = request.body
+  const { name, isDefault } = request.body
 
   const warehouseLocation = await WarehouseLocation.create({
     name,
+    isDefault,
   })
 
   response.status(201).send(warehouseLocation)

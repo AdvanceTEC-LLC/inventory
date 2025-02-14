@@ -27,10 +27,22 @@ const create = async (crate, transaction) => {
 }
 
 const deepCreate = async (crate, transaction) => {
-  const warehouseLocationInDb = await warehouseLocationsService.findOrCreate(
-    crate.warehouseLocation,
+  let warehouseLocationInDb
+  if (crate.warehouseLocation) {
+    warehouseLocationInDb = await warehouseLocationsService.findOrCreate(
+      crate.warehouseLocation,
+      transaction,
+    )
+  }
+
+  const defaultWarehouseLocation = await warehouseLocationsService.findOrCreate(
+    { name: 'Shipping Bay', isDefault: true },
     transaction,
   )
+
+  const warehouseLocationId = warehouseLocationInDb
+    ? warehouseLocationInDb.id
+    : defaultWarehouseLocation.id
 
   let shelfLocationInDb
   if (crate.shelfLocation) {
@@ -58,7 +70,7 @@ const deepCreate = async (crate, transaction) => {
   const crateInDb = await create(
     {
       ...crate,
-      warehouseLocationId: warehouseLocationInDb.id,
+      warehouseLocationId,
       shelfLocationId,
       stagingAreaId,
       projectId: projectInDb.id,

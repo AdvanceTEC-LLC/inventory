@@ -28,7 +28,7 @@ export interface NewCrateType
     | 'project'
     | 'stock'
   > {
-  warehouseLocation: NewWarehouseLocationType | number
+  warehouseLocation?: NewWarehouseLocationType | number
   shelfLocation?: NewShelfLocationType | number
   stagingArea?: NewStagingAreaType | number
   project: NewProjectType | number

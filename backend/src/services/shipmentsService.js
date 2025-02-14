@@ -6,8 +6,6 @@ import { projectsService } from './projectsService.js'
 import { shipmentCratesService } from './shipmentCratesService.js'
 
 const create = async (shipment, transaction) => {
-  info('Transaction active:', transaction)
-
   let shipmentInDb = await Shipment.findOne({
     where: { trackingNumber: shipment.trackingNumber },
     transaction,
@@ -31,8 +29,6 @@ const deepCreate = async (shipment, transaction) => {
 
   const projectInDb = await projectsService.findOrCreate(project, transaction)
 
-  info('Creating shipment:', { trackingNumber, projectId: projectInDb.id })
-
   const shipmentInDb = await create(
     {
       trackingNumber,
@@ -40,8 +36,6 @@ const deepCreate = async (shipment, transaction) => {
     },
     transaction,
   )
-
-  info(`Shipment ${shipmentInDb.id} created successfully`)
 
   await Promise.all(
     crates.map(async (crate) => {

@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Crate from './crate.js'
 
 class WarehouseLocation extends Model {}
 
@@ -16,6 +15,11 @@ WarehouseLocation.init(
       allowNull: false,
       unique: true,
     },
+    isDefault: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
@@ -24,5 +28,27 @@ WarehouseLocation.init(
     modelName: 'warehouseLocation',
   },
 )
+
+WarehouseLocation.beforeUpdate(async (warehouse, options) => {
+  if (warehouse.changed('is_default') && !warehouse.is_default) {
+    const defaultCount = await WarehouseLocation.count({
+      where: { is_default: true },
+    })
+    if (defaultCount === 1) {
+      throw new Error('At least one warehouse must be the default')
+    }
+  }
+})
+
+WarehouseLocation.beforeDestroy(async (warehouse, options) => {
+  if (warehouse.is_default) {
+    const defaultCount = await WarehouseLocation.count({
+      where: { is_default: true },
+    })
+    if (defaultCount === 1) {
+      throw new Error('Cannot delete the last default warehouse')
+    }
+  }
+})
 
 export default WarehouseLocation

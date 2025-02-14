@@ -14,13 +14,6 @@ export const columns: GridColDef[] = [
     valueGetter: (_value, row) => row.material.manufacturer.name,
   },
   {
-    field: 'division',
-    headerName: 'Division',
-    flex: 1,
-    valueGetter: (_value, row) =>
-      `${row.material.division.number} ${row.material.division.name}`,
-  },
-  {
     field: 'quantity',
     headerName: 'Quantity',
     flex: 1,

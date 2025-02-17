@@ -2,7 +2,6 @@ import Container from '../ATEC UI/Container'
 import ShipmentTypeSelector from './ShipmentTypeSelector'
 import ShipmentForm from './ShipmentForm'
 import { ShipmentProvider } from './ShipmentContext'
-import ProjectSelector from './ProjectSelector'
 import { Title } from '../ATEC UI/Text'
 
 const Shipping = () => {
@@ -11,7 +10,6 @@ const Shipping = () => {
       <Container>
         <Title text="Details" />
         <ShipmentTypeSelector />
-        <ProjectSelector />
         <ShipmentForm />
       </Container>
     </ShipmentProvider>

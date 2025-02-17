@@ -1,10 +1,10 @@
 import { TextField } from '@mui/material'
-import { CrateType } from './types'
+import { ReceivedCrateType } from './types'
 import { useShipment } from './ShipmentContext'
 import { ChangeEvent } from 'react'
 
 interface CrateNumberInputProps {
-  crate: CrateType
+  crate: ReceivedCrateType
 }
 
 const CrateNumberInput = ({ crate }: CrateNumberInputProps) => {

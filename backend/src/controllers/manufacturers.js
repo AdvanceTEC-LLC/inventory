@@ -49,7 +49,7 @@ manufacturersRouter.post('/', async (request, response) => {
   response.status(201).send(manufacturer)
 })
 
-manufacturersRouter.post('/bulk/', async (request, response) => {
+manufacturersRouter.post('/bulk/', async (request, response, next) => {
   const transaction = await sequelize.transaction()
 
   try {

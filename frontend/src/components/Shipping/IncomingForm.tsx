@@ -7,11 +7,11 @@ import { AppDispatch } from '../../store'
 import { NewCrateType } from '../../types/crate'
 import { NewReceivedShipmentType } from '../../types/receivedShipment'
 import { NewShipmentType } from '../../types/shipment'
-import { Title } from '../ATEC UI/Text'
 import IncomingCrateList from './IncomingCrateList'
 import ManufacturerSelector from './ManufacturerSelector'
 import { useReceivedShipment } from './ReceivedShipmentContext'
 import { useShipment } from './ShipmentContext'
+import ProjectSelector from './ProjectSelector'
 
 const IncomingForm = () => {
   const { shipment } = useShipment()
@@ -89,10 +89,12 @@ const IncomingForm = () => {
 
   return (
     <>
+      <ProjectSelector />
       <ManufacturerSelector />
-      <Title text="Contents" className="mt-4" />
       <IncomingCrateList />
-      <Button onClick={submitReceivedShipment}>Confirm Shipment</Button>
+      <Button variant="contained" onClick={submitReceivedShipment}>
+        Confirm Shipment
+      </Button>
     </>
   )
 }

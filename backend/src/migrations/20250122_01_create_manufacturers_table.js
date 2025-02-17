@@ -10,6 +10,7 @@ export const up = async ({ context: queryInterface }) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     created_at: {
       type: DataTypes.DATE,

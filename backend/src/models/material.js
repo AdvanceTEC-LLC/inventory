@@ -20,6 +20,12 @@ Material.init(
     },
     name: {
       type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    unit: {
+      type: DataTypes.STRING,
+      defaultValue: 'ea',
     },
   },
   {

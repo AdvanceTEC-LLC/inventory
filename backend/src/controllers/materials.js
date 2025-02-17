@@ -4,6 +4,7 @@ import { manufacturerFindOptions } from './manufacturers.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { materialsService } from '../services/materialsService.js'
 import { sequelize } from '../util/db.js'
+import { info } from '../util/logger.js'
 const materialsRouter = Router()
 
 export const materialFindOptions = {
@@ -44,26 +45,24 @@ materialsRouter.get('/:id', materialFinder, async (request, response) => {
   response.status(200).send(request.material)
 })
 
-materialsRouter.post('/', async (request, response) => {
-  const { manufacturerId, name } = request.body
+materialsRouter.post('/', async (request, response, next) => {
+  const { manufacturer, name } = request.body
 
-  const manufacturerInDb = await Manufacturer.findByPk(manufacturerId)
+  const transaction = await sequelize.transaction()
 
-  if (!manufacturerInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Manufacturer with id ${manufacturerId} not found`,
-      404,
+  try {
+    const material = await materialsService.create(
+      { ...request.body, manufacturerId: manufacturer },
+      transaction,
     )
+
+    await transaction.commit()
+
+    response.status(201).send(material)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
-
-  const material = await Material.create({
-    manufacturerId,
-    name,
-    divisionId,
-  })
-
-  response.status(201).send(material)
 })
 
 materialsRouter.post('/bulk', async (request, response, next) => {

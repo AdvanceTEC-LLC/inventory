@@ -1,11 +1,11 @@
-import { Button } from '@mui/material'
+import { Box, Button, Stack } from '@mui/material'
 import { useShipment } from './ShipmentContext'
-import { CrateType, StockType } from './types'
+import { ReceivedCrateType, StockType } from './types'
 import MaterialSelector from './MaterialSelector'
 import QuantityInput from './QuantityInput'
 
 interface IncomingCrateStockProps {
-  crate: CrateType
+  crate: ReceivedCrateType
   stock: StockType
 }
 
@@ -29,11 +29,26 @@ const IncomingCrateStock = ({ crate, stock }: IncomingCrateStockProps) => {
   }
 
   return (
-    <div className="grid grid-cols-[3fr_1fr_1fr] gap-x-4">
-      <MaterialSelector crate={crate} stock={stock} />
-      <QuantityInput crate={crate} stock={stock} />
-      <Button onClick={handleRemove}>Remove</Button>
-    </div>
+    <Stack
+      spacing={2}
+      sx={{ width: '100%', alignItems: 'center' }}
+      direction="row"
+    >
+      <Stack
+        flex={5}
+        spacing={2}
+        sx={{ width: '100%' }}
+        direction={{ xs: 'column', md: 'row' }}
+      >
+        <Box flex={{ xs: 0, md: 3 }}>
+          <MaterialSelector crate={crate} stock={stock} />
+        </Box>
+        <QuantityInput crate={crate} stock={stock} />
+      </Stack>
+      <Box>
+        <Button onClick={handleRemove}>Remove</Button>
+      </Box>
+    </Stack>
   )
 }
 

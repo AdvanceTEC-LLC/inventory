@@ -17,7 +17,12 @@ export const up = async ({ context: queryInterface }) => {
     },
     name: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
+    },
+    unit: {
+      type: DataTypes.STRING,
+      defaultValue: 'ea',
     },
     created_at: {
       type: DataTypes.DATE,

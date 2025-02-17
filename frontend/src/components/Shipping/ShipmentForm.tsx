@@ -3,14 +3,9 @@ import OutgoingForm from './OutgoingForm'
 import { SentShipmentProvider } from './SentShipmentContext'
 import { ReceivedShipmentProvider } from './ReceivedShipmentContext'
 import { useShipment } from './ShipmentContext'
-import { Button } from '@mui/material'
 
 const ShipmentForm = () => {
   const { shipment } = useShipment()
-
-  const handleConfirm = () => {
-    console.log(shipment)
-  }
 
   if (shipment?.type === 'incoming') {
     return (
@@ -24,7 +19,6 @@ const ShipmentForm = () => {
     return (
       <SentShipmentProvider>
         <OutgoingForm />
-        <Button onClick={handleConfirm}>Confirm Shipment</Button>
       </SentShipmentProvider>
     )
   }

@@ -2,6 +2,9 @@ import { Router } from 'express'
 import { StagingArea, Project } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { projectFindOptions } from './projects.js'
+import { stagingAreasService } from '../services/stagingAreasService.js'
+import { sequelize } from '../util/db.js'
+import { info } from '../util/logger.js'
 const stagingAreasRouter = Router()
 
 export const stagingAreaFindOptions = {
@@ -61,6 +64,24 @@ stagingAreasRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(stagingArea)
+})
+
+stagingAreasRouter.post('/deep/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const stagingArea = await stagingAreasService.deepCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(stagingArea)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 stagingAreasRouter.delete(

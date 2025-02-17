@@ -1,10 +1,10 @@
-import { Button } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { useShipment } from './ShipmentContext'
-import { CrateType } from './types'
+import { ReceivedCrateType } from './types'
 import IncomingCrateStock from './IncomingCrateStock'
 
 interface IncomingCrateStockListProps {
-  crate: CrateType
+  crate: ReceivedCrateType
 }
 
 const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
@@ -35,14 +35,14 @@ const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col gap-y-2">
-        {crate?.stock?.map((stock, index) => (
-          <IncomingCrateStock key={index} crate={crate} stock={stock} />
-        ))}
-      </div>
-      <Button onClick={addItem}>Add Item</Button>
-    </div>
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      {crate?.stock?.map((stock, index) => (
+        <IncomingCrateStock key={index} crate={crate} stock={stock} />
+      ))}
+      <Button fullWidth onClick={addItem}>
+        Add Item
+      </Button>
+    </Stack>
   )
 }
 

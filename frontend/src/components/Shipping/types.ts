@@ -1,7 +1,11 @@
+import { CrateType as DBCrateType } from '../../types/crate'
+import { ManufacturerType } from '../../types/manufacturer'
+import { MaterialType } from '../../types/material'
+
 export interface ShipmentType {
   type?: string
   project?: ProjectType
-  crates?: CrateType[]
+  crates?: ReceivedCrateType[]
 }
 
 export interface ReceivedShipmentType {
@@ -11,12 +15,12 @@ export interface ReceivedShipmentType {
 }
 
 export interface SentShipmentType {
-  shipment: ShipmentType
-  sendDate: Date
-  delivered: boolean
+  sendDate?: Date
+  delivered?: boolean
+  crates?: DBCrateType[]
 }
 
-export interface CrateType {
+export interface ReceivedCrateType {
   id: number
   number?: string
   stock?: StockType[]
@@ -32,14 +36,4 @@ export interface StockType {
   id: number
   material?: MaterialType
   quantity?: number
-}
-
-export interface MaterialType {
-  manufacturer: ManufacturerType
-  name: string
-  unit: string
-}
-
-export interface ManufacturerType {
-  name: string
 }

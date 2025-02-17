@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import IncomingCrate from './IncomingCrate'
 import { useShipment } from './ShipmentContext'
-import { Button, Divider } from '@mui/material'
+import { Button, Divider, Stack } from '@mui/material'
 
 const IncomingCrateList = () => {
   const { shipment, setShipment } = useShipment()
@@ -39,17 +39,17 @@ const IncomingCrateList = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-y-4">
+      <Stack spacing={4}>
         {shipment?.crates?.map((crate, index) => (
-          <div className="flex flex-col gap-y-4" key={index}>
+          <Stack key={index} spacing={2}>
+            <Divider flexItem>Crate {index + 1}</Divider>
             <IncomingCrate crate={crate} />
-            <Divider />
-          </div>
+          </Stack>
         ))}
-      </div>
-      <div className="grid grid-cols-[1fr_3fr]">
-        <Button onClick={addCrate}>Add Crate</Button>
-      </div>
+        <Button variant="outlined" onClick={addCrate}>
+          Add Crate
+        </Button>
+      </Stack>
     </>
   )
 }

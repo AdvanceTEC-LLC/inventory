@@ -19,11 +19,6 @@ import ReceivedShipment from './receivedShipment.js'
 import SentShipment from './sentShipment.js'
 
 const assemblyRelationships = () => {
-  /*Assembly.hasMany(AssemblyMaterial, {
-    foreignKey: 'assemblyId',
-    as: 'assembly',
-  })*/
-
   Assembly.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
 
   Assembly.belongsToMany(Material, {
@@ -46,19 +41,6 @@ const assemblyMaterialsRelationships = () => {
 }
 
 const crateRelationships = () => {
-  /*Crate.hasMany(CrateStock, {
-    foreignKey: 'crateId',
-    as: 'stock',
-  })
-  Crate.hasMany(ShipmentCrate, {
-    foreignKey: 'crateId',
-    as: 'shipment',
-  })
-  Crate.hasMany(CrateAssemblies, {
-    foreignKey: 'crateId',
-    as: 'assemblies',
-  })*/
-
   Crate.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
   Crate.belongsTo(ShelfLocation, {
     foreignKey: 'shelfLocationId',
@@ -127,10 +109,6 @@ const manufacturerRelationships = () => {
 }
 
 const materialRelationships = () => {
-  /*Material.hasMany(AssemblyMaterial, {
-    foreignKey: 'materialId',
-    as: 'material',
-  })*/
   Material.hasMany(Stock, { foreignKey: 'materialId', as: 'stock' })
 
   Material.belongsTo(Manufacturer, {
@@ -218,11 +196,6 @@ const stagingAreaRelationships = () => {
 }
 
 const stockRelationships = () => {
-  /*Stock.hasMany(CrateStock, {
-    foreignKey: 'stockId',
-    as: 'crateStock',
-  })*/
-
   Stock.belongsTo(Material, { foreignKey: 'materialId', as: 'material' })
   Stock.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
 

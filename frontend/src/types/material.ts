@@ -4,6 +4,7 @@ export interface MaterialType {
   id: number
   manufacturer: ManufacturerType
   name: string
+  unit: string
 }
 
 export interface NewMaterialType

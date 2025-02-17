@@ -2,22 +2,31 @@ import { Manufacturer, Material } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { manufacturersService } from './manufacturersService.js'
 
+const create = async (material, transaction) => {
+  const materialInDb = await Material.create(material, {
+    transaction,
+  })
+
+  return materialInDb
+}
+
 const findOrCreate = async (material, transaction) => {
+  const { name, unit, manufacturerId } = material
+
   let materialInDb = await Material.findOne({
-    where: { name: material.name },
+    where: { name },
     transaction,
   })
 
   if (!materialInDb) {
-    const manufacturerInDb = await Manufacturer.findByPk(
-      material.manufacturerId,
-      { transaction },
-    )
+    const manufacturerInDb = await Manufacturer.findByPk(manufacturerId, {
+      transaction,
+    })
 
     if (!manufacturerInDb) {
       throw new CustomError(
         'NotFoundError',
-        `Manufacturer with id ${material.manufacturerId} not found`,
+        `Manufacturer with id ${manufacturerId} not found`,
         404,
       )
     }
@@ -73,6 +82,7 @@ const deepCreate = async (material, transaction) => {
 }
 
 export const materialsService = {
+  create,
   findOrCreate,
   bulkCreate,
   deepCreate,

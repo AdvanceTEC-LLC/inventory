@@ -1,45 +1,33 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material'
+import { Autocomplete, TextField } from '@mui/material'
 import { useReceivedShipment } from './ReceivedShipmentContext'
 import { useManufacturers } from '../../hooks/useManufacturersHook'
-import { ManufacturerType } from './types'
+import { ManufacturerType } from '../../types/manufacturer'
+import { SyntheticEvent } from 'react'
 
 const ManufacturerSelector = () => {
   const { receivedShipment, setReceivedShipment } = useReceivedShipment()
   const { data: manufacturers = [] } = useManufacturers()
 
-  const handleChange = (e: SelectChangeEvent<string>) => {
-    const selectedManufacturer = manufacturers.find(
-      (manufacturer: ManufacturerType) => manufacturer.name === e.target.value
-    )
+  const sortedManufacturers = [...manufacturers].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
 
+  const handleChange = (_: SyntheticEvent, value: ManufacturerType | null) => {
     setReceivedShipment({
       ...receivedShipment,
-      manufacturer: selectedManufacturer,
+      manufacturer: value ?? undefined,
     })
   }
 
   return (
-    <FormControl fullWidth>
-      <InputLabel id="manufactuer-label">Manufacturer</InputLabel>
-      <Select
-        labelId="manufactuer-label"
-        label="Manufacturer"
-        value={receivedShipment?.manufacturer?.name ?? ''}
-        onChange={handleChange}
-      >
-        {manufacturers.map((manufacturer) => (
-          <MenuItem key={manufacturer.id} value={manufacturer.name}>
-            {manufacturer.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Autocomplete
+      options={sortedManufacturers}
+      getOptionLabel={(option) => option.name}
+      value={receivedShipment?.manufacturer || null}
+      onChange={(event, value) => handleChange(event, value)}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      renderInput={(params) => <TextField {...params} label="Manufacturer" />}
+    />
   )
 }
 

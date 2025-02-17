@@ -1,11 +1,11 @@
-import { Button } from '@mui/material'
+import { Button, Divider, Stack } from '@mui/material'
 import CrateNumberInput from './CrateNumberInput'
 import { useShipment } from './ShipmentContext'
-import { CrateType } from './types'
+import { ReceivedCrateType } from './types'
 import IncomingCrateStockList from './IncomingCrateStockList'
 
 interface IncomingCrateProps {
-  crate: CrateType
+  crate: ReceivedCrateType
 }
 
 const IncomingCrate = ({ crate }: IncomingCrateProps) => {
@@ -34,16 +34,23 @@ const IncomingCrate = ({ crate }: IncomingCrateProps) => {
   }
 
   return (
-    <div className="grid grid-cols-[1fr_3fr] gap-x-4">
-      <div className="flex flex-col gap-y-2">
+    <Stack spacing={4} direction={{ xs: 'column', md: 'row' }}>
+      <Stack spacing={2} flex={1}>
         <CrateNumberInput crate={crate} />
-        <div className="flex gap-x-4">
-          <Button onClick={toggleOpen}>{crate.open ? 'close' : 'open'}</Button>
-          <Button onClick={handleRemove}>Remove</Button>
-        </div>
-      </div>
+
+        <Stack spacing={2} direction="row">
+          <Button fullWidth onClick={handleRemove}>
+            Remove
+          </Button>
+          <Button fullWidth onClick={toggleOpen}>
+            {crate.open ? 'close' : 'open'}
+          </Button>
+        </Stack>
+      </Stack>
+
+      <Divider orientation="vertical" flexItem />
       {crate.open && <IncomingCrateStockList crate={crate} />}
-    </div>
+    </Stack>
   )
 }
 

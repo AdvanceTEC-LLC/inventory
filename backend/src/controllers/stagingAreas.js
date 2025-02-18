@@ -66,6 +66,24 @@ stagingAreasRouter.post('/', async (request, response) => {
   response.status(201).send(stagingArea)
 })
 
+stagingAreasRouter.post('/bulk/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const stagingAreas = await stagingAreasService.bulkCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(stagingAreas)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
 stagingAreasRouter.post('/deep/', async (request, response, next) => {
   const transaction = await sequelize.transaction()
 

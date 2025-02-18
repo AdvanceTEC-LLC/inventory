@@ -3,16 +3,16 @@ import { useEffect, useState } from 'react'
 // Table
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import { columns } from './columns'
-import { StockType } from '../../../types/stock'
+import { StockType } from '../../types/stock'
 
 // Queries
 import { useQuery } from '@tanstack/react-query'
-import cratesService from '../../../services/cratesService'
-import { CrateType } from '../../../types/crate'
-import { ProjectType } from '../../../types/project'
-import stockService from '../../../services/stockService'
-import FetchAutocomplete from '../../FetchAutocomplete'
-import projectsService from '../../../services/projectsService'
+import cratesService from '../../services/cratesService'
+import { CrateType } from '../../types/crate'
+import { ProjectType } from '../../types/project'
+import stockService from '../../services/stockService'
+import FetchAutocomplete from '../FetchAutocomplete'
+import projectsService from '../../services/projectsService'
 
 const paginationModel = { page: 0, pageSize: 5 }
 

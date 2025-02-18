@@ -3,12 +3,6 @@ import { useMaterials } from '../../hooks/useMaterialsHook'
 import { ManufacturerType } from '../../types/manufacturer'
 import { name, unit } from '../Tables/Columns/materials'
 import { paginationModel, pageSizeOptions } from '../Tables/pagination'
-import { Button } from '@mui/material'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import materialsService from '../../services/materialsService'
-import { AppDispatch } from '../../store'
-import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
 
 const ManufacturerMaterials = ({
   selectedManufacturer,
@@ -21,6 +15,7 @@ const ManufacturerMaterials = ({
     (material) => material.manufacturer.id === selectedManufacturer?.id
   )
 
+  /*
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
 
@@ -47,11 +42,13 @@ const ManufacturerMaterials = ({
       )
     },
   })
+    */
 
   // Columns including delete button
   const columns: GridColDef[] = [
     name,
     unit,
+    /*
     {
       field: 'actions',
       headerName: 'Actions',
@@ -66,6 +63,7 @@ const ManufacturerMaterials = ({
         </Button>
       ),
     },
+    */
   ]
 
   return (

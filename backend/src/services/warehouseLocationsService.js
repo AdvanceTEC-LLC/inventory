@@ -15,6 +15,18 @@ const findOrCreate = async (warehouseLocation, transaction) => {
   return warehouseLocationInDb
 }
 
+const bulkCreate = async (warehouseLocations, transaction) => {
+  const warehouseLocationsInDb = await WarehouseLocation.bulkCreate(
+    warehouseLocations,
+    {
+      transaction,
+    },
+  )
+
+  return warehouseLocationsInDb
+}
+
 export const warehouseLocationsService = {
   findOrCreate,
+  bulkCreate,
 }

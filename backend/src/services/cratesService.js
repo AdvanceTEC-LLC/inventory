@@ -1,5 +1,6 @@
 import { Crate } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { info } from '../util/logger.js'
 import { crateStocksService } from './crateStockService.js'
 import { projectsService } from './projectsService.js'
 import { shelfLocationsService } from './shelfLocationsService.js'
@@ -103,6 +104,44 @@ const deepCreate = async (crate, transaction) => {
   return crateInDb
 }
 
+const bulkUpdate = async (crates, transaction) => {
+  info('Bulk update from services')
+
+  const updatedCrates = await Promise.all(
+    crates.map(async (crate) => {
+      let warehouseLocationId = null
+      if (crate.warehouseLocation)
+        warehouseLocationId = crate.warehouseLocation.id
+
+      let shelfLocationId = null
+      if (crate.shelfLocation) shelfLocationId = crate.shelfLocation.id
+
+      let stagingAreaId = null
+      if (crate.stagingArea) stagingAreaId = crate.stagingArea.id
+
+      let projectId = null
+      if (crate.project) projectId = crate.project.id
+
+      const updatedCrate = {
+        id: crate.id,
+        number: crate.number,
+        warehouseLocationId,
+        shelfLocationId,
+        stagingAreaId,
+        opened: crate.opened,
+        projectId,
+      }
+
+      await Crate.update(updatedCrate, {
+        where: { id: updatedCrate.id },
+        transaction,
+      })
+    }),
+  )
+  return updatedCrates
+}
+
 export const cratesService = {
   deepCreate,
+  bulkUpdate,
 }

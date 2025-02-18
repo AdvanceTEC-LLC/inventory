@@ -14,7 +14,6 @@ export const up = async ({ context: queryInterface }) => {
     },
     is_default: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false,
     },
     created_at: {
@@ -27,12 +26,16 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
-  await queryInterface.addConstraint('warehouse_locations', {
-    fields: ['is_default'],
-    type: 'unique',
-    name: 'unique_default_warehouse',
-    where: { is_default: true },
-  })
+  const warehouseLocations = [
+    { name: 'Shipping Bay', is_default: true },
+    { name: 'Shelves' },
+    { name: 'Holding Bay' },
+    { name: 'Staging Area' },
+    { name: 'Shipped' },
+    { name: 'Delivered' },
+  ]
+
+  await queryInterface.bulkInsert('warehouse_locations', warehouseLocations)
 }
 
 export const down = async ({ context: queryInterface }) => {

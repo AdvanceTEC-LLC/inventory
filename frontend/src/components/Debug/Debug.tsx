@@ -29,21 +29,29 @@ import { shipmentCrateColumns } from './ShipmentCrates'
 
 import crateStockService from '../../services/crateStockService'
 import { crateStockColumns } from './CrateStock'
+import warehouseLocationsService from '../../services/warehouseLocationsService'
+import receivedShipmentsService from '../../services/receivedShipmentsService'
+import stagingAreasService from '../../services/stagingAreasService'
+import sentShipmentsService from '../../services/sentShipmentsService'
 
 const Debug = () => {
   const queryClient = new QueryClient()
 
   const resetDatabase = async () => {
     try {
-      await materialsService.removeAll()
-      await stockService.removeAll()
-      await projectsService.removeAll()
-      await manufacturersService.removeAll()
       await cratesService.removeAll()
-      await shelfLocationsService.removeAll()
-      await shipmentsService.removeAll()
       await crateStockService.removeAll()
+      await manufacturersService.removeAll()
+      await materialsService.removeAll()
+      await projectsService.removeAll()
+      await receivedShipmentsService.removeAll()
+      await sentShipmentsService.removeAll()
+      await shelfLocationsService.removeAll()
       await shipmentCratesService.removeAll()
+      await shipmentsService.removeAll()
+      await stagingAreasService.removeAll()
+      await stockService.removeAll()
+      await warehouseLocationsService.removeAll()
 
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })

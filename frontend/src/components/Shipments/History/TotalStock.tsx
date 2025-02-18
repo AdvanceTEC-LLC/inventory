@@ -1,7 +1,7 @@
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
 import { MaterialType } from '../../../types/material'
 import { ShipmentType } from '../../../types/shipment'
-import StockRow from '../../Inventory/Crates/StockRow'
+import StockRow from '../../Crates/StockRow'
 import { Subtext } from '../../ATEC UI/Text'
 
 interface TotalStockProps {

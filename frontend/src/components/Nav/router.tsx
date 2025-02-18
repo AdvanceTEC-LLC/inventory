@@ -5,7 +5,7 @@ import ErrorPage from '../ATEC UI/ErrorPage'
 import Debug from '../Debug/Debug'
 import { routes } from './routes'
 import { LinkType } from '../../types/link'
-import Inventory from '../Inventory/Materials/Materials'
+import Inventory from '../Materials/Materials'
 
 const generateRoutes = (routes: LinkType[]) => {
   return routes.flatMap((parentLink) => {

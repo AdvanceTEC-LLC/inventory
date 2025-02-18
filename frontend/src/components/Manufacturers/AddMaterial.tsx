@@ -120,10 +120,8 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSubmit} variant="contained">
             Add
           </Button>
         </DialogActions>

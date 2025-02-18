@@ -17,6 +17,14 @@ const findOrCreate = async (stagingArea, transaction) => {
   return stagingAreaInDb
 }
 
+const bulkCreate = async (stagingAreas, transaction) => {
+  const stagingAreasInDb = await StagingArea.bulkCreate(stagingAreas, {
+    transaction,
+  })
+
+  return stagingAreasInDb
+}
+
 const deepCreate = async (stagingArea, transaction) => {
   const { name, project } = stagingArea
 
@@ -34,5 +42,6 @@ const deepCreate = async (stagingArea, transaction) => {
 
 export const stagingAreasService = {
   findOrCreate,
+  bulkCreate,
   deepCreate,
 }

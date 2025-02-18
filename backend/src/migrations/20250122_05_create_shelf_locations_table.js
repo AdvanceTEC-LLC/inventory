@@ -1,5 +1,33 @@
 import { DataTypes } from 'sequelize'
 
+const generateShelfLocations = () => {
+  const shelfLocations = []
+
+  const addLocations = (aisleRange, colCount, shelfCount) => {
+    for (const aisle of aisleRange) {
+      for (let col = 1; col <= colCount; col++) {
+        for (let shelf = 1; shelf <= shelfCount; shelf++) {
+          shelfLocations.push({
+            side: 'A'.trim(),
+            aisle,
+            col: col.toString().trim(), // Convert col to string for consistency
+            shelf,
+            created_at: new Date(),
+            updated_at: new Date(),
+          })
+        }
+      }
+    }
+  }
+
+  addLocations([10, 11], 10, 6) // Aisles 10 & 11: 10 Columns, 6 Rows
+  addLocations([12, 13], 9, 6) // Aisles 12 & 13: 9 Columns, 6 Rows
+  addLocations([14], 9, 5) // Aisle 14: 9 Columns, 5 Rows
+  addLocations([15, 16, 17], 9, 4) // Aisles 15-17: 9 Columns, 4 Rows
+
+  return shelfLocations
+}
+
 export const up = async ({ context: queryInterface }) => {
   await queryInterface.createTable('shelf_locations', {
     id: {
@@ -8,7 +36,7 @@ export const up = async ({ context: queryInterface }) => {
       primaryKey: true,
     },
     side: {
-      type: DataTypes.CHAR,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     aisle: {
@@ -16,7 +44,7 @@ export const up = async ({ context: queryInterface }) => {
       allowNull: false,
     },
     col: {
-      type: DataTypes.CHAR,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     shelf: {
@@ -33,58 +61,11 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
-  await queryInterface.sequelize.query(`
-    CREATE OR REPLACE FUNCTION capitalize_side()
-    RETURNS TRIGGER AS $$
-    BEGIN
-      NEW.side := UPPER(NEW.side);
-      RETURN NEW;
-    END;
-    $$ LANGUAGE plpgsql;
-  `)
-
-  await queryInterface.sequelize.query(`
-    CREATE TRIGGER capitalize_side_before_insert
-    BEFORE INSERT ON shelf_locations
-    FOR EACH ROW
-    EXECUTE FUNCTION capitalize_side();
-  `)
-
-  await queryInterface.sequelize.query(`
-    CREATE OR REPLACE FUNCTION capitalize_col()
-    RETURNS TRIGGER AS $$
-    BEGIN
-      NEW.col := UPPER(NEW.col);
-      RETURN NEW;
-    END;
-    $$ LANGUAGE plpgsql;
-  `)
-
-  await queryInterface.sequelize.query(`
-    CREATE TRIGGER capitalize_col_before_insert
-    BEFORE INSERT ON shelf_locations
-    FOR EACH ROW
-    EXECUTE FUNCTION capitalize_col();
-  `)
+  // Generate shelf locations for side "A" using the specified configurations
+  const shelfLocations = generateShelfLocations()
+  await queryInterface.bulkInsert('shelf_locations', shelfLocations)
 }
 
 export const down = async ({ context: queryInterface }) => {
-  await queryInterface.sequelize.query(`
-    DROP TRIGGER IF EXISTS capitalize_side_before_insert ON shelf_locations;
-  `)
-
-  await queryInterface.sequelize.query(`
-    DROP TRIGGER IF EXISTS capitalize_col_before_insert ON shelf_locations;
-  `)
-
-  await queryInterface.sequelize.query(`
-    DROP FUNCTION IF EXISTS capitalize_side;
-  `)
-
-  await queryInterface.sequelize.query(`
-    DROP FUNCTION IF EXISTS capitalize_col;
-  `)
-
-  // Drop the table
   await queryInterface.dropTable('shelf_locations', { cascade: true })
 }

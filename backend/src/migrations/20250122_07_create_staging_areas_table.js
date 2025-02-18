@@ -28,6 +28,14 @@ export const up = async ({ context: queryInterface }) => {
       defaultValue: DataTypes.NOW,
     },
   })
+
+  const stagingAreas = [
+    { name: 'Staging Area 1' },
+    { name: 'Staging Area 2' },
+    { name: 'Staging Area 3' },
+  ]
+
+  await queryInterface.bulkInsert('staging_areas', stagingAreas)
 }
 
 export const down = async ({ context: queryInterface }) => {

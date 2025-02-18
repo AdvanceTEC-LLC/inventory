@@ -20,6 +20,15 @@ const findOrCreate = async (shelfLocation, transaction) => {
   return shelfLocationInDb
 }
 
+const bulkCreate = async (shelfLocations, transaction) => {
+  const shelfLocationsInDb = await ShelfLocation.bulkCreate(shelfLocations, {
+    transaction,
+  })
+
+  return shelfLocationsInDb
+}
+
 export const shelfLocationsService = {
   findOrCreate,
+  bulkCreate,
 }

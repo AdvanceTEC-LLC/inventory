@@ -3,7 +3,7 @@ import { ProjectType } from './types'
 import { useShipment } from './ShipmentContext'
 import { useProjects } from '../../hooks/useProjectsHook'
 
-const Project = () => {
+const ProjectSelector = () => {
   const { shipment, setShipment } = useShipment()
 
   const { data: projects = [], isLoading, error } = useProjects()
@@ -42,4 +42,4 @@ const Project = () => {
   )
 }
 
-export default Project
+export default ProjectSelector

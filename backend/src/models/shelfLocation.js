@@ -12,7 +12,7 @@ ShelfLocation.init(
       primaryKey: true,
     },
     side: {
-      type: DataTypes.CHAR,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     aisle: {
@@ -20,7 +20,7 @@ ShelfLocation.init(
       allowNull: false,
     },
     col: {
-      type: DataTypes.CHAR,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     shelf: {

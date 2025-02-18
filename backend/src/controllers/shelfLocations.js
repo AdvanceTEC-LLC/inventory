@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import { ShelfLocation } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { sequelize } from '../util/db.js'
+import { shelfLocationsService } from '../services/shelfLocationsService.js'
 const shelfLocationsRouter = Router()
 
 export const shelfLocationFindOptions = {
@@ -50,6 +52,24 @@ shelfLocationsRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(shelfLocation)
+})
+
+shelfLocationsRouter.post('/bulk/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const shelfLocations = await shelfLocationsService.bulkCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(shelfLocations)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 shelfLocationsRouter.delete(

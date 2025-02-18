@@ -5,6 +5,7 @@ import {
   Project,
   Stock,
   WarehouseLocation,
+  StagingArea,
 } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { shelfLocationFindOptions } from './shelfLocations.js'
@@ -13,6 +14,8 @@ import { CustomError } from '../util/errors/CustomError.js'
 import { warehouseLocationFindOptions } from './warehouseLocations.js'
 import { sequelize } from '../util/db.js'
 import { cratesService } from '../services/cratesService.js'
+import { info } from '../util/logger.js'
+import { stagingAreaFindOptions } from './stagingAreas.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
@@ -20,6 +23,7 @@ export const crateFindOptions = {
     exclude: [
       'warehouseLocationId',
       'shelfLocationId',
+      'stagingAreaId',
       'projectId',
       'vendorId',
       'createdAt',
@@ -28,14 +32,19 @@ export const crateFindOptions = {
   },
   include: [
     {
+      model: WarehouseLocation,
+      as: 'warehouseLocation',
+      ...warehouseLocationFindOptions,
+    },
+    {
       model: ShelfLocation,
       as: 'shelfLocation',
       ...shelfLocationFindOptions,
     },
     {
-      model: WarehouseLocation,
-      as: 'warehouseLocation',
-      ...warehouseLocationFindOptions,
+      model: StagingArea,
+      as: 'stagingArea',
+      ...stagingAreaFindOptions,
     },
     {
       model: Project,
@@ -135,7 +144,7 @@ cratesRouter.post('/', async (request, response) => {
   response.status(201).send(crate)
 })
 
-cratesRouter.post('/deep', async (request, response, next) => {
+cratesRouter.post('/deep/', async (request, response, next) => {
   const transaction = await sequelize.transaction()
 
   try {
@@ -150,7 +159,23 @@ cratesRouter.post('/deep', async (request, response, next) => {
   }
 })
 
-cratesRouter.delete('/:id', crateFinder, async (request, response) => {
+cratesRouter.put('/bulk/', async (request, response, next) => {
+  info('Bulk request received')
+  const transaction = await sequelize.transaction()
+
+  try {
+    const crate = await cratesService.bulkUpdate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(crate)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
+cratesRouter.delete('/:id/', crateFinder, async (request, response) => {
   await request.crate.destroy()
   response.status(204).json({ message: 'Crate entry deleted successfully' })
 })

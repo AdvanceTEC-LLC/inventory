@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import { WarehouseLocation } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { warehouseLocationsService } from '../services/warehouseLocationsService.js'
+import { sequelize } from '../util/db.js'
 const warehouseLocationsRouter = Router()
 
 export const warehouseLocationFindOptions = {
@@ -50,6 +52,24 @@ warehouseLocationsRouter.post('/', async (request, response) => {
   })
 
   response.status(201).send(warehouseLocation)
+})
+
+warehouseLocationsRouter.post('/bulk/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const warehouseLocations = await warehouseLocationsService.bulkCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(warehouseLocations)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 warehouseLocationsRouter.delete(

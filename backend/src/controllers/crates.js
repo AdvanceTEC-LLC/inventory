@@ -160,7 +160,6 @@ cratesRouter.post('/deep/', async (request, response, next) => {
 })
 
 cratesRouter.put('/bulk/', async (request, response, next) => {
-  info('Bulk request received')
   const transaction = await sequelize.transaction()
 
   try {

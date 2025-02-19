@@ -1,7 +1,6 @@
 import DebugCard from './DebugCard'
 import { QueryClient } from '@tanstack/react-query'
 import Container from '../ATEC UI/Container'
-import Button from '../ATEC UI/Button'
 
 import materialsService from '../../services/materialsService'
 import { materialColumns } from './Materials'
@@ -33,6 +32,7 @@ import warehouseLocationsService from '../../services/warehouseLocationsService'
 import receivedShipmentsService from '../../services/receivedShipmentsService'
 import stagingAreasService from '../../services/stagingAreasService'
 import sentShipmentsService from '../../services/sentShipmentsService'
+import { Button } from '@mui/material'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -69,14 +69,14 @@ const Debug = () => {
 
   return (
     <div className="flex flex-col gap-y-8">
-      <Container>
-        <Button
-          text="Reset Database"
-          onClick={() => {
-            void resetDatabase()
-          }}
-        />
-      </Container>
+      <Button
+        variant="contained"
+        onClick={() => {
+          void resetDatabase()
+        }}
+      >
+        Reset Database
+      </Button>
 
       <DebugCard
         title={'Materials'}

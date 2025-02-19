@@ -54,7 +54,12 @@ const IncomingForm = () => {
   })
 
   const submitReceivedShipment = () => {
-    if (!shipment?.project || !shipment?.crates?.length) return
+    if (
+      !shipment?.trackingNumber ||
+      !shipment?.project ||
+      !shipment?.crates?.length
+    )
+      return
 
     const newCrates: NewCrateType[] = shipment.crates
       .filter((crate) => crate.number)
@@ -62,16 +67,19 @@ const IncomingForm = () => {
         number: number!,
         project: shipment.project!,
         stock: stock!
-          .filter(({ material, quantity }) => material && quantity)
-          .map(({ material, quantity }) => ({
+          .filter(
+            ({ material, project, quantity }) => material && project && quantity
+          )
+          .map(({ material, project, quantity }) => ({
             material: material!,
+            project: project!,
             quantity: quantity!,
           })),
         opened: false,
       }))
 
     const newShipment: NewShipmentType = {
-      trackingNumber: 0,
+      trackingNumber: shipment.trackingNumber,
       project: shipment.project,
       crates: newCrates,
     }

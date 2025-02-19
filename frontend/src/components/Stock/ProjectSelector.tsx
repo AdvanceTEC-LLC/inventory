@@ -1,30 +1,26 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { useShipment } from './ShipmentContext'
 import { useProjects } from '../../hooks/useProjectsHook'
 import { ProjectType } from '../../types/project'
+import { Dispatch, SetStateAction } from 'react'
 
-const ProjectSelector = () => {
-  const { shipment, setShipment } = useShipment()
+interface ProjectSelectorProps {
+  project: ProjectType | undefined
+  setProject: Dispatch<SetStateAction<ProjectType | undefined>>
+}
 
+const ProjectSelector = ({ project, setProject }: ProjectSelectorProps) => {
   const { data: projects = [], isLoading, error } = useProjects()
 
   const handleChange = (newValue: ProjectType | null) => {
-    const selectedProject = projects.find(
-      (project: ProjectType) => project.number === newValue?.number
-    )
-
-    setShipment({
-      ...shipment,
-      project: selectedProject,
-    })
+    setProject(newValue ?? undefined)
   }
 
   return (
     <Autocomplete
-      options={[...projects]}
+      options={projects}
       getOptionLabel={(option) => `${option.number} ${option.name}`}
       isOptionEqualToValue={(option, value) => option.number === value?.number}
-      value={shipment?.project ?? null}
+      value={project ?? null}
       onChange={(_event, newValue) => handleChange(newValue)}
       renderInput={(params) => <TextField {...params} label="Project" />}
       noOptionsText={

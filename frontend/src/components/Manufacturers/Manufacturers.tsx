@@ -43,10 +43,7 @@ const Manufacturers = () => {
               selectedManufacturer={selectedManufacturer}
             />
           </Stack>
-          <Stack direction="row" justifyContent="space-between">
-            {/*<DeleteManufacturer manufacturer={selectedManufacturer} />*/}
-            <AddMaterial manufacturer={selectedManufacturer} />
-          </Stack>
+          <AddMaterial manufacturer={selectedManufacturer} />
         </Stack>
       </Stack>
     </Container>

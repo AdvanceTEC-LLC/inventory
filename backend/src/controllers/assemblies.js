@@ -3,6 +3,9 @@ import { Assembly, Material, Project } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { projectFindOptions } from './projects.js'
 import { materialFindOptions } from './materials.js'
+import { sequelize } from '../util/db.js'
+import { assembliesService } from '../services/assembliesService.js'
+import { info } from '../util/logger.js'
 const assembliesRouter = Router()
 
 const transformAssembly = (assembly) => {
@@ -10,39 +13,12 @@ const transformAssembly = (assembly) => {
     id: assembly.id,
     code: assembly.code,
     project: assembly.project,
-    billOfMaterials: assembly.materials.map(
-      ({
-        id,
-        partNumber,
-        description,
-        thickness,
-        width,
-        length,
-        topFinish,
-        bottomFinish,
-        xDimension,
-        cutout,
-        tag,
-        vendor,
-        assemblyMaterial,
-      }) => ({
-        id,
-        material: {
-          partNumber,
-          description,
-          thickness,
-          width,
-          length,
-          topFinish,
-          bottomFinish,
-          xDimension,
-          cutout,
-          tag,
-          vendor,
-        },
-        quantity: assemblyMaterial.quantity,
-      }),
-    ),
+    prefabricated: assembly.prefabricated,
+    billOfMaterials: assembly.materials.map(({ id, assemblyMaterial }) => ({
+      id,
+      material: assemblyMaterial.material,
+      quantity: assemblyMaterial.quantity,
+    })),
   }
 }
 
@@ -118,6 +94,21 @@ assembliesRouter.post('/', async (request, response, next) => {
 
   // Send the assembly data back as response
   response.status(201).send(assembly)
+})
+
+assembliesRouter.post('/deep/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const crate = await assembliesService.deepCreate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(crate)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 /*

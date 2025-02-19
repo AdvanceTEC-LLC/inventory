@@ -1,5 +1,5 @@
 import { ProjectType } from './project'
-import { StockType } from './stock'
+import { NewStockType, StockType } from './stock'
 
 export interface AssemblyType {
   id: number
@@ -13,4 +13,5 @@ export interface AssemblyType {
 export interface NewAssemblyType
   extends Omit<AssemblyType, 'id' | 'project' | 'billOfMaterials'> {
   projectId: number
+  billOfMaterials: NewStockType[]
 }

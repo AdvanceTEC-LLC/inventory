@@ -118,7 +118,12 @@ const RelocateCrates = ({ crates }: RelocateCratesProps) => {
       </Button>
 
       {/* Modal / Dialog */}
-      <Dialog open={open} onClose={handleClose} fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition={false}
+        fullWidth
+      >
         <DialogTitle>
           Relocating {crates.length} Crate{crates.length > 1 ? 's' : ''}
         </DialogTitle>

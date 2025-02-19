@@ -8,6 +8,7 @@ import { location, number, opened, project } from '../Tables/Columns/crates'
 import { CrateType } from '../../types/crate'
 import RelocateCrates from './RelocateCrates'
 import CrateContents from './CrateContents'
+import { pageSizeOptions, paginationModel } from '../Tables/pagination'
 
 const Crates = () => {
   const [selectedCrates, setSelectedCrates] = useState<CrateType[]>([])
@@ -48,6 +49,8 @@ const Crates = () => {
         onRowSelectionModelChange={(rowSelectionModel) =>
           handleRowSelection(rowSelectionModel)
         }
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={pageSizeOptions}
         checkboxSelection
       />
 

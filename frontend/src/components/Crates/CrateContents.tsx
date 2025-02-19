@@ -9,6 +9,7 @@ import { CrateType } from '../../types/crate'
 import { useState } from 'react'
 import { columns } from '../Tables/Columns/stock'
 import { DataGrid } from '@mui/x-data-grid'
+import { pageSizeOptions, paginationModel } from '../Tables/pagination'
 
 interface CrateContentsProps {
   crate: CrateType
@@ -29,11 +30,22 @@ const CrateContents = ({ crate }: CrateContentsProps) => {
       </Button>
 
       {/* Modal / Dialog */}
-      <Dialog open={open} onClose={handleClose} fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition={false}
+        fullWidth
+      >
         <DialogTitle>Crate {crate.number} Contents</DialogTitle>
         <DialogContent>
           {crate && crate.stock.length > 0 ? (
-            <DataGrid sx={{ border: 0 }} rows={crate.stock} columns={columns} />
+            <DataGrid
+              sx={{ border: 0 }}
+              rows={crate.stock}
+              columns={columns}
+              initialState={{ pagination: { paginationModel } }}
+              pageSizeOptions={pageSizeOptions}
+            />
           ) : (
             <p>This crate is empty</p>
           )}

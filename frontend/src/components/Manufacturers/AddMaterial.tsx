@@ -87,7 +87,12 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
       </Button>
 
       {/* Modal / Dialog */}
-      <Dialog open={open} onClose={handleClose} fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition={false}
+        fullWidth
+      >
         <DialogTitle>Add Material</DialogTitle>
         <DialogContent className="flex flex-col gap-y-8">
           <FormControl fullWidth>

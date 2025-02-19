@@ -63,7 +63,12 @@ const AddManufacturer = () => {
       <Button onClick={handleOpen}>Add Manufacturer</Button>
 
       {/* Modal / Dialog */}
-      <Dialog open={open} onClose={handleClose} fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition={false}
+        fullWidth
+      >
         <DialogTitle>Add Manufacturer</DialogTitle>
         <DialogContent>
           <FormControl fullWidth>

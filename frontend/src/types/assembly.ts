@@ -1,5 +1,6 @@
+import { AssemblyMaterialType } from './assemblyMaterial'
 import { ProjectType } from './project'
-import { NewStockType, StockType } from './stock'
+import { NewStockType } from './stock'
 
 export interface AssemblyType {
   id: number
@@ -7,7 +8,7 @@ export interface AssemblyType {
   project: ProjectType
   prefabricated: boolean
   type: string
-  billOfMaterials?: StockType[]
+  billOfMaterials?: AssemblyMaterialType[]
 }
 
 export interface NewAssemblyType

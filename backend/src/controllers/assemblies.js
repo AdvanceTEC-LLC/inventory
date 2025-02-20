@@ -14,10 +14,15 @@ const transformAssembly = (assembly) => {
     code: assembly.code,
     project: assembly.project,
     prefabricated: assembly.prefabricated,
-    billOfMaterials: assembly.materials.map(({ id, assemblyMaterial }) => ({
-      id,
-      material: assemblyMaterial.material,
-      quantity: assemblyMaterial.quantity,
+    billOfMaterials: assembly.materials.map((material) => ({
+      id: material.id,
+      material: {
+        id: material.id,
+        name: material.name,
+        unit: material.unit,
+        manufacturer: material.manufacturer,
+      },
+      quantity: material.assemblyMaterial.quantity,
     })),
   }
 }

@@ -67,12 +67,10 @@ const IncomingForm = () => {
         number: number!,
         project: shipment.project!,
         stock: stock!
-          .filter(
-            ({ material, project, quantity }) => material && project && quantity
-          )
-          .map(({ material, project, quantity }) => ({
+          .filter(({ material, quantity }) => material && quantity)
+          .map(({ material, quantity }) => ({
             material: material!,
-            project: project!,
+            project: shipment.project!,
             quantity: quantity!,
           })),
         opened: false,
@@ -89,8 +87,6 @@ const IncomingForm = () => {
       manufacturer: receivedShipment?.manufacturer!,
       receivedDate: new Date(),
     }
-
-    console.log(newReceivedShipment)
 
     createReceivedShipmentMutation.mutate(newReceivedShipment)
   }

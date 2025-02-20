@@ -3,6 +3,7 @@ import { useAssemblies } from '../../hooks/useAssembliesHook'
 import { ProjectType } from '../../types/project'
 import { code, prefabricated } from '../Tables/Columns/assemblies'
 import { paginationModel, pageSizeOptions } from '../Tables/pagination'
+import BillOfMaterials from './BillOfMaterials'
 
 const ProjectAssemblies = ({ project }: { project: ProjectType | null }) => {
   const { data: assemblies = [] } = useAssemblies()
@@ -11,7 +12,16 @@ const ProjectAssemblies = ({ project }: { project: ProjectType | null }) => {
     (assembly) => assembly.project.id === project?.id
   )
 
-  const columns: GridColDef[] = [code, prefabricated]
+  const columns: GridColDef[] = [
+    code,
+    prefabricated,
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 150,
+      renderCell: (params) => <BillOfMaterials assembly={params.row} />,
+    },
+  ]
 
   return (
     <DataGrid

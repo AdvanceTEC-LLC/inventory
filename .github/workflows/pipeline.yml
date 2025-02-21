@@ -34,6 +34,11 @@ jobs:
         run: |
           npm run lint
 
+      - name: Check DATABASE_URI environment variable
+        run: echo $DATABASE_URI
+        env:
+          DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}
+
       - name: Run unit tests for Backend
         env:
           DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}

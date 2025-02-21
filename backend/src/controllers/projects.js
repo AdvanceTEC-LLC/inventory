@@ -49,6 +49,21 @@ projectsRouter.post('/', async (request, response, next) => {
   }
 })
 
+projectsRouter.post('/bulk/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const projects = await projectsService.bulkCreate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(projects)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
 projectsRouter.delete('/:id', projectFinder, async (request, response) => {
   await request.project.destroy()
   response.status(204).json({ message: 'project entry deleted successfully' })

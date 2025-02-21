@@ -33,6 +33,25 @@ const deepCreate = async (assembly, transaction) => {
   return assemblyInDb
 }
 
+const update = async (assembly, transaction) => {
+  const { id, code, prefabricated, project, billOfMaterials } = assembly
+
+  const updatedAssembly = {
+    id,
+    code,
+    prefabricated,
+    project,
+  }
+
+  const updatedAssemblyInDb = await Assembly.update(updatedAssembly, {
+    where: { id: updatedAssembly.id },
+    transaction,
+  })
+
+  return updatedAssemblyInDb
+}
+
 export const assembliesService = {
   deepCreate,
+  update,
 }

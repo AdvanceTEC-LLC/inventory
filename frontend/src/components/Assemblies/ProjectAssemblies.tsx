@@ -18,7 +18,7 @@ const ProjectAssemblies = ({ project }: { project: ProjectType | null }) => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 150,
+      width: 100,
       renderCell: (params) => <BillOfMaterials assembly={params.row} />,
     },
   ]

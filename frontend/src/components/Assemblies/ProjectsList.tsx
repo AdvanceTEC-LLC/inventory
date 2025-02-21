@@ -13,7 +13,7 @@ const ProjectsList = ({
   onSelectProject,
 }: ProjectsListProps) => {
   const sortedProjects = [...projects].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.number > b.number ? 1 : 0
   )
 
   return (

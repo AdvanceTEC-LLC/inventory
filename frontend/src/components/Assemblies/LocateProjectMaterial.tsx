@@ -5,7 +5,7 @@ import {
   DialogActions,
   Button,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { pageSizeOptions, paginationModel } from '../Tables/pagination'
 import { location, number, opened } from '../Tables/Columns/crates'
@@ -18,13 +18,18 @@ interface LocateProjectMaterialProps {
   material: MaterialType
   quantity: number
   project: ProjectType
+  setCratesAfterPrefab: Dispatch<SetStateAction<CrateType[]>>
 }
 
 const LocateProjectMaterial = ({
   material,
   quantity,
   project,
+  setCratesAfterPrefab,
 }: LocateProjectMaterialProps) => {
+  const [filteredCrates, setFilteredCrates] = useState<
+    (CrateType & { quantityToTake: number })[]
+  >([])
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -33,6 +38,12 @@ const LocateProjectMaterial = ({
   }
 
   const { data: crates = [] } = useCrates()
+
+  useEffect(() => {
+    if (crates.length > 0) {
+      filterCrates()
+    }
+  }, [crates])
 
   const filterCrates = () => {
     const projectCrates = [...crates].filter(
@@ -52,6 +63,7 @@ const LocateProjectMaterial = ({
 
     let remainingQuantity = quantity
     const selectedCrates: (CrateType & { quantityToTake: number })[] = []
+    const cratesAfterPrefab: CrateType[] = []
 
     for (const crate of sortedCrates) {
       if (remainingQuantity <= 0) break
@@ -66,9 +78,27 @@ const LocateProjectMaterial = ({
 
       // Add crate info with the calculated quantityToTake
       selectedCrates.push({ ...crate, quantityToTake: takeAmount })
+
+      // Update crate with the take amount removed
+      const updatedCrate = {
+        ...crate,
+        opened: true,
+        stock: crate.stock.map((stock) => {
+          return {
+            ...stock,
+            quantity:
+              stock.material.id === material.id
+                ? stock.quantity - takeAmount
+                : stock.quantity,
+          }
+        }),
+      }
+
+      cratesAfterPrefab.push(updatedCrate)
     }
 
-    return selectedCrates
+    setCratesAfterPrefab(cratesAfterPrefab)
+    setFilteredCrates(selectedCrates)
   }
 
   const columns = [
@@ -78,14 +108,14 @@ const LocateProjectMaterial = ({
     {
       field: 'quantityToTake',
       headerName: 'Quantity To Take',
-      width: 150,
+      flex: 1,
     },
   ]
 
   return (
     <>
       <Button fullWidth onClick={handleOpen}>
-        View
+        Locate
       </Button>
 
       {/* Modal / Dialog */}
@@ -96,12 +126,12 @@ const LocateProjectMaterial = ({
         fullWidth
       >
         <DialogTitle>
-          Crate{filterCrates.length > 1 ? 's' : ''} Containing {material.name}
+          Crate{filteredCrates.length > 1 ? 's' : ''} Containing {material.name}
         </DialogTitle>
         <DialogContent>
           <DataGrid
             sx={{ border: 0 }}
-            rows={filterCrates()}
+            rows={filteredCrates}
             columns={columns}
             initialState={{ pagination: { paginationModel } }}
             pageSizeOptions={pageSizeOptions}

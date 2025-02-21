@@ -105,94 +105,37 @@ assembliesRouter.post('/deep/', async (request, response, next) => {
   const transaction = await sequelize.transaction()
 
   try {
-    const crate = await assembliesService.deepCreate(request.body, transaction)
-
-    await transaction.commit()
-
-    response.status(201).send(crate)
-  } catch (error) {
-    await transaction.rollback()
-    next(error)
-  }
-})
-
-/*
-assembliesRouter.post('/batch/', async (request, response, next) => {
-  const assemblies = request.body
-
-  const projectInDb = await Project.findOne({
-    where: { number: assemblies[0].project.number },
-  })
-
-  if (!projectInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Project with number ${assemblies[0].project.number} not found`,
-      404,
+    const assemblies = await assembliesService.deepCreate(
+      request.body,
+      transaction,
     )
-  }
-
-  const transaction = await sequelize.transaction()
-
-  try {
-    for (const assembly of assemblies) {
-      let assemblyInDb = await Assembly.findOne({
-        where: { identifier: assembly.identifier, projectId: projectInDb.id },
-        transaction,
-      })
-
-      if (assemblyInDb) {
-        throw new CustomError(
-          'ValidationError',
-          `Assembly with identifier ${assembly.identifier} already exists for project ${projectInDb.number} ${projectInDb.name}.`,
-          400,
-        )
-      }
-
-      assemblyInDb = await Assembly.create(
-        {
-          code: assembly.code,
-          projectId: projectInDb.id,
-        },
-        { transaction },
-      )
-
-      // Create assemblyMaterial entries
-      for (const assemblyMaterial of assembly.billOfMaterials) {
-        let materialInDb = await Material.findOne({
-          where: { partNumber: assemblyMaterial.material.partNumber },
-          transaction,
-        })
-
-        if (!materialInDb) {
-          throw new CustomError(
-            'NotFoundError',
-            `Material with partNumber ${assemblyMaterial.material.partNumber} not found`,
-            404,
-          )
-        }
-
-        await AssemblyMaterial.create(
-          {
-            assemblyId: assemblyInDb.id,
-            materialId: materialInDb.id,
-            quantity: assemblyMaterial.quantity,
-          },
-          { transaction },
-        )
-      }
-    }
 
     await transaction.commit()
 
-    // Send the assembly data back as response
     response.status(201).send(assemblies)
   } catch (error) {
     await transaction.rollback()
     next(error)
   }
 })
-*/
+
+assembliesRouter.put('/:id/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const updatedAssembly = await assembliesService.update(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(updatedAssembly)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
 
 assembliesRouter.delete('/:id', assemblyFinder, async (request, response) => {
   await request.assembly.destroy()

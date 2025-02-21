@@ -33,7 +33,16 @@ const findOrCreate = async (project, transaction) => {
   return projectInDb
 }
 
+const bulkCreate = async (projects, transaction) => {
+  const projectsInDb = await Project.bulkCreate(projects, {
+    transaction,
+  })
+
+  return projectsInDb
+}
+
 export const projectsService = {
   create,
   findOrCreate,
+  bulkCreate,
 }

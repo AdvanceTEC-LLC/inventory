@@ -27,7 +27,7 @@ const apiService = <T, U>({ endpoint }: { endpoint: string }) => {
       return response.data
     },
 
-    update: async (id: number, data: U): Promise<T> => {
+    update: async (id: number, data: T): Promise<T> => {
       const response: AxiosResponse<T> = await apiClient.put(
         `${endpoint}/${id}`,
         data

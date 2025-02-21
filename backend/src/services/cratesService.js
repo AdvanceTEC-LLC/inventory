@@ -105,8 +105,6 @@ const deepCreate = async (crate, transaction) => {
 }
 
 const bulkUpdate = async (crates, transaction) => {
-  info('Bulk update from services')
-
   const updatedCrates = await Promise.all(
     crates.map(async (crate) => {
       let warehouseLocationId = null

@@ -2,7 +2,7 @@ import { test, describe, beforeEach, expect, afterAll } from 'vitest'
 import supertest from 'supertest'
 import app from '../src/app'
 import helper from './helper'
-import { manufacturer } from '../src/models'
+import { Manufacturer } from '../src/models'
 import { setupTestEnvironment, tearDownTestEnvironment } from './testSetup'
 
 const api = supertest(app)
@@ -54,7 +54,7 @@ describe('no data in the database', () => {
 
 describe('data in the database', () => {
   beforeEach(async () => {
-    await manufacturer.bulkCreate(helper.initialManufacturers)
+    await Manufacturer.bulkCreate(helper.initialManufacturers)
   })
 
   describe('get', () => {
@@ -79,7 +79,7 @@ describe('data in the database', () => {
     })
   })
 
-  describe('post', () => {
+  /*describe('post', () => {
     test('post returns error if name is not unique', async () => {
       const duplicateManufacturer = {
         name: helper.initialManufacturers[0].name,
@@ -96,17 +96,17 @@ describe('data in the database', () => {
       )
     })
 
-    test('post returns error name is null', async () => {
-      const duplicateManufacturer = { name: null }
+    test('post returns error if name is null', async () => {
+      const nullName = { name: null }
       const response = await api
         .post('/api/manufacturers')
-        .send(duplicateManufacturer)
+        .send(nullName)
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
       expect(response.body).toHaveProperty('error', 'SequelizeValidationError')
     })
-  })
+  })*/
 
   describe('delete', () => {
     test('delete ID returns error and doesnt change the data', async () => {

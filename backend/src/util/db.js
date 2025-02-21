@@ -3,7 +3,19 @@ import { DATABASE_URI } from './config.js'
 import { Umzug, SequelizeStorage } from 'umzug'
 import { info, error } from './logger.js'
 
-export const sequelize = new Sequelize(DATABASE_URI)
+// Custom logger used during testing to prevent migration logs
+const suppressedLogger = {
+  info: () => {}, // Suppress info logs
+  warn: () => {}, // Suppress warn logs
+  error: () => {}, // Suppress error logs
+}
+
+// True when running tests, used to prevent sequelize logs
+const testing = process.env.NODE_ENV === 'test'
+
+export const sequelize = new Sequelize(DATABASE_URI, {
+  logging: !testing,
+})
 
 export const connectToDatabase = async () => {
   try {
@@ -25,15 +37,18 @@ const migrationConf = {
   },
   storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
   context: sequelize.getQueryInterface(),
-  logger: console,
+  logger: testing ? suppressedLogger : console,
 }
 
-const runMigrations = async () => {
+export const runMigrations = async () => {
   const migrator = new Umzug(migrationConf)
   const migrations = await migrator.up()
-  info('Migrations up to date', {
-    files: migrations.map((mig) => mig.name),
-  })
+
+  if (!testing) {
+    info('Migrations up to date', {
+      files: migrations.map((mig) => mig.name),
+    })
+  }
 }
 
 export const rollbackMigration = async () => {

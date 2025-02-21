@@ -10,27 +10,30 @@ Material.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    partNumber: { type: DataTypes.STRING, unique: true },
-    description: { type: DataTypes.STRING, allowNull: false },
-    thickness: DataTypes.INTEGER,
-    width: DataTypes.INTEGER,
-    length: DataTypes.INTEGER,
-    squareFeet: DataTypes.FLOAT,
-    topFinish: DataTypes.STRING,
-    bottomFinish: DataTypes.STRING,
-    xDimension: DataTypes.INTEGER,
-    cutout: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    tag: DataTypes.STRING,
-    vendorId: {
+    manufacturerId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: 'manufacturers',
+        key: 'id',
+      },
       allowNull: false,
-      references: { model: 'vendors', key: 'id' },
+    },
+    name: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    unit: {
+      type: DataTypes.STRING,
+      defaultValue: 'ea',
     },
   },
-  { sequelize, underscored: true, timestamps: true, modelName: 'material' },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: true,
+    modelName: 'material',
+  },
 )
 
 export default Material

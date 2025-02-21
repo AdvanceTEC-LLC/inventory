@@ -1,0 +1,10 @@
+import { useQuery } from '@tanstack/react-query'
+import warehouseLocationsService from '../services/warehouseLocationsService'
+
+export const useWarehouseLocations = () => {
+  return useQuery({
+    queryKey: ['warehouseLocations'],
+    queryFn: warehouseLocationsService.getAll,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+}

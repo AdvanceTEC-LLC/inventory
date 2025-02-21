@@ -1,31 +1,55 @@
 import { Router } from 'express'
-import { Crate, Storage, Project, Stock, Vendor } from '../models/index.js'
+import {
+  Crate,
+  ShelfLocation,
+  Project,
+  Stock,
+  WarehouseLocation,
+  StagingArea,
+} from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { storageFindOptions } from './storages.js'
+import { shelfLocationFindOptions } from './shelfLocations.js'
 import { stockFindOptions } from './stock.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { vendorFindOptions } from './vendors.js'
+import { warehouseLocationFindOptions } from './warehouseLocations.js'
+import { sequelize } from '../util/db.js'
+import { cratesService } from '../services/cratesService.js'
+import { info } from '../util/logger.js'
+import { stagingAreaFindOptions } from './stagingAreas.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
   attributes: {
-    exclude: ['storageId', 'projectId', 'vendorId', 'createdAt', 'updatedAt'],
+    exclude: [
+      'warehouseLocationId',
+      'shelfLocationId',
+      'stagingAreaId',
+      'projectId',
+      'vendorId',
+      'createdAt',
+      'updatedAt',
+    ],
   },
   include: [
     {
-      model: Storage,
-      as: 'storage',
-      ...storageFindOptions,
+      model: WarehouseLocation,
+      as: 'warehouseLocation',
+      ...warehouseLocationFindOptions,
+    },
+    {
+      model: ShelfLocation,
+      as: 'shelfLocation',
+      ...shelfLocationFindOptions,
+    },
+    {
+      model: StagingArea,
+      as: 'stagingArea',
+      ...stagingAreaFindOptions,
     },
     {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
     },
     {
       model: Stock,
@@ -58,7 +82,45 @@ cratesRouter.get('/:id', crateFinder, async (request, response) => {
 })
 
 cratesRouter.post('/', async (request, response) => {
-  const { number, storageId, projectId } = request.body
+  const {
+    number,
+    warehouseLocationId,
+    shelfLocationId,
+    stagingAreaId,
+    projectId,
+    opened,
+  } = request.body
+
+  const warehouseLocationExists =
+    await WarehouseLocation.findByPk(warehouseLocationId)
+
+  if (!warehouseLocationExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Warehouse location with id ${warehouseLocationId} not found`,
+      404,
+    )
+  }
+
+  const shelfLocationExists = await shelfLocation.findByPk(shelfLocationId)
+
+  if (!shelfLocationExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Shelf location with id ${shelfLocationId} not found`,
+      404,
+    )
+  }
+
+  const stagingAreaExists = await StagingArea.findByPk(stagingAreaId)
+
+  if (!stagingAreaExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Staging area with id ${stagingAreaId} not found`,
+      404,
+    )
+  }
 
   const projectExists = await Project.findByPk(projectId)
 
@@ -70,26 +132,49 @@ cratesRouter.post('/', async (request, response) => {
     )
   }
 
-  const storageExists = await storage.findByPk(storageId)
-
-  if (!storageExists) {
-    throw new CustomError(
-      'NotFoundError',
-      `storage with id ${storageId} not found`,
-      404,
-    )
-  }
-
   const crate = await Crate.create({
     number,
-    storageId,
+    warehouseLocationId,
+    shelfLocationId,
+    stagingAreaId,
     projectId,
+    opened,
   })
 
   response.status(201).send(crate)
 })
 
-cratesRouter.delete('/:id', crateFinder, async (request, response) => {
+cratesRouter.post('/deep/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const crate = await cratesService.deepCreate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(crate)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
+cratesRouter.put('/bulk/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const crate = await cratesService.bulkUpdate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(crate)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
+cratesRouter.delete('/:id/', crateFinder, async (request, response) => {
   await request.crate.destroy()
   response.status(204).json({ message: 'Crate entry deleted successfully' })
 })

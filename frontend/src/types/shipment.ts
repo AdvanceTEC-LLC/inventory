@@ -1,27 +1,15 @@
-import { CrateType, CreateCrateType } from './crate'
-import { CreateProjectType, ProjectType } from './project'
-import { CreateVendorType, VendorType } from './vendor'
-
-export enum ShipmentDirectionEnum {
-  In = 'In',
-  Out = 'Out',
-}
+import { CrateType, NewCrateType } from './crate'
+import { NewProjectType, ProjectType } from './project'
 
 export interface ShipmentType {
   id: number
-  direction: ShipmentDirectionEnum
-  sendDate: Date
-  receivedDate: Date
+  trackingNumber: number
   project: ProjectType
-  vendor: VendorType
   crates: CrateType[]
 }
 
-export interface CreateShipmentType {
-  direction: ShipmentDirectionEnum
-  sendDate: Date
-  receivedDate: Date
-  project: CreateProjectType
-  vendor: CreateVendorType
-  crates: CreateCrateType[]
+export interface NewShipmentType
+  extends Omit<ShipmentType, 'id' | 'project' | 'crates'> {
+  project: NewProjectType
+  crates: NewCrateType[]
 }

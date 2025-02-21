@@ -7,7 +7,8 @@ export interface ShipmentCrateType {
   crate: CrateType
 }
 
-export interface CreateShipmentCrateType {
+export interface NewShipmentCrateType
+  extends Omit<ShipmentType, 'id' | 'shipment' | 'crate'> {
   shipmentId: number
   crateId: number
 }

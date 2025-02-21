@@ -1,36 +1,21 @@
 import { Router } from 'express'
-import {
-  Shipment,
-  Project,
-  Vendor,
-  ShipmentCrate,
-  Crate,
-  CrateStock,
-  Stock,
-  Material,
-} from '../models/index.js'
+import { Shipment, Project, ShipmentCrate, Crate } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { vendorFindOptions } from './vendors.js'
 import { crateFindOptions } from './crates.js'
-import { sequelize } from '../util/db.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { info } from '../util/logger.js'
+import { sequelize } from '../util/db.js'
+import { shipmentsService } from '../services/shipmentsService.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
   attributes: {
-    exclude: ['projectId', 'vendorId', 'createdAt', 'updatedAt'],
+    exclude: ['projectId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
     },
     {
       model: Crate,
@@ -80,7 +65,47 @@ shipmentsRouter.get('/:id', shipmentFinder, async (request, response) => {
 })
 
 shipmentsRouter.post('/', async (request, response, next) => {
-  const { direction, sendDate, receivedDate, project, vendor, crates } =
+  const { trackingNumber, projectId } = request.body
+
+  const projectInDb = await Project.findByPk(projectId)
+
+  if (!projectInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found`,
+      404,
+    )
+  }
+
+  const shipment = await Shipment.create({
+    trackingNumber,
+    projectId,
+  })
+
+  response.status(201).send(shipment)
+})
+
+shipmentsRouter.post('/deep', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const shipment = await shipmentsService.deepCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(shipment)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+
+/*
+shipmentsRouter.post('/batch/', async (request, response, next) => {
+  const { direction, sendDate, receivedDate, project, manufacturer, crates } =
     request.body
 
   if (!['In', 'Out'].includes(direction)) {
@@ -95,15 +120,12 @@ shipmentsRouter.post('/', async (request, response, next) => {
   const parsedSendDate = new Date(sendDate)
   const parsedReceivedDate = new Date(receivedDate)
 
-  if (
-    (sendDate !== null && isNaN(parsedSendDate.getTime())) ||
-    isNaN(parsedReceivedDate.getTime())
-  ) {
-    throw new CustomError(
-      'ValidationError',
-      'One or both of the provided dates are invalid.',
-      400,
-    )
+  if (sendDate !== null && isNaN(parsedSendDate.getTime())) {
+    throw new CustomError('ValidationError', 'Send date is invalid.', 400)
+  }
+
+  if (receivedDate && isNaN(parsedReceivedDate.getTime())) {
+    throw new CustomError('ValidationError', 'Received date is invalid.', 400)
   }
 
   if (parsedSendDate > parsedReceivedDate) {
@@ -119,7 +141,7 @@ shipmentsRouter.post('/', async (request, response, next) => {
   const transaction = await sequelize.transaction()
 
   try {
-    // Check if project and vendor exist in the database
+    // Check if project and manufacturer exist in the database
     let projectInDb = await Project.findOne({
       where: { number: project.number },
       transaction,
@@ -129,16 +151,16 @@ shipmentsRouter.post('/', async (request, response, next) => {
       projectInDb = await Project.create(project, { transaction })
     }
 
-    let vendorInDb = await Vendor.findOne({
-      where: { name: vendor.name },
+    let manufacturerInDb = await Manufacturer.findOne({
+      where: { name: manufacturer.name },
       transaction,
     })
 
-    if (!vendorInDb) {
-      vendorInDb = await Vendor.create(vendor, { transaction })
+    if (!manufacturerInDb) {
+      manufacturerInDb = await Manufacturer.create(manufacturer, {
+        transaction,
+      })
     }
-
-    info(sendDate)
 
     // Create shipment entry
     const shipment = await Shipment.create(
@@ -147,17 +169,17 @@ shipmentsRouter.post('/', async (request, response, next) => {
         sendDate: parsedSendDate,
         receivedDate: parsedReceivedDate,
         projectId: projectInDb.id,
-        vendorId: vendorInDb.id,
+        manufacturerId: manufacturerInDb.id,
       },
       { transaction },
     )
 
     // Create crates and stock entries
     for (const crate of crates) {
-      let crateInDb = await Crate.findOne(
-        { attributes: { where: { number: crate.number } } },
-        { transaction },
-      )
+      let crateInDb = await Crate.findOne({
+        where: { number: crate.number },
+        transaction,
+      })
 
       if (crateInDb) {
         throw new CustomError(
@@ -173,7 +195,7 @@ shipmentsRouter.post('/', async (request, response, next) => {
           location: crate.location,
           storageId: null,
           projectId: projectInDb.id,
-          vendorId: vendorInDb.id,
+          manufacturerId: manufacturerInDb.id,
         },
         { transaction },
       )
@@ -206,7 +228,7 @@ shipmentsRouter.post('/', async (request, response, next) => {
               xDimension: stock.material.xDimension,
               cutout: stock.material.cutout,
               tag: stock.material.tag,
-              vendorId: vendorInDb.id,
+              manufacturerId: manufacturerInDb.id,
             },
             { transaction },
           )
@@ -232,6 +254,9 @@ shipmentsRouter.post('/', async (request, response, next) => {
 
     await transaction.commit()
 
+    info(sendDate)
+    info(parsedSendDate)
+
     // Send the shipment data back as response
     response.status(201).send(shipment)
   } catch (error) {
@@ -240,6 +265,83 @@ shipmentsRouter.post('/', async (request, response, next) => {
   }
 })
 
+shipmentsRouter.post('/batch/outbound/', async (request, response, next) => {
+  const { direction, sendDate, project, crates } = request.body
+
+  if ('Out' !== direction) {
+    throw new CustomError(
+      'ValidationError',
+      `Shipment direction of ${direction} is not 'Out'.`,
+      400,
+    )
+  }
+
+  info(sendDate)
+  // Convert sendDate and receivedDate to Date objects
+  const parsedSendDate = new Date(sendDate)
+  info(parsedSendDate)
+
+  if (sendDate !== null && isNaN(parsedSendDate.getTime())) {
+    throw new CustomError('ValidationError', 'Send date is invalid.', 400)
+  }
+
+  const transaction = await sequelize.transaction()
+
+  try {
+    // Check if project and manufacturer exist in the database
+    let projectInDb = await Project.findOne({
+      where: { number: project.number },
+      transaction,
+    })
+
+    if (!projectInDb) {
+      projectInDb = await Project.create(project, { transaction })
+    }
+
+    // Create shipment entry
+    const shipment = await Shipment.create(
+      {
+        direction,
+        sendDate: parsedSendDate,
+        projectId: projectInDb.id,
+      },
+      { transaction },
+    )
+
+    // Create crate relationships
+    for (const crate of crates) {
+      const crateInDb = await Crate.findOne({
+        where: { number: crate.number },
+        transaction,
+      })
+
+      if (!crateInDb) {
+        throw new CustomError(
+          'ValidationError',
+          `Crate with number ${crate.number} does not exist.`,
+          400,
+        )
+      }
+
+      await ShipmentCrate.create(
+        {
+          crateId: crateInDb.id,
+          shipmentId: shipment.id,
+        },
+        { transaction },
+      )
+    }
+
+    await transaction.commit()
+
+    // Send the shipment data back as response
+    response.status(201).send(shipment)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
+})
+*/
 shipmentsRouter.delete('/:id', shipmentFinder, async (request, response) => {
   await request.shipment.destroy()
   response.status(204).json({ message: 'Shipment entry deleted successfully' })

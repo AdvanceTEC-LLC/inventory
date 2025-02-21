@@ -1,7 +1,6 @@
 import DebugCard from './DebugCard'
 import { QueryClient } from '@tanstack/react-query'
 import Container from '../ATEC UI/Container'
-import Button from '../ATEC UI/Button'
 
 import materialsService from '../../services/materialsService'
 import { materialColumns } from './Materials'
@@ -12,11 +11,11 @@ import { stockColumns } from './Stock'
 import projectsService from '../../services/projectsService'
 import { projectColumns } from './Projects'
 
-import vendorsService from '../../services/vendorsService'
-import { vendorColumns } from './Vendors'
+import manufacturersService from '../../services/manufacturersService'
+import { manufacturerColumns } from './Manufacturers'
 
-import storagesService from '../../services/storagesService'
-import { storageColumns } from './Storages'
+import shelfLocationsService from '../../services/shelfLocationsService'
+import { shelfLocationColumns } from './ShelfLocations'
 
 import cratesService from '../../services/cratesService'
 import { crateColumns } from './Crates'
@@ -29,28 +28,37 @@ import { shipmentCrateColumns } from './ShipmentCrates'
 
 import crateStockService from '../../services/crateStockService'
 import { crateStockColumns } from './CrateStock'
+import warehouseLocationsService from '../../services/warehouseLocationsService'
+import receivedShipmentsService from '../../services/receivedShipmentsService'
+import stagingAreasService from '../../services/stagingAreasService'
+import sentShipmentsService from '../../services/sentShipmentsService'
+import { Button } from '@mui/material'
 
 const Debug = () => {
   const queryClient = new QueryClient()
 
   const resetDatabase = async () => {
     try {
-      await materialsService.removeAll()
-      await stockService.removeAll()
-      await projectsService.removeAll()
-      await vendorsService.removeAll()
       await cratesService.removeAll()
-      await storagesService.removeAll()
-      await shipmentsService.removeAll()
       await crateStockService.removeAll()
+      await manufacturersService.removeAll()
+      await materialsService.removeAll()
+      await projectsService.removeAll()
+      await receivedShipmentsService.removeAll()
+      await sentShipmentsService.removeAll()
+      await shelfLocationsService.removeAll()
       await shipmentCratesService.removeAll()
+      await shipmentsService.removeAll()
+      await stagingAreasService.removeAll()
+      await stockService.removeAll()
+      await warehouseLocationsService.removeAll()
 
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })
       queryClient.invalidateQueries({ queryKey: ['projects'] })
-      queryClient.invalidateQueries({ queryKey: ['vendors'] })
+      queryClient.invalidateQueries({ queryKey: ['manufacturers'] })
       queryClient.invalidateQueries({ queryKey: ['crates'] })
-      queryClient.invalidateQueries({ queryKey: ['storages'] })
+      queryClient.invalidateQueries({ queryKey: ['shelfLocations'] })
       queryClient.invalidateQueries({ queryKey: ['shipments'] })
       queryClient.invalidateQueries({ queryKey: ['crateStock'] })
       queryClient.invalidateQueries({ queryKey: ['shipmentCrates'] })
@@ -61,14 +69,14 @@ const Debug = () => {
 
   return (
     <div className="flex flex-col gap-y-8">
-      <Container>
-        <Button
-          text="Reset Database"
-          onClick={() => {
-            void resetDatabase()
-          }}
-        />
-      </Container>
+      <Button
+        variant="contained"
+        onClick={() => {
+          void resetDatabase()
+        }}
+      >
+        Reset Database
+      </Button>
 
       <DebugCard
         title={'Materials'}
@@ -95,18 +103,18 @@ const Debug = () => {
       />
 
       <DebugCard
-        title={'Vendors'}
-        columns={vendorColumns}
+        title={'Manufacturers'}
+        columns={manufacturerColumns}
         service={{
-          getAll: vendorsService.getAll,
+          getAll: manufacturersService.getAll,
         }}
       />
 
       <DebugCard
-        title={'Storages'}
-        columns={storageColumns}
+        title={'Shelf Locations'}
+        columns={shelfLocationColumns}
         service={{
-          getAll: storagesService.getAll,
+          getAll: shelfLocationsService.getAll,
         }}
       />
 

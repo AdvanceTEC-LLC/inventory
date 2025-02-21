@@ -1,18 +1,26 @@
 import { Router } from 'express'
-import { Material, Stock, Vendor } from '../models/index.js'
+import { Material, Project, Stock } from '../models/index.js'
 import { materialFindOptions } from './materials.js'
+import { projectFindOptions } from './projects.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { stockService } from '../services/stockService.js'
+import { sequelize } from '../util/db.js'
 const stockRouter = Router()
 
 export const stockFindOptions = {
   attributes: {
-    exclude: ['materialId', 'createdAt', 'updatedAt'],
+    exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
       model: Material,
       as: 'material',
       ...materialFindOptions,
+    },
+    {
+      model: Project,
+      as: 'project',
+      ...projectFindOptions,
     },
   ],
 }
@@ -60,7 +68,7 @@ stockRouter.get('/material/:partNumber', async (request, response) => {
 })
 
 stockRouter.post('/', async (request, response) => {
-  const { materialId, quantity } = request.body
+  const { materialId, projectId, quantity } = request.body
 
   const materialExists = await Material.findByPk(materialId)
 
@@ -72,12 +80,38 @@ stockRouter.post('/', async (request, response) => {
     )
   }
 
+  const projectExists = await Project.findByPk(projectId)
+
+  if (!projectExists) {
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found.`,
+      404,
+    )
+  }
+
   const stock = await Stock.create({
     materialId,
     quantity,
+    projectId,
   })
 
   response.status(201).send(stock)
+})
+
+stockRouter.post('/deep/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
+
+  try {
+    const stock = await stockService.deepCreate(request.body, transaction)
+
+    await transaction.commit()
+
+    response.status(201).send(stock)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 stockRouter.put('/:id', stockFinder, async (request, response) => {

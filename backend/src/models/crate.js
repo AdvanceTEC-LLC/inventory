@@ -1,5 +1,7 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+import WarehouseLocation from './warehouseLocation.js'
+
 class Crate extends Model {}
 
 Crate.init(
@@ -13,30 +15,46 @@ Crate.init(
       type: DataTypes.STRING,
       unique: true,
     },
-    location: {
-      type: DataTypes.ENUM(
-        'Shipping Bay',
-        'Storage',
-        'Staging Zone 1',
-        'Staging Zone 2',
-        'In Transit',
-        'Delivered',
-      ),
-      allowNull: false,
-    },
-    storageId: {
+    warehouseLocationId: {
       type: DataTypes.INTEGER,
-      references: { model: 'storages', key: 'id' },
+      references: {
+        model: 'warehouse_locations',
+        key: 'id',
+      },
+      allowNull: false,
+      defaultValue: async () => {
+        const defaultWarehouse = await WarehouseLocation.findOne({
+          where: { isDefault: true },
+        })
+        return defaultWarehouse.id
+      },
+    },
+    shelfLocationId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'shelf_locations',
+        key: 'id',
+      },
+    },
+    stagingAreaId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'staging_areas',
+        key: 'id',
+      },
     },
     projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'projects', key: 'id' },
+      references: {
+        model: 'projects',
+        key: 'id',
+      },
     },
-    vendorId: {
-      type: DataTypes.INTEGER,
+    opened: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      references: { model: 'vendors', key: 'id' },
+      defaultValue: false,
     },
   },
   {
@@ -44,21 +62,7 @@ Crate.init(
     underscored: true,
     timestamps: true,
     modelName: 'crate',
-    validate: {
-      storageRequiresStorageId() {
-        if (this.location === 'Storage' && this.storageId === null) {
-          throw new Error('Crates in "Storage" location must have a storageId.')
-        }
-      },
-    },
   },
 )
-
-// Add hook to enforce crates in 'Storage' locations to have a storageId
-Crate.addHook('beforeValidate', (crate) => {
-  if (crate.location === 'Storage' && crate.storageId === null) {
-    throw new Error('Crates in "Storage" location must have a storageId.')
-  }
-})
 
 export default Crate

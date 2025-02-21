@@ -1,32 +1,36 @@
-import { CreateStorageType, StorageType } from './storage'
-import { CreateProjectType, ProjectType } from './project'
-import { CreateStockType, StockType } from './stock'
-import { CreateVendorType, VendorType } from './vendor'
-
-export enum CrateLocationEnum {
-  ShippingBay = 'Shipping Bay',
-  Storage = 'Storage',
-  StagingZone1 = 'Staging Zone 1',
-  StagingZone2 = 'Staging Zone 2',
-  InTransit = 'In Transit',
-  Delivered = 'Delivered',
-}
+import { NewProjectType, ProjectType } from './project'
+import { NewShelfLocationType, ShelfLocationType } from './shelfLocation'
+import { NewStagingAreaType, StagingAreaType } from './stagingArea'
+import { NewStockType, StockType } from './stock'
+import {
+  NewWarehouseLocationType,
+  WarehouseLocationType,
+} from './warehouseLocation'
 
 export interface CrateType {
   id: number
   number: string
-  location: CrateLocationEnum
-  storage: StorageType
+  warehouseLocation: WarehouseLocationType
+  shelfLocation?: ShelfLocationType
+  stagingArea?: StagingAreaType
   project: ProjectType
-  vendor: VendorType
+  opened: boolean
   stock: StockType[]
 }
 
-export interface CreateCrateType {
-  number: string
-  location: CrateLocationEnum
-  storage?: CreateStorageType
-  project: CreateProjectType
-  vendor: CreateVendorType
-  stock: CreateStockType[]
+export interface NewCrateType
+  extends Omit<
+    CrateType,
+    | 'id'
+    | 'warehouseLocation'
+    | 'shelfLocation'
+    | 'stagingArea'
+    | 'project'
+    | 'stock'
+  > {
+  warehouseLocation?: NewWarehouseLocationType | number
+  shelfLocation?: NewShelfLocationType | number
+  stagingArea?: NewStagingAreaType | number
+  project: NewProjectType | number
+  stock: NewStockType[]
 }

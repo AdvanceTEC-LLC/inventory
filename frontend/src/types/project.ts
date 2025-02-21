@@ -2,9 +2,9 @@ export interface ProjectType {
   id: number
   number: number
   name: string
+  active: boolean
 }
 
-export interface CreateProjectType {
-  number: number
-  name: string
+export interface NewProjectType extends Omit<ProjectType, 'id' | 'active'> {
+  active?: boolean
 }

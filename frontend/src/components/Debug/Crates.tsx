@@ -1,5 +1,4 @@
 import { GridColDef } from '@mui/x-data-grid'
-import { CrateLocationEnum } from '../../types/crate'
 
 export const crateColumns: GridColDef[] = [
   {
@@ -15,25 +14,29 @@ export const crateColumns: GridColDef[] = [
     valueGetter: (_value, row) => row.number,
   },
   {
-    field: 'location',
-    headerName: 'Location',
+    field: 'warehouseLocation',
+    headerName: 'Warehouse Location',
     flex: 1,
-    valueGetter: (_value, row) => row.location,
+    valueGetter: (_value, row) => row.warehouseLocation.name,
   },
   {
-    field: 'storage',
-    headerName: 'Storage',
+    field: 'shelfLocation',
+    headerName: 'Shelf Location',
     flex: 1,
     valueGetter: (_value, row) => {
-      if (!row.storage) return ''
-      return `Aisle ${row.storage.aisle} ${row.storage.col}x${row.storage.shelf}`
+      if (!row.shelfLocation) return ''
+      const { side, aisle, col, shelf } = row.shelfLocation
+      return `Side ${side} Aisle ${aisle} ${col}x${shelf}`
     },
   },
   {
-    field: 'vendor',
-    headerName: 'Vendor',
+    field: 'stagingArea',
+    headerName: 'Staging Area',
     flex: 1,
-    valueGetter: (_value, row) => row.vendor.name,
+    valueGetter: (_value, row) => {
+      if (!row.stagingArea) return ''
+      return row.stagingArea.name
+    },
   },
   {
     field: 'project',
@@ -53,21 +56,6 @@ export const crateForm = (
       placeholder="number"
       name="number"
     />
-
-    <select
-      className="p-2 border-b-2 border-gray-300"
-      name="location"
-      defaultValue=""
-    >
-      <option value="" disabled>
-        location
-      </option>
-      {Object.values(CrateLocationEnum).map((location) => (
-        <option key={location} value={location}>
-          {location}
-        </option>
-      ))}
-    </select>
     <input
       className="p-2 border-b-2 border-gray-300"
       type="text"

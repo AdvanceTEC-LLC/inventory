@@ -11,7 +11,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import React from 'react'
 import { CrateType } from '../../../types/crate'
-import StockRow from '../../Inventory/Crates/StockRow'
+import StockRow from '../../Crates/StockRow'
 import { Header, Subtext } from '../../ATEC UI/Text'
 
 interface CrateRowProps {
@@ -61,7 +61,7 @@ const CrateRow = ({ crate }: CrateRowProps) => {
 
               {crate.stock.length ? (
                 <Table>
-                  <TableHead className="bg-gray-50">
+                  <TableHead>
                     <TableRow>
                       <TableCell>Part Number</TableCell>
                       <TableCell>Description</TableCell>

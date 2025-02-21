@@ -1,31 +1,13 @@
-import { CreateVendorType, VendorType } from './vendor'
+import { ManufacturerType, NewManufacturerType } from './manufacturer'
 
 export interface MaterialType {
   id: number
-  partNumber: string
-  description: string
-  thickness?: number
-  width?: number
-  length?: number
-  squareFeet?: number
-  topFinish?: string
-  bottomFinish?: string
-  xDimension?: number
-  cutout?: boolean
-  tag?: string
-  vendor: VendorType
+  manufacturer: ManufacturerType
+  name: string
+  unit: string
 }
 
-export interface CreateMaterialType {
-  partNumber: string
-  description: string
-  thickness?: number
-  width?: number
-  length?: number
-  topFinish?: string
-  bottomFinish?: string
-  xDimension?: number
-  cutout?: boolean
-  tag?: string
-  vendor: CreateVendorType
+export interface NewMaterialType
+  extends Omit<MaterialType, 'id' | 'manufacturer' | 'division'> {
+  manufacturer: NewManufacturerType | number
 }

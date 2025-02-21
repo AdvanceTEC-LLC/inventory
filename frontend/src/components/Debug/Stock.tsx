@@ -8,16 +8,10 @@ export const stockColumns: GridColDef[] = [
     valueGetter: (_value, row) => row.id,
   },
   {
-    field: 'partNumber',
-    headerName: 'Part Number',
+    field: 'name',
+    headerName: 'Name',
     flex: 1,
-    valueGetter: (_value, row) => row.material.partNumber,
-  },
-  {
-    field: 'description',
-    headerName: 'Description',
-    flex: 1,
-    valueGetter: (_value, row) => row.material.description,
+    valueGetter: (_value, row) => row.material.name,
   },
   {
     field: 'quantity',

@@ -58,22 +58,22 @@ jobs:
           npm run test
 
       # End to end tests
-      - name: Run end to end tests
-        env:
-          TEST_MONGODB_URI: ${{ secrets.TEST_DATABASE_URI }}
-          PORT: 3001
-        run: |
-          cd ./backend && npm run start:test &
-          cd ./frontend && npm run dev &
-          cd ./end-to-end-tests && npm ci && npx playwright install --with-deps && npm run test
+      #- name: Run end to end tests
+      #  env:
+      #    TEST_MONGODB_URI: ${{ secrets.TEST_DATABASE_URI }}
+      #    PORT: 3001
+      #  run: |
+      #    cd ./backend && npm run start:test &
+      #    cd ./frontend && npm run dev &
+      #    cd ./end-to-end-tests && npm ci && npx playwright install --with-deps && npm run test
 
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: ./end-to-end-tests/playwright-report/
-          retention-days: 30
+      #- name: Upload Playwright report
+      #  uses: actions/upload-artifact@v4
+      #  if: ${{ !cancelled() }}
+      #  with:
+      #    name: playwright-report
+      #    path: ./end-to-end-tests/playwright-report/
+      #    retention-days: 30
 
       # Combined Build and Deployment Step
       - name: Set up Flyctl

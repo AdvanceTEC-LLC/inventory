@@ -36,7 +36,7 @@ jobs:
 
       - name: Run unit tests for Backend
         env:
-          TEST_MONGODB_URI: ${{ secrets.TEST_DATABASE_URI }}
+          DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}
         working-directory: backend
         run: |
           npm run test

@@ -13,7 +13,7 @@ env:
 
 jobs:
   deployment_pipeline:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -98,7 +98,7 @@ jobs:
   tag_release:
     needs: [deployment_pipeline]
     if: ${{ github.ref == 'refs/heads/main'}}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out the code
         uses: actions/checkout@v4

@@ -29,6 +29,13 @@ const create = async (crateStock, transaction) => {
   return crateStockInDb
 }
 
+const removeStock = async (stock, transaction) => {
+  await CrateStock.destroy({
+    where: { stockId: stock.id },
+    transaction,
+  })
+}
+
 const createBatch = async (crateStock, transaction) => {
   const { stock, crate } = crateStock
 
@@ -47,5 +54,6 @@ const createBatch = async (crateStock, transaction) => {
 
 export const crateStocksService = {
   create,
+  removeStock,
   createBatch,
 }

@@ -137,7 +137,7 @@ const bulkUpdate = async (crates, transaction) => {
 
       await Promise.all(
         crate.stock.map(async (stock) => {
-          await stockService.update(stock, transaction)
+          await stockService.updateOrRemove(stock, transaction)
         }),
       )
     }),

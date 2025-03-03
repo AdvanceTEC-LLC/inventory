@@ -204,6 +204,7 @@ const stockRelationships = () => {
     foreignKey: 'stockId',
     otherKey: 'crateId',
     as: 'crates',
+    onDelete: 'CASCADE',
   })
 }
 

@@ -19,6 +19,7 @@ import { CrateType } from '../../types/crate'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../store'
 import assembliesService from '../../services/assembliesService'
+import { useStock } from '../../hooks/useStockHook'
 
 interface BillOfMaterialsProps {
   assembly: AssemblyType
@@ -67,7 +68,7 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
     mutationFn: (assembly: AssemblyType) =>
       assembliesService.update(assembly.id, assembly),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['assembly'] })
+      await queryClient.invalidateQueries({ queryKey: ['assemblies'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -86,6 +87,21 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
         })
       )
     },
+  })
+
+  const { data: stock = [] } = useStock()
+
+  console.log(queryClient.getQueryCache().findAll())
+
+  // Get all stock related to this project's assembly
+  const projectStock = stock.filter((s) => s.project.id === assembly.project.id)
+
+  // Check if every material in the bill of materials has enough stock
+  const materialsInStock = assembly.billOfMaterials?.every((bill) => {
+    const stockItem = projectStock.find(
+      (s) => s.material.id === bill.material.id
+    )
+    return stockItem && stockItem.quantity >= bill.quantity
   })
 
   const handleSubmit = () => {
@@ -144,7 +160,11 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
           {!assembly.prefabricated && (
-            <Button variant="contained" onClick={handleSubmit}>
+            <Button
+              variant="contained"
+              disabled={!materialsInStock}
+              onClick={handleSubmit}
+            >
               Prefabricate
             </Button>
           )}

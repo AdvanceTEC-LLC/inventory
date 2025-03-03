@@ -134,6 +134,12 @@ const bulkUpdate = async (crates, transaction) => {
         where: { id: updatedCrate.id },
         transaction,
       })
+
+      await Promise.all(
+        crate.stock.map(async (stock) => {
+          await stockService.update(stock, transaction)
+        }),
+      )
     }),
   )
   return updatedCrates

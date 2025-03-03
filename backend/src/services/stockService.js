@@ -46,7 +46,19 @@ const deepCreate = async (stock, transaction) => {
   return stockInDb
 }
 
+const update = async (stock, transaction) => {
+  info(stock)
+
+  const stockInDb = await Stock.update(stock, {
+    where: { id: stock.id },
+    transaction,
+  })
+
+  return stockInDb
+}
+
 export const stockService = {
   create,
   deepCreate,
+  update,
 }

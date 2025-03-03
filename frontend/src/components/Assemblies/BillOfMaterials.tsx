@@ -91,8 +91,6 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
 
   const { data: stock = [] } = useStock()
 
-  console.log(queryClient.getQueryCache().findAll())
-
   // Get all stock related to this project's assembly
   const projectStock = stock.filter((s) => s.project.id === assembly.project.id)
 

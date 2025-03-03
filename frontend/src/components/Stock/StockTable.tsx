@@ -9,8 +9,7 @@ import { ProjectType } from '../../types/project'
 import { manufacturer, name, quantity, unit } from '../Tables/Columns/stock'
 import { useStock } from '../../hooks/useStockHook'
 import ProjectSelector from './ProjectSelector'
-
-const paginationModel = { page: 0, pageSize: 5 }
+import { pageSizeOptions, paginationModel } from '../Tables/pagination'
 
 const columns = [name, manufacturer, unit, quantity]
 
@@ -76,7 +75,7 @@ const StockTable = () => {
         rows={filteredAndGroupedStock}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={pageSizeOptions}
         sx={{ border: 0 }}
         disableRowSelectionOnClick
       />

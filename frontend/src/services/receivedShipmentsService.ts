@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import {
   ReceivedShipmentType,
   NewReceivedShipmentType,
@@ -15,11 +15,15 @@ const receivedShipmentsService = {
   deepCreate: async (
     data: NewReceivedShipmentType
   ): Promise<ReceivedShipmentType> => {
-    const response = await axios.post(`/api/${endpoint}/deep`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const response: AxiosResponse<ReceivedShipmentType> = await axios.post(
+      `/api/${endpoint}/deep`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
     return response.data
   },
 }

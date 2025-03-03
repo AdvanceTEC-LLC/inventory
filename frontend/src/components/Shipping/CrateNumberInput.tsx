@@ -25,7 +25,7 @@ const CrateNumberInput = ({ crate }: CrateNumberInputProps) => {
     <TextField
       variant="standard"
       label="Crate Number"
-      value={crate?.number ?? ''}
+      value={crate.number ?? ''}
       onChange={handleChange}
     />
   )

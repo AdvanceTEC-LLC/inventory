@@ -25,8 +25,8 @@ const AddProject = () => {
 
   const createProjectMutation = useMutation({
     mutationFn: (project: NewProjectType) => projectsService.create(project),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['projects'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -47,7 +47,9 @@ const AddProject = () => {
     },
   })
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
     setName('')

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button } from '@mui/material'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
@@ -32,8 +33,8 @@ const IncomingForm = () => {
         })
       )
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['receivedShipments'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['receivedShipments'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -56,8 +57,8 @@ const IncomingForm = () => {
   const submitReceivedShipment = () => {
     if (
       !shipment?.trackingNumber ||
-      !shipment?.project ||
-      !shipment?.crates?.length
+      !shipment.project ||
+      !shipment.crates?.length
     )
       return
 
@@ -84,7 +85,7 @@ const IncomingForm = () => {
 
     const newReceivedShipment: NewReceivedShipmentType = {
       shipment: newShipment,
-      manufacturer: receivedShipment?.manufacturer!,
+      manufacturer: receivedShipment!.manufacturer!,
       receivedDate: new Date(),
     }
 

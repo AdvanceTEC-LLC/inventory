@@ -3,4 +3,4 @@ export interface ManufacturerType {
   name: string
 }
 
-export interface NewManufacturerType extends Omit<ManufacturerType, 'id'> {}
+export type NewManufacturerType = Omit<ManufacturerType, 'id'>

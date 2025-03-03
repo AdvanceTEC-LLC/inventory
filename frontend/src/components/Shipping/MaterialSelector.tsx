@@ -47,14 +47,16 @@ const MaterialSelector = ({ crate, stock }: MaterialSelectorProps) => {
     })
   }
 
-  const materialValue = stock?.material ?? null
+  const materialValue = stock.material ?? null
 
   return (
     <Autocomplete
       options={sortedMaterials}
       getOptionLabel={(option) => option.name}
       value={materialValue}
-      onChange={(event, value) => handleChange(event, value)}
+      onChange={(event, value) => {
+        handleChange(event, value)
+      }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => <TextField {...params} label="Material" />}
     />

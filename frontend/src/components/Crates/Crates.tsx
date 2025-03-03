@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import Container from '../ATEC UI/Container'
 import { Title } from '../ATEC UI/Text'
-import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowSelectionModel,
+} from '@mui/x-data-grid'
 import { useQuery } from '@tanstack/react-query'
 import cratesService from '../../services/cratesService'
 import { location, number, opened, project } from '../Tables/Columns/crates'
@@ -34,7 +39,9 @@ const Crates = () => {
       field: 'actions',
       headerName: 'Actions',
       width: 150,
-      renderCell: (params) => <CrateContents crate={params.row} />,
+      renderCell: (params: GridRenderCellParams<CrateType>) => (
+        <CrateContents crate={params.row} />
+      ),
     },
   ]
 
@@ -46,9 +53,9 @@ const Crates = () => {
         sx={{ border: 0 }}
         rows={crates}
         columns={columns}
-        onRowSelectionModelChange={(rowSelectionModel) =>
+        onRowSelectionModelChange={(rowSelectionModel) => {
           handleRowSelection(rowSelectionModel)
-        }
+        }}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={pageSizeOptions}
         checkboxSelection

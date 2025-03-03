@@ -13,7 +13,7 @@ const AddAssemblyMaterialsList = ({
   setBillOfMaterials,
 }: AddAssemblyMaterialsListProps) => {
   const addItem = () => {
-    const id = (billOfMaterials.length ?? 0) + 1
+    const id = billOfMaterials.length + 1
 
     const newBill = {
       id,

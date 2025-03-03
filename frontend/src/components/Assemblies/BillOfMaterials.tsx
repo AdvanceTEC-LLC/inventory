@@ -27,7 +27,9 @@ interface BillOfMaterialsProps {
 const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
   const [open, setOpen] = useState(false)
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
   }
@@ -39,8 +41,8 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
 
   const bulkUpdateCratesMutation = useMutation({
     mutationFn: (crates: CrateType[]) => cratesService.bulkUpdate(crates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crates'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['crates'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -64,8 +66,8 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
   const updateAssemblyMutation = useMutation({
     mutationFn: (assembly: AssemblyType) =>
       assembliesService.update(assembly.id, assembly),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assembly'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['assembly'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',

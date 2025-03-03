@@ -32,7 +32,9 @@ const LocateProjectMaterial = ({
   >([])
   const [open, setOpen] = useState(false)
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
   }

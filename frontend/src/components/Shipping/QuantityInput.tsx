@@ -41,12 +41,12 @@ const QuantityInput = ({ crate, stock }: QuantityInputProps) => {
           input: {
             endAdornment: (
               <InputAdornment position="end">
-                {stock?.material?.unit ?? 'ea'}
+                {stock.material?.unit ?? 'ea'}
               </InputAdornment>
             ),
           },
         }}
-        value={stock?.quantity ?? ''}
+        value={stock.quantity ?? ''}
         onChange={handleChange}
       />
     </>

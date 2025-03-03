@@ -29,8 +29,8 @@ const OutgoingForm = () => {
         })
       )
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sentShipments'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['sentShipments'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',

@@ -11,13 +11,13 @@ const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
   const { shipment, setShipment } = useShipment()
 
   const addItem = () => {
-    const id = (crate?.stock?.length ?? 0) + 1
+    const id = (crate.stock?.length ?? 0) + 1
 
     const newStock = {
       id,
     }
 
-    const stock = [...(crate?.stock || []), newStock]
+    const stock = [...(crate.stock ?? []), newStock]
 
     const updatedCrate = {
       ...crate,
@@ -25,7 +25,7 @@ const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
     }
 
     const crates = shipment?.crates?.map((c) =>
-      c.id === crate?.id ? updatedCrate : c
+      c.id === crate.id ? updatedCrate : c
     )
 
     setShipment({
@@ -36,7 +36,7 @@ const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      {crate?.stock?.map((stock, index) => (
+      {crate.stock?.map((stock, index) => (
         <IncomingCrateStock key={index} crate={crate} stock={stock} />
       ))}
       <Button fullWidth onClick={addItem}>

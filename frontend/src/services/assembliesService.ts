@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { AssemblyType, NewAssemblyType } from '../types/assembly'
 import apiService from './apiService'
 
@@ -10,11 +10,15 @@ const assembliessService = {
   }),
 
   deepCreate: async (data: NewAssemblyType): Promise<AssemblyType> => {
-    const response = await axios.post(`/api/${endpoint}/deep`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const response: AxiosResponse<AssemblyType> = await axios.post(
+      `/api/${endpoint}/deep`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
     return response.data
   },
 }

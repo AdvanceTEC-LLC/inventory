@@ -3,5 +3,4 @@ export interface WarehouseLocationType {
   name: string
 }
 
-export interface NewWarehouseLocationType
-  extends Omit<WarehouseLocationType, 'id'> {}
+export type NewWarehouseLocationType = Omit<WarehouseLocationType, 'id'>

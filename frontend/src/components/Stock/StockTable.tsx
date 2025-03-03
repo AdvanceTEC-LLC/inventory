@@ -37,20 +37,16 @@ const StockTable = () => {
   }
 
   const getGroupedStock = (filteredStock: StockType[]) => {
-    if (!filteredStock) return []
-
     const groupedStock = filteredStock.reduce(
       (acc: Record<number, StockType>, item) => {
         const materialId = item.material.id
 
-        if (!acc[materialId]) {
-          // Initialize a new StockType object if not already present
-          acc[materialId] = {
-            id: item.id,
-            material: item.material,
-            project: item.project,
-            quantity: 0, // Start with zero to sum later
-          }
+        // Initialize a new StockType object if not already present
+        acc[materialId] = {
+          id: item.id,
+          material: item.material,
+          project: item.project,
+          quantity: 0, // Start with zero to sum later
         }
 
         // Sum the quantities for the same material ID

@@ -23,8 +23,10 @@ const ManufacturerSelector = () => {
     <Autocomplete
       options={sortedManufacturers}
       getOptionLabel={(option) => option.name}
-      value={receivedShipment?.manufacturer || null}
-      onChange={(event, value) => handleChange(event, value)}
+      value={receivedShipment?.manufacturer ?? null}
+      onChange={(event, value) => {
+        handleChange(event, value)
+      }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => <TextField {...params} label="Manufacturer" />}
     />

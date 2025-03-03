@@ -25,8 +25,8 @@ const AddManufacturer = () => {
   const createManufacturerMutation = useMutation({
     mutationFn: (manufacturer: NewManufacturerType) =>
       manufacturersService.create(manufacturer),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['manufacturers'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['manufacturers'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -47,7 +47,9 @@ const AddManufacturer = () => {
     },
   })
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
     setName('')
@@ -78,7 +80,9 @@ const AddManufacturer = () => {
               variant="standard"
               fullWidth
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) => {
+                setName(event.target.value)
+              }}
             />
           </FormControl>
         </DialogContent>

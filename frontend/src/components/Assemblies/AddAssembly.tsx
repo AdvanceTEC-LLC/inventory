@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Button,
   Dialog,
@@ -20,7 +21,6 @@ import AddAssemblyMaterialsList from './AddAssemblyMaterialsList'
 import { BillOfMaterialType } from './types'
 import { Header } from '../ATEC UI/Text'
 import { NewStockType } from '../../types/stock'
-import { MaterialType } from '../../types/material'
 
 interface AddAssemblyProps {
   project: ProjectType | null
@@ -40,8 +40,8 @@ const AddAssembly = ({ project }: AddAssemblyProps) => {
   const createAssemblyMutation = useMutation({
     mutationFn: (assembly: NewAssemblyType) =>
       assembliesService.deepCreate(assembly),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assemblies'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['assemblies'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -62,7 +62,9 @@ const AddAssembly = ({ project }: AddAssemblyProps) => {
     },
   })
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
     setCode(undefined)
@@ -76,7 +78,7 @@ const AddAssembly = ({ project }: AddAssemblyProps) => {
       .filter((bill) => bill.material && bill.quantity)
       .map((bill) => {
         return {
-          material: bill.material as MaterialType,
+          material: bill.material!,
           quantity: bill.quantity!,
           project: project,
         }
@@ -117,7 +119,9 @@ const AddAssembly = ({ project }: AddAssemblyProps) => {
                 variant="standard"
                 fullWidth
                 value={code ?? ''}
-                onChange={(event) => setCode(event.target.value)}
+                onChange={(event) => {
+                  setCode(event.target.value)
+                }}
               />
             </FormControl>
 

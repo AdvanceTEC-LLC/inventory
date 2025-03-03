@@ -18,7 +18,9 @@ interface CrateContentsProps {
 const CrateContents = ({ crate }: CrateContentsProps) => {
   const [open, setOpen] = useState(false)
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
   }
@@ -38,7 +40,7 @@ const CrateContents = ({ crate }: CrateContentsProps) => {
       >
         <DialogTitle>Crate {crate.number} Contents</DialogTitle>
         <DialogContent>
-          {crate && crate.stock.length > 0 ? (
+          {crate.stock.length > 0 ? (
             <DataGrid
               sx={{ border: 0 }}
               rows={crate.stock}

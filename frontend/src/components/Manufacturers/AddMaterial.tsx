@@ -42,8 +42,8 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
   const creatematerialMutation = useMutation({
     mutationFn: (material: NewMaterialType) =>
       materialsService.create(material),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['materials'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['materials'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -64,7 +64,9 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
     },
   })
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
     setName(defaultName)
@@ -72,7 +74,7 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
   }
 
   const handleSubmit = () => {
-    if (!name?.trim() || !unit || !manufacturer) return
+    if (!name.trim() || !unit || !manufacturer) return
 
     const material = { name: name.trim(), unit, manufacturer: manufacturer.id }
 
@@ -102,7 +104,9 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
               variant="standard"
               fullWidth
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) => {
+                setName(event.target.value)
+              }}
             />
           </FormControl>
 
@@ -114,7 +118,9 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
               variant="standard"
               fullWidth
               value={unit}
-              onChange={(event) => setUnit(event.target.value)}
+              onChange={(event) => {
+                setUnit(event.target.value)
+              }}
             >
               {units.map((unit, index) => (
                 <MenuItem key={index} value={unit.value}>

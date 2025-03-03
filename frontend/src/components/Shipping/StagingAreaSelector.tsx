@@ -21,14 +21,14 @@ const StagingAreaSelector = () => {
 
   const [stagingArea, setStagingArea] = useState<StagingAreaType>()
 
-  const handleChange = (e: SelectChangeEvent<string>) => {
+  const handleChange = (e: SelectChangeEvent) => {
     setStagingArea(
       stagingAreas.find(
         (stagingArea) => stagingArea.id === parseInt(e.target.value)
       )
     )
 
-    const cratesInStagingArea = crates?.filter(
+    const cratesInStagingArea = crates.filter(
       (crate) => crate.stagingArea?.id === parseInt(e.target.value)
     )
 
@@ -49,7 +49,7 @@ const StagingAreaSelector = () => {
       >
         {stagingAreas
           .filter((stagingArea) =>
-            crates.some((crate) => crate?.stagingArea?.id === stagingArea.id)
+            crates.some((crate) => crate.stagingArea?.id === stagingArea.id)
           )
           .map((stagingArea) => (
             <MenuItem key={stagingArea.id} value={stagingArea.id}>

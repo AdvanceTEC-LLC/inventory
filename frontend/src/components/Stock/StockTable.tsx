@@ -41,16 +41,17 @@ const StockTable = () => {
       (acc: Record<number, StockType>, item) => {
         const materialId = item.material.id
 
-        // Initialize a new StockType object if not already present
-        acc[materialId] = {
-          id: item.id,
-          material: item.material,
-          project: item.project,
-          quantity: 0, // Start with zero to sum later
+        // Initialize the stock if it doesn't exist yet, otherwise add the quantity
+        if (!Object.prototype.hasOwnProperty.call(acc, materialId)) {
+          acc[materialId] = {
+            id: item.id,
+            material: item.material,
+            project: item.project,
+            quantity: item.quantity, // Initialize with the first quantity value
+          }
+        } else {
+          acc[materialId].quantity += item.quantity // If exists, add to the existing quantity
         }
-
-        // Sum the quantities for the same material ID
-        acc[materialId].quantity += item.quantity
 
         return acc
       },

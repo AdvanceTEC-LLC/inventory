@@ -1,5 +1,6 @@
 import { Project } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { info } from '../util/logger.js'
 
 const create = async (project, transaction) => {
   let projectInDb = await Project.findOne({

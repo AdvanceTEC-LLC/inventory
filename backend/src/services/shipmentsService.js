@@ -37,7 +37,6 @@ const deepCreate = async (shipment, transaction) => {
     transaction,
   )
 
-  info(crates)
   await Promise.all(
     crates.map(async (crate) => {
       info(crate)

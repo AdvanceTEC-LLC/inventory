@@ -2,13 +2,10 @@ import React from 'react'
 // Notification Redux state
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store'
-import { NotificationType } from '../../types/notification'
 import Notification from './Notification'
 
 const NotificationList: React.FC = () => {
-  const notifications = useSelector(
-    (state: RootState) => state.notifications as NotificationType[]
-  )
+  const notifications = useSelector((state: RootState) => state.notifications)
 
   if (notifications.length > 0)
     return (

@@ -20,7 +20,7 @@ const shipmentTypes: ShipmentType[] = [
 const ShipmentTypeSelector = () => {
   const { shipment, setShipment } = useShipment()
 
-  const handleChange = (e: SelectChangeEvent<string>) => {
+  const handleChange = (e: SelectChangeEvent) => {
     setShipment({
       ...shipment,
       type: e.target.value,

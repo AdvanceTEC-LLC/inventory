@@ -20,7 +20,9 @@ const ManufacturersList = ({
         <ListItemButton
           key={manufacturer.id}
           selected={selectedManufacturer?.id === manufacturer.id}
-          onClick={() => onSelectManufacturer(manufacturer)}
+          onClick={() => {
+            onSelectManufacturer(manufacturer)
+          }}
         >
           <ListItemText primary={manufacturer.name} />
         </ListItemButton>

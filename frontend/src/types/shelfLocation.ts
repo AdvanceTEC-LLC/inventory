@@ -6,4 +6,4 @@ export interface ShelfLocationType {
   shelf: number
 }
 
-export interface NewShelfLocationType extends Omit<ShelfLocationType, 'id'> {}
+export type NewShelfLocationType = Omit<ShelfLocationType, 'id'>

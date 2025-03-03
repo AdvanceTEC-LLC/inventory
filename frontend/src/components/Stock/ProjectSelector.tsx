@@ -19,9 +19,11 @@ const ProjectSelector = ({ project, setProject }: ProjectSelectorProps) => {
     <Autocomplete
       options={projects}
       getOptionLabel={(option) => `${option.number} ${option.name}`}
-      isOptionEqualToValue={(option, value) => option.number === value?.number}
+      isOptionEqualToValue={(option, value) => option.number === value.number}
       value={project ?? null}
-      onChange={(_event, newValue) => handleChange(newValue)}
+      onChange={(_event, newValue) => {
+        handleChange(newValue)
+      }}
       renderInput={(params) => <TextField {...params} label="Project" />}
       noOptionsText={
         isLoading

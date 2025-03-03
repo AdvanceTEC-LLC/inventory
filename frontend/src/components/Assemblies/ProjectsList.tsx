@@ -22,7 +22,9 @@ const ProjectsList = ({
         <ListItemButton
           key={project.id}
           selected={selectedProject?.id === project.id}
-          onClick={() => onSelectProject(project)}
+          onClick={() => {
+            onSelectProject(project)
+          }}
         >
           <ListItemText primary={`${project.number} ${project.name}`} />
         </ListItemButton>

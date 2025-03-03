@@ -20,14 +20,16 @@ const StagingAreaSelector: React.FC<StagingAreaSelectorProps> = ({
         sx={{ marginTop: 1 }}
         options={stagingAreas}
         getOptionLabel={(option) => {
-          let label = `${option.name}`
+          let label = option.name
           if (option.project)
             label += ` - ${option.project.number} ${option.project.name}`
           return label
         }}
-        isOptionEqualToValue={(option, value) => option.id === value?.id}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
         value={stagingArea ?? null}
-        onChange={(_event, newValue) => setStagingArea(newValue ?? undefined)}
+        onChange={(_event, newValue) => {
+          setStagingArea(newValue ?? undefined)
+        }}
         renderInput={(params) => <TextField {...params} label="Staging Area" />}
         noOptionsText={
           isLoading

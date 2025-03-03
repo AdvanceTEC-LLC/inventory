@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Button,
   Dialog,
@@ -52,7 +53,9 @@ const DeleteManufacturer = ({ manufacturer }: DeleteManufacturerProps) => {
     setOpen(false)
   }
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
 
   return (
     <>
@@ -65,7 +68,7 @@ const DeleteManufacturer = ({ manufacturer }: DeleteManufacturerProps) => {
       <Dialog open={open} onClose={handleCancel}>
         <DialogTitle>Delete Manufacturer</DialogTitle>
         <DialogContent>
-          <p>Are you sure you want to delete "{manufacturer?.name}"?</p>
+          <p>Are you sure you want to delete {`"${manufacturer?.name}"`}?</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="secondary">

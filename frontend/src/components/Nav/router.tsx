@@ -18,7 +18,7 @@ const generateRoutes = (routes: LinkType[]) => {
       parentLink.dropdown?.map((dropdownLink) => ({
         path: `/${parentLink.path}/${dropdownLink.path}`,
         element: dropdownLink.element ?? parentLink.element,
-      })) || []
+      })) ?? []
 
     return [parentRoute, ...childRoutes]
   })

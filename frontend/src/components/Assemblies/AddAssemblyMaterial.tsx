@@ -16,7 +16,7 @@ const AddAssemblyMaterial = ({
   bill,
 }: AddAssemblyMaterialProps) => {
   const handleRemove = () => {
-    const updatedBillOfMaterials = billOfMaterials?.filter(
+    const updatedBillOfMaterials = billOfMaterials.filter(
       (b) => b.id !== bill.id
     )
 

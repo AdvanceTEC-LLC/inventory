@@ -50,8 +50,8 @@ const RelocateCrates = ({ crates }: RelocateCratesProps) => {
 
   const bulkUpdateCratesMutation = useMutation({
     mutationFn: (crates: CrateType[]) => cratesService.bulkUpdate(crates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['crates'] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['crates'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -72,7 +72,9 @@ const RelocateCrates = ({ crates }: RelocateCratesProps) => {
     },
   })
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = () => {
+    setOpen(true)
+  }
   const handleClose = () => {
     setOpen(false)
     setWarehouseLocation(undefined)
@@ -133,14 +135,12 @@ const RelocateCrates = ({ crates }: RelocateCratesProps) => {
               <Autocomplete
                 sx={{ marginTop: 1 }}
                 options={filteredLocations}
-                getOptionLabel={(option) => `${option.name}`}
-                isOptionEqualToValue={(option, value) =>
-                  option.id === value?.id
-                }
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
                 value={warehouseLocation ?? null}
-                onChange={(_event, newValue) =>
+                onChange={(_event, newValue) => {
                   handleWarehouseLocationChange(newValue)
-                }
+                }}
                 renderInput={(params) => (
                   <TextField {...params} label="Warehouse Location" />
                 )}

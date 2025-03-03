@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 
 // Generic API service factory function
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 const apiService = <T, U>({ endpoint }: { endpoint: string }) => {
   const apiClient = axios.create({
     baseURL: '/api',

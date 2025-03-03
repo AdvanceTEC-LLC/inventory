@@ -1,11 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
 import notificationsReducer from './reducers/notificationsReducer'
-import projectReducer from './reducers/projectReducer'
 
 const store = configureStore({
   reducer: {
     notifications: notificationsReducer,
-    project: projectReducer,
   },
 })
 

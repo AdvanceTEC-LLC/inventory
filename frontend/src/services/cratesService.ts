@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { CrateType, NewCrateType } from '../types/crate'
 import apiService from './apiService'
 
@@ -10,11 +10,15 @@ const cratesService = {
   }),
 
   bulkUpdate: async (data: CrateType[]): Promise<CrateType[]> => {
-    const response = await axios.put(`/api/${endpoint}/bulk`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const response: AxiosResponse<CrateType[]> = await axios.put(
+      `/api/${endpoint}/bulk`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
     return response.data
   },
 }

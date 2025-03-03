@@ -1,22 +1,23 @@
 import { GridColDef } from '@mui/x-data-grid'
+import { StockType } from '../../types/stock'
 
 export const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Name',
     flex: 1,
-    valueGetter: (_value, row) => row.material.name,
+    valueGetter: (_value, row: StockType) => row.material.name,
   },
   {
     field: 'manufacturer',
     headerName: 'Manufacturer',
     flex: 1,
-    valueGetter: (_value, row) => row.material.manufacturer.name,
+    valueGetter: (_value, row: StockType) => row.material.manufacturer.name,
   },
   {
     field: 'quantity',
     headerName: 'Quantity',
     flex: 1,
-    valueGetter: (_value, row) => row.quantity,
+    valueGetter: (_value, row: StockType) => row.quantity,
   },
 ]

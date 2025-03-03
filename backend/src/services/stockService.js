@@ -19,16 +19,32 @@ const create = async (stock, transaction) => {
   }
 
   const stockInDb = await Stock.create(stock, {
+    cascade: true,
     transaction,
   })
 
   return stockInDb
 }
 
+const update = async (stock, transaction) => {
+  const stockInDb = await Stock.update(stock, {
+    where: { id: stock.id },
+    transaction,
+  })
+  return stockInDb
+}
+
+const remove = async (stock, transaction) => {
+  //await crateStocksService.removeStock(stock, transaction)
+
+  await Stock.destroy({
+    where: { id: stock.id },
+    transaction,
+  })
+}
+
 const deepCreate = async (stock, transaction) => {
   const { material, project } = stock
-
-  info(stock)
 
   const materialInDb = await materialsService.deepCreate(material, transaction)
 
@@ -46,7 +62,18 @@ const deepCreate = async (stock, transaction) => {
   return stockInDb
 }
 
+const updateOrRemove = async (stock, transaction) => {
+  const { quantity } = stock
+
+  if (quantity <= 0) {
+    return await remove(stock, transaction)
+  }
+
+  return await update(stock, transaction)
+}
+
 export const stockService = {
   create,
   deepCreate,
+  updateOrRemove,
 }

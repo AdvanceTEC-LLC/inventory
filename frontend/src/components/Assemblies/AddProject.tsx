@@ -52,6 +52,7 @@ const AddProject = () => {
   }
   const handleClose = () => {
     setOpen(false)
+    setNumber(undefined)
     setName('')
   }
 

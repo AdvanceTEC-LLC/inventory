@@ -22,6 +22,7 @@ export const up = async ({ context: queryInterface }) => {
         model: 'stock',
         key: 'id',
       },
+      onDelete: 'CASCADE',
     },
     created_at: {
       type: DataTypes.DATE,

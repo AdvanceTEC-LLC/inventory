@@ -9,8 +9,7 @@ import { ProjectType } from '../../types/project'
 import { manufacturer, name, quantity, unit } from '../Tables/Columns/stock'
 import { useStock } from '../../hooks/useStockHook'
 import ProjectSelector from './ProjectSelector'
-
-const paginationModel = { page: 0, pageSize: 5 }
+import { pageSizeOptions, paginationModel } from '../Tables/pagination'
 
 const columns = [name, manufacturer, unit, quantity]
 
@@ -41,16 +40,17 @@ const StockTable = () => {
       (acc: Record<number, StockType>, item) => {
         const materialId = item.material.id
 
-        // Initialize a new StockType object if not already present
-        acc[materialId] = {
-          id: item.id,
-          material: item.material,
-          project: item.project,
-          quantity: 0, // Start with zero to sum later
+        // Initialize the stock if it doesn't exist yet, otherwise add the quantity
+        if (!Object.prototype.hasOwnProperty.call(acc, materialId)) {
+          acc[materialId] = {
+            id: item.id,
+            material: item.material,
+            project: item.project,
+            quantity: item.quantity, // Initialize with the first quantity value
+          }
+        } else {
+          acc[materialId].quantity += item.quantity // If exists, add to the existing quantity
         }
-
-        // Sum the quantities for the same material ID
-        acc[materialId].quantity += item.quantity
 
         return acc
       },
@@ -75,7 +75,7 @@ const StockTable = () => {
         rows={filteredAndGroupedStock}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={pageSizeOptions}
         sx={{ border: 0 }}
         disableRowSelectionOnClick
       />

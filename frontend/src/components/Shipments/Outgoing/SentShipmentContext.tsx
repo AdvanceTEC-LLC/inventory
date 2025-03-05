@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
-import { SentShipmentType } from './types'
+import { SentShipmentType } from '../types'
 
 interface SentShipmentContextType {
   sentShipment: SentShipmentType | undefined

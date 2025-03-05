@@ -22,8 +22,8 @@ const CratesTable = ({ setSelectedCrates }: CratesTableProps) => {
 
   const { data: crates = [] } = useCrates()
 
-  const filteredCrates = crates.filter((assembly) =>
-    !project ? true : assembly.project.id === project.id
+  const filteredCrates = crates.filter((crate) =>
+    !project ? true : crate.project.id === project.id
   )
 
   const handleRowSelection = (rowSelectionModel: GridRowSelectionModel) => {

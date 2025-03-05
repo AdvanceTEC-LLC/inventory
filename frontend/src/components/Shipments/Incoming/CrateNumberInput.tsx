@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
-import { ReceivedCrateType } from './types'
-import { useShipment } from './ShipmentContext'
+import { ReceivedCrateType } from '../types'
+import { useShipment } from '../ShipmentContext'
 import { ChangeEvent } from 'react'
 
 interface CrateNumberInputProps {

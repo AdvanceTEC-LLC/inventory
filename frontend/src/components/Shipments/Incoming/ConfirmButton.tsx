@@ -2,21 +2,20 @@
 import { Button } from '@mui/material'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
-import receivedShipmentsService from '../../services/receivedShipmentsService'
-import { AppDispatch } from '../../store'
-import { NewCrateType } from '../../types/crate'
-import { NewReceivedShipmentType } from '../../types/receivedShipment'
-import { NewShipmentType } from '../../types/shipment'
-import IncomingCrateList from './IncomingCrateList'
-import ManufacturerSelector from './ManufacturerSelector'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import receivedShipmentsService from '../../../services/receivedShipmentsService'
+import { AppDispatch } from '../../../store'
+import { NewCrateType } from '../../../types/crate'
+import { NewReceivedShipmentType } from '../../../types/receivedShipment'
+import { NewShipmentType } from '../../../types/shipment'
 import { useReceivedShipment } from './ReceivedShipmentContext'
-import { useShipment } from './ShipmentContext'
-import ProjectSelector from './ProjectSelector'
+import { useShipment } from '../ShipmentContext'
+import { useProject } from '../../Projects/Projects/ProjectContext'
 
-const IncomingForm = () => {
+const ConfirmButton = () => {
   const { shipment } = useShipment()
   const { receivedShipment } = useReceivedShipment()
+  const { project } = useProject()
 
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
@@ -24,15 +23,6 @@ const IncomingForm = () => {
   const createReceivedShipmentMutation = useMutation({
     mutationFn: (receivedShipment: NewReceivedShipmentType) =>
       receivedShipmentsService.deepCreate(receivedShipment),
-    onMutate: () => {
-      dispatch(
-        notifyWithTimeout({
-          title: 'Processing...',
-          message: 'Your shipment is being processed.',
-          status: 'info',
-        })
-      )
-    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['receivedShipments'] })
       dispatch(
@@ -55,23 +45,19 @@ const IncomingForm = () => {
   })
 
   const submitReceivedShipment = () => {
-    if (
-      !shipment?.trackingNumber ||
-      !shipment.project ||
-      !shipment.crates?.length
-    )
+    if (!shipment?.trackingNumber || !project || !shipment.crates?.length)
       return
 
     const newCrates: NewCrateType[] = shipment.crates
       .filter((crate) => crate.number)
       .map(({ number, stock }) => ({
         number: number!,
-        project: shipment.project!,
+        project,
         stock: stock!
           .filter(({ material, quantity }) => material && quantity)
           .map(({ material, quantity }) => ({
             material: material!,
-            project: shipment.project!,
+            project,
             quantity: quantity!,
           })),
         opened: false,
@@ -79,7 +65,7 @@ const IncomingForm = () => {
 
     const newShipment: NewShipmentType = {
       trackingNumber: shipment.trackingNumber,
-      project: shipment.project,
+      project,
       crates: newCrates,
     }
 
@@ -93,15 +79,14 @@ const IncomingForm = () => {
   }
 
   return (
-    <>
-      <ProjectSelector />
-      <ManufacturerSelector />
-      <IncomingCrateList />
-      <Button variant="contained" onClick={submitReceivedShipment}>
-        Confirm Shipment
-      </Button>
-    </>
+    <Button
+      variant="contained"
+      onClick={submitReceivedShipment}
+      loading={createReceivedShipmentMutation.isPending ? true : null}
+    >
+      Confirm Shipment
+    </Button>
   )
 }
 
-export default IncomingForm
+export default ConfirmButton

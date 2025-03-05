@@ -5,12 +5,16 @@ import { DataGrid } from '@mui/x-data-grid'
 import { StockType } from '../../../types/stock'
 
 // Queries
-import { manufacturer, name, quantity, unit } from '../../Tables/Columns/stock'
+import {
+  manufacturer,
+  name,
+  quantity,
+  unit,
+  project as projectColumn,
+} from '../../Tables/Columns/stock'
 import { useStock } from '../../../hooks/useStockHook'
 import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
 import { useProject } from '../Projects/ProjectContext'
-
-const columns = [name, manufacturer, unit, quantity]
 
 const StockTable = () => {
   const [filteredAndGroupedStock, setFilteredAndGroupedStock] = useState<
@@ -66,6 +70,10 @@ const StockTable = () => {
   useEffect(() => {
     getFilteredAndGroupedStock()
   }, [stock, project])
+
+  const columns = project
+    ? [name, manufacturer, unit, quantity]
+    : [name, manufacturer, projectColumn, unit, quantity]
 
   return (
     <DataGrid

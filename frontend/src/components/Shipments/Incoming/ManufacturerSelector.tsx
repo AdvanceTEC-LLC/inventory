@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from '@mui/material'
 import { useReceivedShipment } from './ReceivedShipmentContext'
-import { useManufacturers } from '../../hooks/useManufacturersHook'
-import { ManufacturerType } from '../../types/manufacturer'
+import { useManufacturers } from '../../../hooks/useManufacturersHook'
+import { ManufacturerType } from '../../../types/manufacturer'
 import { SyntheticEvent } from 'react'
 
 const ManufacturerSelector = () => {

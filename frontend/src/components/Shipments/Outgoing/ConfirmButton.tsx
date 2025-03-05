@@ -1,16 +1,15 @@
 import { Button } from '@mui/material'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
-import sentShipmentsService from '../../services/sentShipmentsService'
-import { AppDispatch } from '../../store'
-import { NewSentShipmentType } from '../../types/sentShipment'
-import { NewShipmentType } from '../../types/shipment'
-import { useShipment } from './ShipmentContext'
-import StagingAreaSelector from './StagingAreaSelector'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import sentShipmentsService from '../../../services/sentShipmentsService'
+import { AppDispatch } from '../../../store'
+import { NewSentShipmentType } from '../../../types/sentShipment'
+import { NewShipmentType } from '../../../types/shipment'
+import { useShipment } from '../ShipmentContext'
 import { useSentShipment } from './SentShipmentContext'
 
-const OutgoingForm = () => {
+const ConfirmButton = () => {
   const { shipment } = useShipment()
   const { sentShipment } = useSentShipment()
 
@@ -20,15 +19,6 @@ const OutgoingForm = () => {
   const createSentShipmentMutation = useMutation({
     mutationFn: (sentShipment: NewSentShipmentType) =>
       sentShipmentsService.create(sentShipment),
-    onMutate: () => {
-      dispatch(
-        notifyWithTimeout({
-          title: 'Processing...',
-          message: 'Your shipment is being processed.',
-          status: 'info',
-        })
-      )
-    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['sentShipments'] })
       dispatch(
@@ -51,10 +41,15 @@ const OutgoingForm = () => {
   })
 
   const submitSentShipment = () => {
-    if (!shipment?.project || !sentShipment?.crates?.length) return
+    if (
+      !shipment?.trackingNumber ||
+      !shipment.project ||
+      !sentShipment?.crates?.length
+    )
+      return
 
     const newShipment: NewShipmentType = {
-      trackingNumber: 0,
+      trackingNumber: shipment.trackingNumber,
       project: shipment.project,
       crates: sentShipment.crates,
     }
@@ -65,17 +60,18 @@ const OutgoingForm = () => {
       delivered: false,
     }
 
-    console.log(newSentShipment)
-
     createSentShipmentMutation.mutate(newSentShipment)
   }
 
   return (
-    <>
-      <StagingAreaSelector />
-      <Button onClick={submitSentShipment}>Confirm Shipment</Button>
-    </>
+    <Button
+      variant={'contained'}
+      onClick={submitSentShipment}
+      loading={createSentShipmentMutation.isPending ? true : null}
+    >
+      Confirm Shipment
+    </Button>
   )
 }
 
-export default OutgoingForm
+export default ConfirmButton

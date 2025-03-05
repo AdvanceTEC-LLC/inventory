@@ -1,10 +1,10 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { useMaterials } from '../../hooks/useMaterialsHook'
-import { ReceivedCrateType, StockType } from './types'
-import { useShipment } from './ShipmentContext'
+import { useMaterials } from '../../../hooks/useMaterialsHook'
+import { ReceivedCrateType, StockType } from '../types'
+import { useShipment } from '../ShipmentContext'
 import { useReceivedShipment } from './ReceivedShipmentContext'
 import { SyntheticEvent } from 'react'
-import { MaterialType } from '../../types/material'
+import { MaterialType } from '../../../types/material'
 
 interface MaterialSelectorProps {
   crate: ReceivedCrateType

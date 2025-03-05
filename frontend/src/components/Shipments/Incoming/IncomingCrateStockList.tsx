@@ -1,6 +1,6 @@
 import { Button, Stack } from '@mui/material'
-import { useShipment } from './ShipmentContext'
-import { ReceivedCrateType } from './types'
+import { useShipment } from '../ShipmentContext'
+import { ReceivedCrateType } from '../types'
 import IncomingCrateStock from './IncomingCrateStock'
 
 interface IncomingCrateStockListProps {

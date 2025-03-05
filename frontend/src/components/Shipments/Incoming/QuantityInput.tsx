@@ -1,6 +1,6 @@
 import { InputAdornment, TextField } from '@mui/material'
-import { ReceivedCrateType, StockType } from './types'
-import { useShipment } from './ShipmentContext'
+import { ReceivedCrateType, StockType } from '../types'
+import { useShipment } from '../ShipmentContext'
 import { ChangeEvent } from 'react'
 
 interface QuantityInputProps {

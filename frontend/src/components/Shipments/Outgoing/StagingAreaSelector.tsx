@@ -5,9 +5,9 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material'
-import { useStagingAreas } from '../../hooks/useStagingAreas'
-import { useCrates } from '../../hooks/useCratesHook'
-import { StagingAreaType } from '../../types/stagingArea'
+import { useStagingAreas } from '../../../hooks/useStagingAreas'
+import { useCrates } from '../../../hooks/useCratesHook'
+import { StagingAreaType } from '../../../types/stagingArea'
 import { useState } from 'react'
 import { useSentShipment } from './SentShipmentContext'
 //import { useShipment } from './ShipmentContext'

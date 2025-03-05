@@ -4,19 +4,17 @@ import { useProjects } from '../../../hooks/useProjectsHook'
 import AddProject from './AddProject'
 import ProjectsList from './ProjectsList'
 import { Title } from '../../ATEC UI/Text'
-import { ProjectType } from '../../../types/project'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { useProject } from './ProjectContext'
 
 const ProjectsColumn = () => {
-  const [sortedProjects, setSortedProjects] = useState<ProjectType[]>([])
-
   const { project, setProject } = useProject()
   const { data: projects = [] } = useProjects()
 
-  useEffect(() => {
-    setSortedProjects([...projects].sort((a, b) => a.number - b.number))
-  }, [projects])
+  const sortedProjects = useMemo(
+    () => [...projects].sort((a, b) => a.number - b.number),
+    [projects]
+  )
 
   return (
     <Stack spacing={4} flex={1}>

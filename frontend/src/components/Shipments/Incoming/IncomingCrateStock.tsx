@@ -1,6 +1,6 @@
 import { Box, Button, Stack } from '@mui/material'
-import { useShipment } from './ShipmentContext'
-import { ReceivedCrateType, StockType } from './types'
+import { useShipment } from '../ShipmentContext'
+import { ReceivedCrateType, StockType } from '../types'
 import MaterialSelector from './MaterialSelector'
 import QuantityInput from './QuantityInput'
 

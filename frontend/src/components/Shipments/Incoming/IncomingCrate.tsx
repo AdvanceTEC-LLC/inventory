@@ -1,7 +1,7 @@
 import { Button, Divider, Stack } from '@mui/material'
 import CrateNumberInput from './CrateNumberInput'
-import { useShipment } from './ShipmentContext'
-import { ReceivedCrateType } from './types'
+import { useShipment } from '../ShipmentContext'
+import { ReceivedCrateType } from '../types'
 import IncomingCrateStockList from './IncomingCrateStockList'
 
 interface IncomingCrateProps {

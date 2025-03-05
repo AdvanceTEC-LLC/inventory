@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import IncomingCrate from './IncomingCrate'
-import { useShipment } from './ShipmentContext'
+import { useShipment } from '../ShipmentContext'
 import { Button, Divider, Stack } from '@mui/material'
 
 const IncomingCrateList = () => {

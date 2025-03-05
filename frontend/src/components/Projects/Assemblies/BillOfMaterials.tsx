@@ -8,7 +8,7 @@ import {
 import { AssemblyType } from '../../../types/assembly'
 import { useState } from 'react'
 import { name, quantity } from '../../Tables/Columns/stock'
-import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
 import LocateProjectMaterial from './LocateProjectMaterial'
 import { AssemblyMaterialType } from '../../../types/assemblyMaterial'
@@ -114,23 +114,23 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
     bulkUpdateCratesMutation.mutate(cratesAfterPrefab)
   }
 
-  const columns = [
-    name,
-    quantity,
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      renderCell: (params: GridRenderCellParams<AssemblyMaterialType>) => (
-        <LocateProjectMaterial
-          material={params.row.material}
-          quantity={params.row.quantity}
-          project={assembly.project}
-          setCratesAfterPrefab={setCratesAfterPrefab}
-        />
-      ),
-    },
-  ]
+  const actions: GridColDef = {
+    field: 'actions',
+    headerName: 'Actions',
+    flex: 1,
+    renderCell: (params: GridRenderCellParams<AssemblyMaterialType>) => (
+      <LocateProjectMaterial
+        material={params.row.material}
+        quantity={params.row.quantity}
+        project={assembly.project}
+        setCratesAfterPrefab={setCratesAfterPrefab}
+      />
+    ),
+  }
+
+  const columns = assembly.prefabricated
+    ? [name, quantity]
+    : [name, quantity, actions]
 
   return (
     <>
@@ -162,6 +162,7 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
               variant="contained"
               disabled={!materialsInStock}
               onClick={handleSubmit}
+              loading={updateAssemblyMutation.isPending ? true : null}
             >
               Prefabricate
             </Button>

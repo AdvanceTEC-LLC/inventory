@@ -2,7 +2,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '../ATEC UI/Layout'
 import ErrorPage from '../ATEC UI/ErrorPage'
-import Debug from '../Debug/Debug'
 import { routes } from './routes'
 import { LinkType } from '../../types/link'
 import Projects from '../Projects/Projects'
@@ -29,10 +28,6 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     errorElement: <ErrorPage />,
-    children: [
-      { path: '/', element: <Projects /> },
-      { path: '/debug', element: <Debug /> },
-      ...generateRoutes(routes),
-    ],
+    children: [{ path: '/', element: <Projects /> }, ...generateRoutes(routes)],
   },
 ])

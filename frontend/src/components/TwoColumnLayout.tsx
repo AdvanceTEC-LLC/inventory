@@ -10,7 +10,7 @@ interface TwoColumnLayoutProps {
 const TwoColumnLayout = ({ left, right }: TwoColumnLayoutProps) => {
   return (
     <Container>
-      <Stack spacing={8} direction={{ xs: 'column', md: 'row' }}>
+      <Stack spacing={{ xs: 2, md: 8 }} direction={{ xs: 'column', md: 'row' }}>
         {left}
         <Divider orientation="vertical" flexItem />
         {right}

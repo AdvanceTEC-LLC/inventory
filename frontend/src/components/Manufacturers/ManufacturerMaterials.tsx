@@ -1,31 +1,13 @@
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { useMaterials } from '../../hooks/useMaterialsHook'
-import { ManufacturerType } from '../../types/manufacturer'
-import { name, unit } from '../Tables/Columns/materials'
-import { paginationModel, pageSizeOptions } from '../Tables/pagination'
+import { Stack } from '@mui/system'
+import AddMaterial from './AddMaterial'
+import MaterialsTable from './MaterialsTable'
 
-const ManufacturerMaterials = ({
-  selectedManufacturer,
-}: {
-  selectedManufacturer: ManufacturerType | null
-}) => {
-  const { data: materials = [] } = useMaterials()
-
-  const filteredMaterials = materials.filter(
-    (material) => material.manufacturer.id === selectedManufacturer?.id
-  )
-
-  const columns: GridColDef[] = [name, unit]
-
+const ManufacturerMaterials = () => {
   return (
-    <DataGrid
-      rows={filteredMaterials}
-      columns={columns}
-      initialState={{ pagination: { paginationModel } }}
-      pageSizeOptions={pageSizeOptions}
-      sx={{ border: 0 }}
-      disableRowSelectionOnClick
-    />
+    <Stack flex={3} spacing={4} justifyContent="space-between" height={'100%'}>
+      <MaterialsTable />
+      <AddMaterial />
+    </Stack>
   )
 }
 

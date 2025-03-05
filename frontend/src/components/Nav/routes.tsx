@@ -1,18 +1,11 @@
 import { LinkType } from '../../types/link'
-import Crates from '../Crates/Crates'
 
-import Stock from '../Stock/Stock'
 import Manufacturers from '../Manufacturers/Manufacturers'
 
 import Shipping from '../Shipping/Shipping'
-import Assemblies from '../Assemblies/Assemblies'
+import Projects from '../Projects/Projects'
 
 export const routes: LinkType[] = [
-  {
-    name: 'Stock',
-    path: 'stock',
-    element: <Stock />,
-  },
   {
     name: 'Shipping',
     path: 'shipping',
@@ -24,13 +17,8 @@ export const routes: LinkType[] = [
     element: <Manufacturers />,
   },
   {
-    name: 'Crates',
-    path: 'crates',
-    element: <Crates />,
-  },
-  {
-    name: 'Assemblies',
-    path: 'assemblies',
-    element: <Assemblies />,
+    name: 'Projects',
+    path: 'projects',
+    element: <Projects />,
   },
 ]

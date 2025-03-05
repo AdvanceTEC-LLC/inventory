@@ -10,10 +10,10 @@ import {
 import { ChangeEvent, useState } from 'react'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
-import projectsService from '../../services/projectsService'
-import { AppDispatch } from '../../store'
-import { NewProjectType } from '../../types/project'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import projectsService from '../../../services/projectsService'
+import { AppDispatch } from '../../../store'
+import { NewProjectType } from '../../../types/project'
 
 const AddProject = () => {
   const [open, setOpen] = useState(false)

@@ -1,6 +1,6 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { useProjects } from '../../hooks/useProjectsHook'
-import { ProjectType } from '../../types/project'
+import { useProjects } from '../../../hooks/useProjectsHook'
+import { ProjectType } from '../../../types/project'
 import { Dispatch, SetStateAction } from 'react'
 
 interface ProjectSelectorProps {

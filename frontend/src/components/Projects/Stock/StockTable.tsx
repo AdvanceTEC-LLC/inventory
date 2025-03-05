@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react'
 
 // Table
 import { DataGrid } from '@mui/x-data-grid'
-import { StockType } from '../../types/stock'
+import { StockType } from '../../../types/stock'
 
 // Queries
-import { ProjectType } from '../../types/project'
-import { manufacturer, name, quantity, unit } from '../Tables/Columns/stock'
-import { useStock } from '../../hooks/useStockHook'
-import ProjectSelector from './ProjectSelector'
-import { pageSizeOptions, paginationModel } from '../Tables/pagination'
+import { manufacturer, name, quantity, unit } from '../../Tables/Columns/stock'
+import { useStock } from '../../../hooks/useStockHook'
+import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
+import { useProject } from '../Projects/ProjectContext'
 
 const columns = [name, manufacturer, unit, quantity]
 
@@ -17,7 +16,8 @@ const StockTable = () => {
   const [filteredAndGroupedStock, setFilteredAndGroupedStock] = useState<
     StockType[]
   >([])
-  const [project, setProject] = useState<ProjectType>()
+
+  const { project } = useProject()
 
   const { data: stock = [] } = useStock()
 
@@ -68,18 +68,14 @@ const StockTable = () => {
   }, [stock, project])
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <ProjectSelector project={project} setProject={setProject} />
-
-      <DataGrid
-        rows={filteredAndGroupedStock}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={pageSizeOptions}
-        sx={{ border: 0 }}
-        disableRowSelectionOnClick
-      />
-    </div>
+    <DataGrid
+      rows={filteredAndGroupedStock}
+      columns={columns}
+      initialState={{ pagination: { paginationModel } }}
+      pageSizeOptions={pageSizeOptions}
+      sx={{ border: 0 }}
+      disableRowSelectionOnClick
+    />
   )
 }
 

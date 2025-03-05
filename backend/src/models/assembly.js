@@ -18,10 +18,6 @@ Assembly.init(
       unique: true,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,

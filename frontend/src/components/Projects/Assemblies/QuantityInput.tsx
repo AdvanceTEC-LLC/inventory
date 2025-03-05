@@ -1,6 +1,6 @@
 import { InputAdornment, TextField } from '@mui/material'
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
-import { BillOfMaterialType } from './types'
+import { BillOfMaterialType } from '../types'
 
 interface QuantityInputProps {
   bill: BillOfMaterialType

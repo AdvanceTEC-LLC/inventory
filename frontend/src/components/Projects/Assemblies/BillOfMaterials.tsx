@@ -5,21 +5,21 @@ import {
   DialogActions,
   Button,
 } from '@mui/material'
-import { AssemblyType } from '../../types/assembly'
+import { AssemblyType } from '../../../types/assembly'
 import { useState } from 'react'
-import { name, quantity } from '../Tables/Columns/stock'
+import { name, quantity } from '../../Tables/Columns/stock'
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid'
-import { pageSizeOptions, paginationModel } from '../Tables/pagination'
+import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
 import LocateProjectMaterial from './LocateProjectMaterial'
-import { AssemblyMaterialType } from '../../types/assemblyMaterial'
+import { AssemblyMaterialType } from '../../../types/assemblyMaterial'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
-import cratesService from '../../services/cratesService'
-import { CrateType } from '../../types/crate'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import cratesService from '../../../services/cratesService'
+import { CrateType } from '../../../types/crate'
 import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../store'
-import assembliesService from '../../services/assembliesService'
-import { useStock } from '../../hooks/useStockHook'
+import { AppDispatch } from '../../../store'
+import assembliesService from '../../../services/assembliesService'
+import { useStock } from '../../../hooks/useStockHook'
 
 interface BillOfMaterialsProps {
   assembly: AssemblyType

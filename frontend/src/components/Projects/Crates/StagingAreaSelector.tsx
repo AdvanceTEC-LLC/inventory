@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { FormControl, Autocomplete, TextField } from '@mui/material'
-import { StagingAreaType } from '../../types/stagingArea'
-import { useStagingAreas } from '../../hooks/useStagingAreas'
+import { StagingAreaType } from '../../../types/stagingArea'
+import { useStagingAreas } from '../../../hooks/useStagingAreas'
 
 interface StagingAreaSelectorProps {
   stagingArea: StagingAreaType | undefined

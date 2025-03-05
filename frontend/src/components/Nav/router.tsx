@@ -5,7 +5,7 @@ import ErrorPage from '../ATEC UI/ErrorPage'
 import Debug from '../Debug/Debug'
 import { routes } from './routes'
 import { LinkType } from '../../types/link'
-import Inventory from '../Stock/Stock'
+import Projects from '../Projects/Projects'
 
 const generateRoutes = (routes: LinkType[]) => {
   return routes.flatMap((parentLink) => {
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: '/', element: <Inventory /> },
+      { path: '/', element: <Projects /> },
       { path: '/debug', element: <Debug /> },
       ...generateRoutes(routes),
     ],

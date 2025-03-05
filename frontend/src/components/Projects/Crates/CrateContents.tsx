@@ -5,11 +5,11 @@ import {
   DialogActions,
   Button,
 } from '@mui/material'
-import { CrateType } from '../../types/crate'
+import { CrateType } from '../../../types/crate'
 import { useState } from 'react'
-import { columns } from '../Tables/Columns/stock'
+import { columns } from '../../Tables/Columns/stock'
 import { DataGrid } from '@mui/x-data-grid'
-import { pageSizeOptions, paginationModel } from '../Tables/pagination'
+import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
 
 interface CrateContentsProps {
   crate: CrateType

@@ -12,27 +12,25 @@ import {
 import { useState } from 'react'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
-import assembliesService from '../../services/assembliesService'
-import { AppDispatch } from '../../store'
-import { NewAssemblyType } from '../../types/assembly'
-import { ProjectType } from '../../types/project'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import assembliesService from '../../../services/assembliesService'
+import { AppDispatch } from '../../../store'
+import { NewAssemblyType } from '../../../types/assembly'
 import AddAssemblyMaterialsList from './AddAssemblyMaterialsList'
-import { BillOfMaterialType } from './types'
-import { Header } from '../ATEC UI/Text'
-import { NewStockType } from '../../types/stock'
+import { BillOfMaterialType } from '../types'
+import { Header } from '../../ATEC UI/Text'
+import { NewStockType } from '../../../types/stock'
+import { useProject } from '../Projects/ProjectContext'
 
-interface AddAssemblyProps {
-  project: ProjectType | null
-}
-
-const AddAssembly = ({ project }: AddAssemblyProps) => {
+const AddAssembly = () => {
   const [open, setOpen] = useState(false)
 
   const [code, setCode] = useState<string>()
   const [billOfMaterials, setBillOfMaterials] = useState<BillOfMaterialType[]>([
     { id: 0 },
   ])
+
+  const { project } = useProject()
 
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
@@ -87,7 +85,6 @@ const AddAssembly = ({ project }: AddAssemblyProps) => {
     const assembly = {
       code,
       prefabricated: false,
-      type: '',
       projectId: project.id,
       billOfMaterials: formattedBillOfMaterials,
     }

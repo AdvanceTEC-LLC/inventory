@@ -1,7 +1,7 @@
 import { Button, Stack } from '@mui/material'
 import AddAssemblyMaterial from './AddAssemblyMaterial'
 import { Dispatch, SetStateAction } from 'react'
-import { BillOfMaterialType } from './types'
+import { BillOfMaterialType } from '../types'
 
 interface AddAssemblyMaterialsListProps {
   billOfMaterials: BillOfMaterialType[]

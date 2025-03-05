@@ -1,8 +1,8 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { useMaterials } from '../../hooks/useMaterialsHook'
+import { useMaterials } from '../../../hooks/useMaterialsHook'
 import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
-import { MaterialType } from '../../types/material'
-import { BillOfMaterialType } from './types'
+import { MaterialType } from '../../../types/material'
+import { BillOfMaterialType } from '../types'
 
 interface MaterialSelectorProps {
   bill: BillOfMaterialType

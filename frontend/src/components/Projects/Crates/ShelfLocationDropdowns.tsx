@@ -7,8 +7,8 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material'
-import { useShelfLocations } from '../../hooks/useShelfLocationsHook'
-import { ShelfLocationType } from '../../types/shelfLocation'
+import { useShelfLocations } from '../../../hooks/useShelfLocationsHook'
+import { ShelfLocationType } from '../../../types/shelfLocation'
 
 interface ShelfLocationDropdownsProps {
   setShelfLocation: Dispatch<SetStateAction<ShelfLocationType | undefined>>

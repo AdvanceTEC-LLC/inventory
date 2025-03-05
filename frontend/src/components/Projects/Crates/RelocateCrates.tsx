@@ -10,18 +10,18 @@ import {
   Stack,
 } from '@mui/material'
 import { useState } from 'react'
-import { CrateType } from '../../types/crate'
-import { useWarehouseLocations } from '../../hooks/useWarehouseLocationsHook'
-import { WarehouseLocationType } from '../../types/warehouseLocation'
-import { ShelfLocationType } from '../../types/shelfLocation'
+import { CrateType } from '../../../types/crate'
+import { useWarehouseLocations } from '../../../hooks/useWarehouseLocationsHook'
+import { WarehouseLocationType } from '../../../types/warehouseLocation'
+import { ShelfLocationType } from '../../../types/shelfLocation'
 import ShelfLocationDropdowns from './ShelfLocationDropdowns'
-import { StagingAreaType } from '../../types/stagingArea'
+import { StagingAreaType } from '../../../types/stagingArea'
 import StagingAreaSelector from './StagingAreaSelector'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
-import { notifyWithTimeout } from '../../reducers/notificationsReducer'
-import cratesService from '../../services/cratesService'
-import { AppDispatch } from '../../store'
+import { notifyWithTimeout } from '../../../reducers/notificationsReducer'
+import cratesService from '../../../services/cratesService'
+import { AppDispatch } from '../../../store'
 
 interface RelocateCratesProps {
   crates: CrateType[]

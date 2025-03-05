@@ -1,12 +1,14 @@
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useAssemblies } from '../../hooks/useAssembliesHook'
-import { ProjectType } from '../../types/project'
-import { code, prefabricated } from '../Tables/Columns/assemblies'
-import { paginationModel, pageSizeOptions } from '../Tables/pagination'
+import { useAssemblies } from '../../../hooks/useAssembliesHook'
+import { code, prefabricated } from '../../Tables/Columns/assemblies'
+import { paginationModel, pageSizeOptions } from '../../Tables/pagination'
 import BillOfMaterials from './BillOfMaterials'
-import { AssemblyType } from '../../types/assembly'
+import { AssemblyType } from '../../../types/assembly'
+import { useProject } from '../Projects/ProjectContext'
 
-const ProjectAssemblies = ({ project }: { project: ProjectType | null }) => {
+const AssembliesTable = () => {
+  const { project } = useProject()
+
   const { data: assemblies = [] } = useAssemblies()
 
   const filteredAssemblies = assemblies.filter(
@@ -38,4 +40,4 @@ const ProjectAssemblies = ({ project }: { project: ProjectType | null }) => {
   )
 }
 
-export default ProjectAssemblies
+export default AssembliesTable

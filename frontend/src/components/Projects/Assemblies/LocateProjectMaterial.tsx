@@ -7,12 +7,12 @@ import {
 } from '@mui/material'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
-import { pageSizeOptions, paginationModel } from '../Tables/pagination'
-import { location, number, opened } from '../Tables/Columns/crates'
-import { MaterialType } from '../../types/material'
-import { ProjectType } from '../../types/project'
-import { useCrates } from '../../hooks/useCratesHook'
-import { CrateType } from '../../types/crate'
+import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
+import { location, number, opened } from '../../Tables/Columns/crates'
+import { MaterialType } from '../../../types/material'
+import { ProjectType } from '../../../types/project'
+import { useCrates } from '../../../hooks/useCratesHook'
+import { CrateType } from '../../../types/crate'
 
 interface LocateProjectMaterialProps {
   material: MaterialType

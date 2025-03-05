@@ -1,5 +1,5 @@
 import { List, ListItemButton, ListItemText } from '@mui/material'
-import { ProjectType } from '../../types/project'
+import { ProjectType } from '../../../types/project'
 
 interface ProjectsListProps {
   projects: ProjectType[]

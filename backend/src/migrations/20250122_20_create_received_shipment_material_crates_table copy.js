@@ -1,25 +1,25 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('shipment_crates', {
+  await queryInterface.createTable('received_shipment_material_crates', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    shipment_id: {
+    received_shipment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'shipments',
+        model: 'received_shipments',
         key: 'id',
       },
     },
-    crate_id: {
+    material_crate_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'crates',
+        model: 'material_crates',
         key: 'id',
       },
     },
@@ -35,5 +35,7 @@ export const up = async ({ context: queryInterface }) => {
 }
 
 export const down = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('shipment_crates', { cascade: true })
+  await queryInterface.dropTable('received_shipment_material_crates', {
+    cascade: true,
+  })
 }

@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
 import Project from './project.js'
-import ShipmentCrate from './shipmentCrate.js'
+import ShipmentCrate from './receivedShipmentMaterialCrate.js'
 import Manufacturer from './manufacturer.js'
 import Crate from './crate.js'
 import ReceivedShipment from './receivedShipment.js'

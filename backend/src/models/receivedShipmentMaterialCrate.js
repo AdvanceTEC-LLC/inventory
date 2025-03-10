@@ -1,34 +1,32 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Crate from './crate.js'
-import Shipment from './shipment.js'
 
-class ShipmentCrate extends Model {}
+class ReceivedShipmentMaterialCrate extends Model {}
 
-ShipmentCrate.init(
+ReceivedShipmentMaterialCrate.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    shipmentId: {
+    receivedShipmentId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'shipments', key: 'id' },
+      references: { model: 'receivedShipments', key: 'id' },
     },
-    crateId: {
+    materialCrateId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'crates', key: 'id' },
+      references: { model: 'materialCrates', key: 'id' },
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'shipmentCrate',
+    modelName: 'receivedShipmentMaterialCrate',
   },
 )
 
-export default ShipmentCrate
+export default ReceivedShipmentMaterialCrate

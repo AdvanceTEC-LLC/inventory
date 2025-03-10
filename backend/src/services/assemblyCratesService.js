@@ -3,7 +3,6 @@ import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 import { assembliesService } from './assembliesService.js'
 import { assemblyCrateAssembliesService } from './assemblyCratesAssembliesService.js'
-import { crateLocationsService } from './crateLocationsService.js'
 import { cratesService } from './cratesService.js'
 import { stagingAreasService } from './stagingAreasService.js'
 
@@ -69,7 +68,7 @@ const update = async (assemblyCrate, transaction) => {
 
   await cratesService.update(assemblyCrate.crate, transaction)
 
-  if (stagingArea) await stagingAreasService.update(stagingArea, transaction)
+  await stagingAreasService.update(stagingArea, transaction)
 
   return updatedAssemblyCrateInDb
 }
@@ -114,6 +113,7 @@ const bulkUpdate = async (assemblyCrates, transaction) => {
 export const assemblyCratesService = {
   find,
   create,
+  update,
   deepCreate,
   bulkUpdate,
 }

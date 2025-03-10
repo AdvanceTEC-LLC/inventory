@@ -1,42 +1,32 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
 
-class AssemblyCrate extends Model {}
+class SentShipmentAssemblyCrate extends Model {}
 
-AssemblyCrate.init(
+SentShipmentAssemblyCrate.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    crateId: {
+    sentShipmentId: {
       type: DataTypes.INTEGER,
-      references: {
-        model: 'crates',
-        key: 'id',
-      },
       allowNull: false,
+      references: { model: 'sentShipments', key: 'id' },
     },
-    stagingAreaId: {
+    assemblyCrateId: {
       type: DataTypes.INTEGER,
-      references: {
-        model: 'staging_areas',
-        key: 'id',
-      },
-    },
-    status: {
-      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'Empty',
+      references: { model: 'assemblyCrates', key: 'id' },
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'assemblyCrate',
+    modelName: 'sentShipmentAssemblyCrate',
   },
 )
 
-export default AssemblyCrate
+export default SentShipmentAssemblyCrate

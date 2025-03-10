@@ -39,7 +39,7 @@ const AddAssembly = () => {
     mutationFn: (assembly: NewAssemblyType) =>
       assembliesService.deepCreate(assembly),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['assemblies'] })
+      await queryClient.invalidateQueries()
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -76,9 +76,9 @@ const AddAssembly = () => {
       .filter((bill) => bill.material && bill.quantity)
       .map((bill) => {
         return {
-          material: bill.material!,
+          materialId: bill.material!.id,
           quantity: bill.quantity!,
-          project: project,
+          projectId: project.id,
         }
       })
 

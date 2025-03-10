@@ -1,10 +1,11 @@
 import { Tabs, Tab } from '@mui/material'
 import { Stack, Box } from '@mui/system'
 import { useState } from 'react'
-import ShipmentHistory from './History/ShipmentHistory'
 import OutgoingForm from './Outgoing/OutgoingForm'
 import IncomingForm from './Incoming/IncomingForm'
 import { useShipment } from './ShipmentContext'
+import ReceivedShipmentsTable from './ReceivedHistory/ReceivedShipmentsTable'
+import SentShipmentsTable from './SentHistory/SentShipmentsTable'
 
 const ShipmentTabs = () => {
   const { shipment, setShipment } = useShipment()
@@ -30,15 +31,17 @@ const ShipmentTabs = () => {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label="History" />
-          <Tab label="Received at Warehouse" />
-          <Tab label="Sending to Project" />
+          <Tab label="Received History" />
+          <Tab label="Receiving Form" />
+          <Tab label="Sent History" />
+          <Tab label="Sending Form" />
         </Tabs>
       </Box>
 
-      {value == 0 && <ShipmentHistory />}
+      {value == 0 && <ReceivedShipmentsTable />}
       {value == 1 && <IncomingForm />}
-      {value == 2 && <OutgoingForm />}
+      {value == 2 && <SentShipmentsTable />}
+      {value == 3 && <OutgoingForm />}
     </Stack>
   )
 }

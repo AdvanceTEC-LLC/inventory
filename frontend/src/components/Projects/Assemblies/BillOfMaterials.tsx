@@ -76,7 +76,7 @@ const BillOfMaterials = ({ assembly }: BillOfMaterialsProps) => {
     mutationFn: (assembly: AssemblyType) =>
       assembliesService.update(assembly.id, assembly),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['assemblies'] })
+      await queryClient.invalidateQueries()
       dispatch(
         notifyWithTimeout({
           title: 'Success',

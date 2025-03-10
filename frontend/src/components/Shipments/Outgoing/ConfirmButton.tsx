@@ -9,20 +9,26 @@ import { NewShipmentType } from '../../../types/shipment'
 import { useShipment } from '../ShipmentContext'
 import { useSentShipment } from './SentShipmentContext'
 import { useProject } from '../../Projects/Projects/ProjectContext'
+import { useCrateLocations } from '../../../hooks/useCrateLocationsHook'
 
 const ConfirmButton = () => {
   const { project } = useProject()
   const { shipment } = useShipment()
   const { sentShipment } = useSentShipment()
 
+  const { data: crateLocations = [] } = useCrateLocations()
+  const shippedLocation = crateLocations.find((crateLocation) =>
+    crateLocation.name.includes('Shipped')
+  )
+
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
 
   const createSentShipmentMutation = useMutation({
     mutationFn: (sentShipment: NewSentShipmentType) =>
-      sentShipmentsService.create(sentShipment),
+      sentShipmentsService.deepCreate(sentShipment),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['sentShipments'] })
+      await queryClient.invalidateQueries()
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -43,13 +49,11 @@ const ConfirmButton = () => {
   })
 
   const submitSentShipment = () => {
-    console.log(shipment)
-    console.log(project)
-    console.log(sentShipment)
     if (
       !shipment?.trackingNumber ||
       !project ||
-      !sentShipment?.assemblyCrates?.length
+      !sentShipment?.assemblyCrates?.length ||
+      !shippedLocation
     )
       return
 
@@ -58,15 +62,25 @@ const ConfirmButton = () => {
       projectId: project.id,
     }
 
+    const updatedCrates = sentShipment.assemblyCrates.map((assemblyCrate) => {
+      return {
+        ...assemblyCrate,
+        crate: {
+          ...assemblyCrate.crate,
+          crateLocation: shippedLocation,
+        },
+        stagingArea: undefined,
+      }
+    })
+
     const newSentShipment: NewSentShipmentType = {
       shipment: newShipment,
       sendDate: new Date(),
       delivered: false,
-      assemblyCrates: sentShipment.assemblyCrates,
+      assemblyCrates: updatedCrates,
     }
 
     createSentShipmentMutation.mutate(newSentShipment)
-    console.log(newSentShipment)
   }
 
   return (

@@ -3,15 +3,9 @@ import { useEffect, useState } from 'react'
 // Table
 import { DataGrid } from '@mui/x-data-grid'
 import { StockType } from '../../../types/stock'
+import { manufacturer, name, quantity, unit } from '../../Tables/Columns/stock'
 
 // Queries
-import {
-  manufacturer,
-  name,
-  quantity,
-  unit,
-  project as projectColumn,
-} from '../../Tables/Columns/stock'
 import { useStock } from '../../../hooks/useStockHook'
 import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
 import { useProject } from '../Projects/ProjectContext'
@@ -71,9 +65,7 @@ const StockTable = () => {
     getFilteredAndGroupedStock()
   }, [stock, project])
 
-  const columns = project
-    ? [name, manufacturer, unit, quantity]
-    : [name, manufacturer, projectColumn, unit, quantity]
+  const columns = [name, manufacturer, unit, quantity]
 
   return (
     <DataGrid

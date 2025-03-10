@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { Shipment, Project, ShipmentCrate, Crate } from '../models/index.js'
+import { Shipment, Project, Crate } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { crateFindOptions } from './crates.js'
 import { CustomError } from '../util/errors/CustomError.js'
@@ -16,12 +16,6 @@ export const shipmentFindOptions = {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Crate,
-      as: 'crates',
-      through: { attributes: [] },
-      ...crateFindOptions,
     },
   ],
 }

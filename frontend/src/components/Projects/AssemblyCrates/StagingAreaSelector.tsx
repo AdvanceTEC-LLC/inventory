@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { FormControl, Autocomplete, TextField } from '@mui/material'
 import { StagingAreaType } from '../../../types/stagingArea'
 import { useStagingAreas } from '../../../hooks/useStagingAreas'
@@ -38,11 +38,17 @@ const StagingAreaSelector: React.FC<StagingAreaSelectorProps> = ({
       ? matchingStagingAreas
       : unassignedStagingAreas
 
+  const sortedStartingAreas = useMemo(
+    () =>
+      [...filteredStagingAreas].sort((a, b) => a.name.localeCompare(b.name)),
+    [filteredStagingAreas]
+  )
+
   return (
     <FormControl>
       <Autocomplete
         sx={{ marginTop: 1 }}
-        options={filteredStagingAreas}
+        options={sortedStartingAreas}
         getOptionLabel={(option) => {
           let label = option.name
           if (option.project)

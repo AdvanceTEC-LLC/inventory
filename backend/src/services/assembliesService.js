@@ -36,11 +36,11 @@ const deepCreate = async (assembly, transaction) => {
 
   if (Array.isArray(billOfMaterials)) {
     await Promise.all(
-      billOfMaterials.map(async ({ material, quantity }) => {
+      billOfMaterials.map(async ({ materialId, quantity }) => {
         await assemblyMaterialsService.create(
           {
             assemblyId: assemblyInDb.id,
-            materialId: material.id,
+            materialId,
             quantity,
           },
           transaction,

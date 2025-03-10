@@ -12,7 +12,7 @@ export const trackingNumber: GridColDef = {
 export const project: GridColDef = {
   field: 'project',
   headerName: 'Project',
-  flex: 3,
+  flex: 2,
   valueGetter: (_value, row: ReceivedShipmentType) => {
     return `${row.shipment.project.number} ${row.shipment.project.name}`
   },
@@ -23,6 +23,14 @@ export const manufacturer: GridColDef = {
   headerName: 'Manufacturer',
   flex: 1,
   valueGetter: (_value, row: ReceivedShipmentType) => row.manufacturer.name,
+}
+
+export const receivedDate: GridColDef = {
+  field: 'receivedDate',
+  headerName: 'Received Date',
+  flex: 2,
+  valueGetter: (_value, row: ReceivedShipmentType) =>
+    new Date(row.receivedDate).toDateString(),
 }
 
 export const columns: GridColDef[] = [trackingNumber, project]

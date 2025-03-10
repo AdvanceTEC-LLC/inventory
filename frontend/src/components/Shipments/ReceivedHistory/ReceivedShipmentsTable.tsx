@@ -1,6 +1,7 @@
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { paginationModel, pageSizeOptions } from '../../Tables/pagination'
 import {
+  manufacturer,
   project as projectColumn,
   trackingNumber,
 } from '../../Tables/Columns/receivedShipments'
@@ -9,7 +10,7 @@ import { ReceivedShipmentType } from '../../../types/receivedShipment'
 import { useReceivedShipments } from '../../../hooks/useReceivedShipmentsHook'
 import ReceivedShipmentMaterialCrates from './ReceivedShipmentMaterialCrates'
 
-const ReceivedShipmentsHistory = () => {
+const ReceivedShipmentsTable = () => {
   const { data: receivedShipments = [] } = useReceivedShipments()
   const { project } = useProject()
 
@@ -28,8 +29,8 @@ const ReceivedShipmentsHistory = () => {
   }
 
   const columns: GridColDef[] = project
-    ? [trackingNumber, actions]
-    : [trackingNumber, projectColumn, actions]
+    ? [trackingNumber, manufacturer, actions]
+    : [trackingNumber, projectColumn, manufacturer, actions]
 
   return (
     <DataGrid
@@ -42,4 +43,4 @@ const ReceivedShipmentsHistory = () => {
   )
 }
 
-export default ReceivedShipmentsHistory
+export default ReceivedShipmentsTable

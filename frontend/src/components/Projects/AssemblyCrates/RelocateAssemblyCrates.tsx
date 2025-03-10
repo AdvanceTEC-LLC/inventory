@@ -58,8 +58,7 @@ const RelocateAssemblyCrates = () => {
     mutationFn: (assemblyCrates: AssemblyCrateType[]) =>
       assemblyCratesService.bulkUpdate(assemblyCrates),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['assemblyCrates'] })
-      await queryClient.invalidateQueries({ queryKey: ['crates'] })
+      await queryClient.invalidateQueries()
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -113,7 +112,6 @@ const RelocateAssemblyCrates = () => {
     )
 
     bulkUpdateAssemblyCratesMutation.mutate(updatedAssemblyCrates)
-    console.log(updatedAssemblyCrates)
   }
 
   const handlecrateLocationChange = (newValue: CrateLocationType | null) => {

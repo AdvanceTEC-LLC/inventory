@@ -20,7 +20,6 @@ import projectsRouter from './controllers/projects.js'
 import receivedShipmentsRouter from './controllers/receivedShipments.js'
 import sentShipmentsRouter from './controllers/sentShipments.js'
 import shelfLocationsRouter from './controllers/shelfLocations.js'
-import shipmentCratesRouter from './controllers/shipmentCrates.js'
 import shipmentsRouter from './controllers/shipments.js'
 import stagingAreasRouter from './controllers/stagingAreas.js'
 import stockRouter from './controllers/stock.js'
@@ -48,7 +47,6 @@ app.use('/api/projects', projectsRouter)
 app.use('/api/receivedShipments', receivedShipmentsRouter)
 app.use('/api/sentShipments', sentShipmentsRouter)
 app.use('/api/shelfLocations', shelfLocationsRouter)
-app.use('/api/shipmentCrates', shipmentCratesRouter)
 app.use('/api/shipments', shipmentsRouter)
 app.use('/api/stagingAreas', stagingAreasRouter)
 app.use('/api/stock', stockRouter)

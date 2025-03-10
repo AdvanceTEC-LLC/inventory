@@ -3,7 +3,7 @@ import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 import { manufacturersService } from './manufacturersService.js'
 import { materialCratesService } from './materialCratesService.js'
-import { shipmentCratesService } from './shipmentCratesService.js'
+import { receivedShipmentMaterialCratesService } from './receivedShipmentMaterialCratesService.js'
 import { shipmentsService } from './shipmentsService.js'
 
 const parseReceivedDate = (receivedDate) => {
@@ -16,8 +16,29 @@ const parseReceivedDate = (receivedDate) => {
   return parsedReceivedDate
 }
 
+const find = async (receivedShipmentId, transaction) => {
+  info('ENTERING RECEIVED SHIPMENT FIND')
+
+  const receivedShipmentInDb = await ReceivedShipment.findByPk(
+    receivedShipmentId,
+    {
+      transaction,
+    },
+  )
+
+  if (!receivedShipmentInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Received shipment with id ${receivedShipmentId} not found.`,
+      404,
+    )
+  }
+
+  return receivedShipmentInDb
+}
+
 const create = async (receivedShipment, transaction) => {
-  info('ENTERING RCEIVED SHIPMENT CREATE')
+  info('ENTERING RECEIVED SHIPMENT CREATE')
 
   const { shipmentId, receivedDate, manufacturerId } = receivedShipment
 
@@ -57,10 +78,10 @@ const deepCreate = async (receivedShipment, transaction) => {
         transaction,
       )
 
-      await shipmentCratesService.create(
+      await receivedShipmentMaterialCratesService.create(
         {
-          crateId: materialCrateInDb.crateId,
-          shipmentId: shipmentInDb.id,
+          receivedShipmentId: receivedShipmentInDb.id,
+          materialCrateId: materialCrateInDb.id,
         },
         transaction,
       )
@@ -71,6 +92,7 @@ const deepCreate = async (receivedShipment, transaction) => {
 }
 
 export const receivedShipmentsService = {
+  find,
   create,
   deepCreate,
 }

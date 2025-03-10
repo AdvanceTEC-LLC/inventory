@@ -2,9 +2,9 @@ import { Tabs, Tab } from '@mui/material'
 import { Stack, Box } from '@mui/system'
 import { useState } from 'react'
 import ProjectAssemblies from './Assemblies/ProjectAssemblies'
-import ProjectFieldCrates from './FieldCrates/ProjectFieldCrates'
-import ProjectCrates from './Crates/ProjectCrates'
 import ProjectStock from './Stock/ProjectStock'
+import ProjectMaterialCrates from './MaterialCrates/ProjectMaterialCrates'
+import ProjectAssemblyCrates from './AssemblyCrates/ProjectAssemblyCrates'
 
 const ProjectTabs = () => {
   const [value, setValue] = useState(0)
@@ -26,13 +26,13 @@ const ProjectTabs = () => {
           <Tab label="Stock" />
           <Tab label="Material Crates" />
           <Tab label="Assemblies" />
-          <Tab label="Field Crates" />
+          <Tab label="Assembly Crates" />
         </Tabs>
       </Box>
       {value == 0 && <ProjectStock />}
-      {value == 1 && <ProjectCrates />}
+      {value == 1 && <ProjectMaterialCrates />}
       {value == 2 && <ProjectAssemblies />}
-      {value == 3 && <ProjectFieldCrates />}
+      {value == 3 && <ProjectAssemblyCrates />}
     </Stack>
   )
 }

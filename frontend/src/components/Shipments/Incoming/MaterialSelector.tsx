@@ -1,19 +1,17 @@
 import { Autocomplete, TextField } from '@mui/material'
 import { useMaterials } from '../../../hooks/useMaterialsHook'
-import { ReceivedCrateType, StockType } from '../types'
-import { useShipment } from '../ShipmentContext'
+import { ReceivedMaterialCrateType, StockType } from '../types'
 import { useReceivedShipment } from './ReceivedShipmentContext'
 import { SyntheticEvent } from 'react'
 import { MaterialType } from '../../../types/material'
 
 interface MaterialSelectorProps {
-  crate: ReceivedCrateType
+  crate: ReceivedMaterialCrateType
   stock: StockType
 }
 
 const MaterialSelector = ({ crate, stock }: MaterialSelectorProps) => {
-  const { shipment, setShipment } = useShipment()
-  const { receivedShipment } = useReceivedShipment()
+  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
 
   const { data: materials = [] } = useMaterials()
 
@@ -37,13 +35,13 @@ const MaterialSelector = ({ crate, stock }: MaterialSelectorProps) => {
       stock: crate.stock?.map((s) => (s.id === stock.id ? updatedStock : s)),
     }
 
-    const crates = shipment?.crates?.map((c) =>
+    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
       c.id === crate.id ? updatedCrate : c
     )
 
-    setShipment({
-      ...shipment,
-      crates,
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates,
     })
   }
 

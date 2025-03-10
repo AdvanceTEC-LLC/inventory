@@ -1,36 +1,21 @@
-import { NewProjectType, ProjectType } from './project'
-import { NewShelfLocationType, ShelfLocationType } from './shelfLocation'
-import { NewStagingAreaType, StagingAreaType } from './stagingArea'
-import { NewStockType, StockType } from './stock'
-import {
-  NewWarehouseLocationType,
-  WarehouseLocationType,
-} from './warehouseLocation'
+import { ProjectType } from './project'
+import { ShelfLocationType } from './shelfLocation'
+import { CrateLocationType } from './crateLocation'
 
 export interface CrateType {
   id: number
   number: string
-  warehouseLocation: WarehouseLocationType
+  crateLocation: CrateLocationType
   shelfLocation?: ShelfLocationType
-  stagingArea?: StagingAreaType
   project: ProjectType
-  opened: boolean
-  stock: StockType[]
 }
 
 export interface NewCrateType
   extends Omit<
     CrateType,
-    | 'id'
-    | 'warehouseLocation'
-    | 'shelfLocation'
-    | 'stagingArea'
-    | 'project'
-    | 'stock'
+    'id' | 'crateLocation' | 'shelfLocation' | 'project' | 'stock'
   > {
-  warehouseLocation?: NewWarehouseLocationType | number
-  shelfLocation?: NewShelfLocationType | number
-  stagingArea?: NewStagingAreaType | number
-  project: NewProjectType | number
-  stock: NewStockType[]
+  crateLocationId?: number
+  shelfLocationId?: number
+  projectId: number
 }

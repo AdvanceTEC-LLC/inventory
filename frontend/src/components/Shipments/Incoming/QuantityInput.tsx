@@ -1,15 +1,15 @@
 import { InputAdornment, TextField } from '@mui/material'
-import { ReceivedCrateType, StockType } from '../types'
-import { useShipment } from '../ShipmentContext'
+import { ReceivedMaterialCrateType, StockType } from '../types'
+import { useReceivedShipment } from './ReceivedShipmentContext'
 import { ChangeEvent } from 'react'
 
 interface QuantityInputProps {
-  crate: ReceivedCrateType
+  crate: ReceivedMaterialCrateType
   stock: StockType
 }
 
 const QuantityInput = ({ crate, stock }: QuantityInputProps) => {
-  const { shipment, setShipment } = useShipment()
+  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.replace(/\D/g, '') // Remove non-numeric characters
@@ -22,13 +22,13 @@ const QuantityInput = ({ crate, stock }: QuantityInputProps) => {
       stock: crate.stock?.map((s) => (s.id === stock.id ? updatedStock : s)),
     }
 
-    const crates = shipment?.crates?.map((c) =>
+    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
       c.id === crate.id ? updatedCrate : c
     )
 
-    setShipment({
-      ...shipment,
-      crates,
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates,
     })
   }
 

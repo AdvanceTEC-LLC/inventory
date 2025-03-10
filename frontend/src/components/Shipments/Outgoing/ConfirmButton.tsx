@@ -8,8 +8,10 @@ import { NewSentShipmentType } from '../../../types/sentShipment'
 import { NewShipmentType } from '../../../types/shipment'
 import { useShipment } from '../ShipmentContext'
 import { useSentShipment } from './SentShipmentContext'
+import { useProject } from '../../Projects/Projects/ProjectContext'
 
 const ConfirmButton = () => {
+  const { project } = useProject()
   const { shipment } = useShipment()
   const { sentShipment } = useSentShipment()
 
@@ -41,32 +43,38 @@ const ConfirmButton = () => {
   })
 
   const submitSentShipment = () => {
+    console.log(shipment)
+    console.log(project)
+    console.log(sentShipment)
     if (
       !shipment?.trackingNumber ||
-      !shipment.project ||
-      !sentShipment?.crates?.length
+      !project ||
+      !sentShipment?.assemblyCrates?.length
     )
       return
 
     const newShipment: NewShipmentType = {
       trackingNumber: shipment.trackingNumber,
-      project: shipment.project,
-      crates: sentShipment.crates,
+      projectId: project.id,
     }
 
     const newSentShipment: NewSentShipmentType = {
       shipment: newShipment,
       sendDate: new Date(),
       delivered: false,
+      assemblyCrates: sentShipment.assemblyCrates,
     }
 
     createSentShipmentMutation.mutate(newSentShipment)
+    console.log(newSentShipment)
   }
 
   return (
     <Button
-      variant={'contained'}
       onClick={submitSentShipment}
+      disabled={
+        !sentShipment?.assemblyCrates?.length || !shipment?.trackingNumber
+      }
       loading={createSentShipmentMutation.isPending ? true : null}
     >
       Confirm Shipment

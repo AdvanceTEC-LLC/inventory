@@ -1,5 +1,24 @@
 import { Assembly } from '../models/index.js'
+import { info } from '../util/logger.js'
 import { assemblyMaterialsService } from './assemblyMaterialsService.js'
+
+const find = async (assemblyId, transaction) => {
+  info('ENTERING ASSEMBLY FIND')
+
+  const assemblyInDb = await Assembly.findByPk(assemblyId, {
+    transaction,
+  })
+
+  if (!assemblyInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Assembly with id ${assemblyId} not found.`,
+      404,
+    )
+  }
+
+  return assemblyInDb
+}
 
 const create = async (assembly, transaction) => {
   const assemblyInDb = await Assembly.create(assembly, { transaction })
@@ -52,6 +71,7 @@ const update = async (assembly, transaction) => {
 }
 
 export const assembliesService = {
+  find,
   deepCreate,
   update,
 }

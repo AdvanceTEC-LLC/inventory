@@ -1,12 +1,39 @@
 import { Router } from 'express'
-import { ReceivedShipment } from '../models/index.js'
+import {
+  Manufacturer,
+  ReceivedShipment,
+  Shipment,
+  MaterialCrate,
+} from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { sequelize } from '../util/db.js'
 import { receivedShipmentsService } from '../services/receivedShipmentsService.js'
+import { manufacturerFindOptions } from './manufacturers.js'
+import { materialCrateFindOptions } from './materialCrates.js'
+import { shipmentFindOptions } from './shipments.js'
+
 const receivedShipmentsRouter = Router()
 
 export const receivedShipmentFindOptions = {
   attributes: { exclude: ['createdAt', 'updatedAt'] },
+  include: [
+    {
+      model: Shipment,
+      as: 'shipment',
+      ...shipmentFindOptions,
+    },
+    {
+      model: Manufacturer,
+      as: 'manufacturer',
+      ...manufacturerFindOptions,
+    },
+    {
+      model: MaterialCrate,
+      as: 'materialCrates',
+      through: { attributes: [] },
+      ...materialCrateFindOptions,
+    },
+  ],
 }
 
 const receivedShipmentFinder = async (request, _response, next) => {

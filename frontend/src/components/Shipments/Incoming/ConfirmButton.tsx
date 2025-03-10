@@ -11,6 +11,8 @@ import { NewShipmentType } from '../../../types/shipment'
 import { useReceivedShipment } from './ReceivedShipmentContext'
 import { useShipment } from '../ShipmentContext'
 import { useProject } from '../../Projects/Projects/ProjectContext'
+import { NewMaterialCrateType } from '../../../types/materialCrate'
+import { NewStockType } from '../../../types/stock'
 
 const ConfirmButton = () => {
   const { shipment } = useShipment()
@@ -25,6 +27,10 @@ const ConfirmButton = () => {
       receivedShipmentsService.deepCreate(receivedShipment),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['receivedShipments'] })
+      await queryClient.invalidateQueries({ queryKey: ['shipments'] })
+      await queryClient.invalidateQueries({ queryKey: ['materialCrates'] })
+      await queryClient.invalidateQueries({ queryKey: ['crates'] })
+      await queryClient.invalidateQueries({ queryKey: ['stock'] })
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -45,34 +51,47 @@ const ConfirmButton = () => {
   })
 
   const submitReceivedShipment = () => {
-    if (!shipment?.trackingNumber || !project || !shipment.crates?.length)
+    if (
+      !shipment?.trackingNumber ||
+      !project ||
+      !receivedShipment?.materialCrates?.length
+    )
       return
 
-    const newCrates: NewCrateType[] = shipment.crates
-      .filter((crate) => crate.number)
-      .map(({ number, stock }) => ({
-        number: number!,
-        project,
-        stock: stock!
-          .filter(({ material, quantity }) => material && quantity)
-          .map(({ material, quantity }) => ({
-            material: material!,
-            project,
-            quantity: quantity!,
-          })),
-        opened: false,
-      }))
+    const materialCrates: NewMaterialCrateType[] =
+      receivedShipment.materialCrates
+        .filter((materialCrate) => materialCrate.number)
+        .map((materialCrate) => {
+          const crate: NewCrateType = {
+            number: materialCrate.number!,
+            projectId: project.id,
+          }
+
+          const stock: NewStockType[] = materialCrate
+            .stock!.filter(({ material, quantity }) => material && quantity)
+            .map(({ material, quantity }) => ({
+              materialId: material!.id,
+              projectId: project.id,
+              quantity: quantity!,
+            }))
+
+          return {
+            crate,
+            stock,
+            opened: false,
+          }
+        })
 
     const newShipment: NewShipmentType = {
       trackingNumber: shipment.trackingNumber,
-      project,
-      crates: newCrates,
+      projectId: project.id,
     }
 
     const newReceivedShipment: NewReceivedShipmentType = {
       shipment: newShipment,
-      manufacturer: receivedShipment!.manufacturer!,
+      manufacturerId: receivedShipment.manufacturer!.id,
       receivedDate: new Date(),
+      materialCrates,
     }
 
     createReceivedShipmentMutation.mutate(newReceivedShipment)
@@ -80,7 +99,6 @@ const ConfirmButton = () => {
 
   return (
     <Button
-      variant="contained"
       onClick={submitReceivedShipment}
       loading={createReceivedShipmentMutation.isPending ? true : null}
     >

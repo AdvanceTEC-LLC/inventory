@@ -2,6 +2,7 @@ import { QueryClient } from '@tanstack/react-query'
 import { Button } from '@mui/material'
 
 import cratesService from '../../services/cratesService'
+import crateLocationsService from '../../services/crateLocationsService'
 import crateStockService from '../../services/crateStockService'
 import manufacturersService from '../../services/manufacturersService'
 import materialsService from '../../services/materialsService'
@@ -13,7 +14,6 @@ import shipmentsService from '../../services/shipmentsService'
 import shipmentCratesService from '../../services/shipmentCratesService'
 import stagingAreasService from '../../services/stagingAreasService'
 import stockService from '../../services/stockService'
-import warehouseLocationsService from '../../services/warehouseLocationsService'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -21,6 +21,7 @@ const Debug = () => {
   const resetDatabase = async () => {
     try {
       await cratesService.removeAll()
+      await crateLocationsService.removeAll()
       await crateStockService.removeAll()
       await manufacturersService.removeAll()
       await materialsService.removeAll()
@@ -32,7 +33,6 @@ const Debug = () => {
       await shipmentCratesService.removeAll()
       await stagingAreasService.removeAll()
       await stockService.removeAll()
-      await warehouseLocationsService.removeAll()
 
       await queryClient.invalidateQueries()
     } catch (error) {

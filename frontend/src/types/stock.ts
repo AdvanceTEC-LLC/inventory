@@ -1,4 +1,4 @@
-import { MaterialType, NewMaterialType } from './material'
+import { MaterialType } from './material'
 import { ProjectType } from './project'
 
 export interface StockType {
@@ -8,6 +8,8 @@ export interface StockType {
   project: ProjectType
 }
 
-export interface NewStockType extends Omit<StockType, 'id' | 'material'> {
-  material: NewMaterialType
+export interface NewStockType
+  extends Omit<StockType, 'id' | 'material' | 'project'> {
+  materialId: number
+  projectId: number
 }

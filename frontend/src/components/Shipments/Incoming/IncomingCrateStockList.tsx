@@ -1,14 +1,14 @@
 import { Button, Stack } from '@mui/material'
-import { useShipment } from '../ShipmentContext'
-import { ReceivedCrateType } from '../types'
+import { useReceivedShipment } from './ReceivedShipmentContext'
+import { ReceivedMaterialCrateType } from '../types'
 import IncomingCrateStock from './IncomingCrateStock'
 
 interface IncomingCrateStockListProps {
-  crate: ReceivedCrateType
+  crate: ReceivedMaterialCrateType
 }
 
 const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
-  const { shipment, setShipment } = useShipment()
+  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
 
   const addItem = () => {
     const id = (crate.stock?.length ?? 0) + 1
@@ -24,13 +24,13 @@ const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
       stock,
     }
 
-    const crates = shipment?.crates?.map((c) =>
+    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
       c.id === crate.id ? updatedCrate : c
     )
 
-    setShipment({
-      ...shipment,
-      crates,
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates,
     })
   }
 

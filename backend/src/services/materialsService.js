@@ -1,6 +1,23 @@
 import { Manufacturer, Material } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { info } from '../util/logger.js'
 import { manufacturersService } from './manufacturersService.js'
+
+const find = async (materialId, transaction) => {
+  info('ENTERING MATERIAL FIND')
+
+  const materialInDb = await Material.findByPk(materialId, { transaction })
+
+  if (!materialInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Material with id ${materialId} not found.`,
+      404,
+    )
+  }
+
+  return materialInDb
+}
 
 const create = async (material, transaction) => {
   const materialInDb = await Material.create(material, {
@@ -82,6 +99,7 @@ const deepCreate = async (material, transaction) => {
 }
 
 export const materialsService = {
+  find,
   create,
   findOrCreate,
   bulkCreate,

@@ -1,18 +1,6 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
-  // Ensure at least one warehouse exists before querying it
-  await queryInterface.sequelize.query(
-    `INSERT INTO warehouse_locations (name, is_default, created_at, updated_at)
-     VALUES ('Shipping Bay', true, NOW(), NOW())
-     ON CONFLICT (name) DO NOTHING;`,
-  )
-
-  // Get the default warehouse ID
-  const [[defaultWarehouse]] = await queryInterface.sequelize.query(
-    'SELECT id FROM warehouse_locations WHERE is_default = true LIMIT 1;',
-  )
-
   await queryInterface.createTable('crates', {
     id: {
       type: DataTypes.INTEGER,
@@ -23,23 +11,15 @@ export const up = async ({ context: queryInterface }) => {
       type: DataTypes.STRING,
       unique: true,
     },
-    warehouse_location_id: {
+    crate_location_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'warehouse_locations',
+        model: 'crate_locations',
         key: 'id',
       },
       allowNull: false,
-      defaultValue: defaultWarehouse.id,
     },
     shelf_location_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'shelf_locations',
-        key: 'id',
-      },
-    },
-    staging_area_id: {
       type: DataTypes.INTEGER,
       references: {
         model: 'shelf_locations',
@@ -53,11 +33,6 @@ export const up = async ({ context: queryInterface }) => {
         model: 'projects',
         key: 'id',
       },
-    },
-    opened: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,

@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
 import IncomingCrate from './IncomingCrate'
-import { useShipment } from '../ShipmentContext'
+import { useReceivedShipment } from './ReceivedShipmentContext'
 import { Button, Divider, Stack } from '@mui/material'
 
 const IncomingCrateList = () => {
-  const { shipment, setShipment } = useShipment()
+  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
 
   useEffect(() => {
-    setShipment({
-      ...shipment,
-      crates: [
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates: [
         {
           id: 0,
           stock: [{ id: 0 }],
@@ -17,10 +17,10 @@ const IncomingCrateList = () => {
         },
       ],
     })
-  }, [shipment?.type])
+  }, [])
 
   const addCrate = () => {
-    const id = (shipment?.crates?.length ?? 0) + 1
+    const id = (receivedShipment?.materialCrates?.length ?? 0) + 1
 
     const newCrate = {
       id,
@@ -29,18 +29,21 @@ const IncomingCrateList = () => {
       open: true,
     }
 
-    const crates = [...(shipment?.crates ?? []), newCrate]
+    const materialCrates = [
+      ...(receivedShipment?.materialCrates ?? []),
+      newCrate,
+    ]
 
-    setShipment({
-      ...shipment,
-      crates,
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates,
     })
   }
 
   return (
     <>
       <Stack spacing={4}>
-        {shipment?.crates?.map((crate, index) => (
+        {receivedShipment?.materialCrates?.map((crate, index) => (
           <Stack key={index} spacing={2}>
             <Divider flexItem>Crate {index + 1}</Divider>
             <IncomingCrate crate={crate} />

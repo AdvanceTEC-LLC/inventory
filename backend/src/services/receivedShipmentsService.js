@@ -1,6 +1,9 @@
-import { Manufacturer, ReceivedShipment, Shipment } from '../models/index.js'
+import { ReceivedShipment } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { info } from '../util/logger.js'
 import { manufacturersService } from './manufacturersService.js'
+import { materialCratesService } from './materialCratesService.js'
+import { shipmentCratesService } from './shipmentCratesService.js'
 import { shipmentsService } from './shipmentsService.js'
 
 const parseReceivedDate = (receivedDate) => {
@@ -14,31 +17,15 @@ const parseReceivedDate = (receivedDate) => {
 }
 
 const create = async (receivedShipment, transaction) => {
+  info('ENTERING RCEIVED SHIPMENT CREATE')
+
   const { shipmentId, receivedDate, manufacturerId } = receivedShipment
 
   const parsedReceivedDate = parseReceivedDate(receivedDate)
 
-  const shipmentInDb = await Shipment.findByPk(shipmentId, { transaction })
+  await shipmentsService.find(shipmentId, transaction)
 
-  if (!shipmentInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Shipment with id ${shipmentId} not found`,
-      404,
-    )
-  }
-
-  const manufacturerInDb = await Manufacturer.findByPk(manufacturerId, {
-    transaction,
-  })
-
-  if (manufacturerId && !manufacturerInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `manufacturer with id ${manufacturerId} not found`,
-      404,
-    )
-  }
+  await manufacturersService.find(manufacturerId, transaction)
 
   const receivedShipmentInDb = await ReceivedShipment.create(
     {
@@ -53,24 +40,31 @@ const create = async (receivedShipment, transaction) => {
 }
 
 const deepCreate = async (receivedShipment, transaction) => {
-  const { shipment, receivedDate, manufacturer } = receivedShipment
+  info('ENTERING RECEIVED SHIPMENT DEEP CREATE')
+  const { shipment, materialCrates } = receivedShipment
 
-  const manufacturerInDb = await manufacturersService.findOrCreate(
-    manufacturer,
+  const shipmentInDb = await shipmentsService.create(shipment, transaction)
+
+  const receivedShipmentInDb = await create(
+    { ...receivedShipment, shipmentId: shipmentInDb.id },
     transaction,
   )
 
-  const shipmentInDb = await shipmentsService.deepCreate(shipment, transaction)
+  await Promise.all(
+    materialCrates.map(async (materialCrate) => {
+      const materialCrateInDb = await materialCratesService.deepCreate(
+        materialCrate,
+        transaction,
+      )
 
-  const parsedReceivedDate = parseReceivedDate(receivedDate)
-
-  const receivedShipmentInDb = await receivedShipmentsService.create(
-    {
-      receivedDate: parsedReceivedDate,
-      manufacturerId: manufacturerInDb.id,
-      shipmentId: shipmentInDb.id,
-    },
-    transaction,
+      await shipmentCratesService.create(
+        {
+          crateId: materialCrateInDb.crateId,
+          shipmentId: shipmentInDb.id,
+        },
+        transaction,
+      )
+    }),
   )
 
   return receivedShipmentInDb

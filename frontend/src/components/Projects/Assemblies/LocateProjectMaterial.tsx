@@ -8,17 +8,17 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import { pageSizeOptions, paginationModel } from '../../Tables/pagination'
-import { location, number, opened } from '../../Tables/Columns/crates'
+import { location, number, opened } from '../../Tables/Columns/materialCrates'
 import { MaterialType } from '../../../types/material'
 import { ProjectType } from '../../../types/project'
-import { useCrates } from '../../../hooks/useCratesHook'
-import { CrateType } from '../../../types/crate'
+import { useMaterialCrates } from '../../../hooks/useMaterialCratesHook'
+import { MaterialCrateType } from '../../../types/materialCrate'
 
 interface LocateProjectMaterialProps {
   material: MaterialType
   quantity: number
   project: ProjectType
-  setCratesAfterPrefab: Dispatch<SetStateAction<CrateType[]>>
+  setCratesAfterPrefab: Dispatch<SetStateAction<MaterialCrateType[]>>
 }
 
 const LocateProjectMaterial = ({
@@ -28,7 +28,7 @@ const LocateProjectMaterial = ({
   setCratesAfterPrefab,
 }: LocateProjectMaterialProps) => {
   const [filteredCrates, setFilteredCrates] = useState<
-    (CrateType & { quantityToTake: number })[]
+    (MaterialCrateType & { quantityToTake: number })[]
   >([])
   const [open, setOpen] = useState(false)
 
@@ -39,17 +39,17 @@ const LocateProjectMaterial = ({
     setOpen(false)
   }
 
-  const { data: crates = [] } = useCrates()
+  const { data: materialCrates = [] } = useMaterialCrates()
 
   useEffect(() => {
-    if (crates.length > 0) {
+    if (materialCrates.length > 0) {
       filterCrates()
     }
-  }, [crates])
+  }, [materialCrates])
 
   const filterCrates = () => {
-    const projectCrates = [...crates].filter(
-      (crate) => crate.project.id === project.id
+    const projectCrates = [...materialCrates].filter(
+      (materialCrate) => materialCrate.crate.project.id === project.id
     )
 
     // Filter crates containing the material, then sort by opened status
@@ -64,13 +64,14 @@ const LocateProjectMaterial = ({
     ) // Prioritize opened crates
 
     let remainingQuantity = quantity
-    const selectedCrates: (CrateType & { quantityToTake: number })[] = []
-    const cratesAfterPrefab: CrateType[] = []
+    const selectedCrates: (MaterialCrateType & { quantityToTake: number })[] =
+      []
+    const cratesAfterPrefab: MaterialCrateType[] = []
 
-    for (const crate of sortedCrates) {
+    for (const materialCrate of sortedCrates) {
       if (remainingQuantity <= 0) break
 
-      const stockItem = crate.stock.find(
+      const stockItem = materialCrate.stock.find(
         (stock) => stock.material.id === material.id
       )
       if (!stockItem) continue
@@ -79,13 +80,13 @@ const LocateProjectMaterial = ({
       remainingQuantity -= takeAmount
 
       // Add crate info with the calculated quantityToTake
-      selectedCrates.push({ ...crate, quantityToTake: takeAmount })
+      selectedCrates.push({ ...materialCrate, quantityToTake: takeAmount })
 
       // Update crate with the take amount removed
       const updatedCrate = {
-        ...crate,
+        ...materialCrate,
         opened: true,
-        stock: crate.stock.map((stock) => {
+        stock: materialCrate.stock.map((stock) => {
           return {
             ...stock,
             quantity:

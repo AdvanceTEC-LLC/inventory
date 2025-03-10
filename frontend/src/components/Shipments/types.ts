@@ -1,28 +1,28 @@
-import { CrateType as DBCrateType } from '../../types/crate'
+import { AssemblyCrateType } from '../../types/assemblyCrate'
 import { ManufacturerType } from '../../types/manufacturer'
 import { MaterialType } from '../../types/material'
 import { ProjectType } from '../../types/project'
 
 export interface ShipmentType {
-  type?: string
   trackingNumber?: number
   project?: ProjectType
-  crates?: ReceivedCrateType[]
 }
 
 export interface ReceivedShipmentType {
   shipment?: ShipmentType
   receivedDate?: Date
   manufacturer?: ManufacturerType
+  materialCrates?: ReceivedMaterialCrateType[]
 }
 
 export interface SentShipmentType {
+  shipment?: ShipmentType
   sendDate?: Date
   delivered?: boolean
-  crates?: DBCrateType[]
+  assemblyCrates?: AssemblyCrateType[]
 }
 
-export interface ReceivedCrateType {
+export interface ReceivedMaterialCrateType {
   id: number
   number?: string
   stock?: StockType[]

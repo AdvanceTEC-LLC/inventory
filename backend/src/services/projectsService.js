@@ -2,6 +2,24 @@ import { Project } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 
+const find = async (projectId, transaction) => {
+  info('ENTERING PROJECT FIND')
+
+  const projectInDb = await Project.findByPk(projectId, {
+    transaction,
+  })
+
+  if (!projectInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Project with id ${projectId} not found.`,
+      404,
+    )
+  }
+
+  return projectInDb
+}
+
 const create = async (project, transaction) => {
   let projectInDb = await Project.findOne({
     where: { number: project.number },
@@ -43,6 +61,7 @@ const bulkCreate = async (projects, transaction) => {
 }
 
 export const projectsService = {
+  find,
   create,
   findOrCreate,
   bulkCreate,

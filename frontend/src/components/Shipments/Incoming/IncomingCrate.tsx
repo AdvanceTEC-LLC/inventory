@@ -1,35 +1,37 @@
 import { Button, Divider, Stack } from '@mui/material'
 import CrateNumberInput from './CrateNumberInput'
-import { useShipment } from '../ShipmentContext'
-import { ReceivedCrateType } from '../types'
+import { useReceivedShipment } from './ReceivedShipmentContext'
+import { ReceivedMaterialCrateType } from '../types'
 import IncomingCrateStockList from './IncomingCrateStockList'
 
 interface IncomingCrateProps {
-  crate: ReceivedCrateType
+  crate: ReceivedMaterialCrateType
 }
 
 const IncomingCrate = ({ crate }: IncomingCrateProps) => {
-  const { shipment, setShipment } = useShipment()
+  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
 
   const toggleOpen = () => {
     const updatedCrate = { ...crate, open: !crate.open }
 
-    const crates = shipment?.crates?.map((c) =>
+    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
       c.id === crate.id ? updatedCrate : c
     )
 
-    setShipment({
-      ...shipment,
-      crates,
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates,
     })
   }
 
   const handleRemove = () => {
-    const crates = shipment?.crates?.filter((c) => c.id !== crate.id)
+    const materialCrates = receivedShipment?.materialCrates?.filter(
+      (c) => c.id !== crate.id
+    )
 
-    setShipment({
-      ...shipment,
-      crates,
+    setReceivedShipment({
+      ...receivedShipment,
+      materialCrates,
     })
   }
 

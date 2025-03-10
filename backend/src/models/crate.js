@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import WarehouseLocation from './warehouseLocation.js'
 
 class Crate extends Model {}
 
@@ -15,31 +14,18 @@ Crate.init(
       type: DataTypes.STRING,
       unique: true,
     },
-    warehouseLocationId: {
+    crateLocationId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'warehouse_locations',
+        model: 'crate_locations',
         key: 'id',
       },
       allowNull: false,
-      defaultValue: async () => {
-        const defaultWarehouse = await WarehouseLocation.findOne({
-          where: { isDefault: true },
-        })
-        return defaultWarehouse.id
-      },
     },
     shelfLocationId: {
       type: DataTypes.INTEGER,
       references: {
         model: 'shelf_locations',
-        key: 'id',
-      },
-    },
-    stagingAreaId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'staging_areas',
         key: 'id',
       },
     },
@@ -50,11 +36,6 @@ Crate.init(
         model: 'projects',
         key: 'id',
       },
-    },
-    opened: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
     },
   },
   {

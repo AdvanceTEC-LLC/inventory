@@ -19,20 +19,12 @@ import { AppDispatch } from '../../../store'
 import { NewAssemblyCrateType } from '../../../types/assemblyCrate'
 
 const AddAssemblyCrate = () => {
-  const [open, setOpen] = useState(false)
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const { data: crateLocations = [] } = useCrateLocations()
 
   const { project } = useProject()
+  const { assemblyCrate, setAssemblyCrate } = useAssemblyCrate()
 
-  const { setAssemblyCrate } = useAssemblyCrate()
-
-  const { data: crateLocations = [] } = useCrateLocations()
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const holdingBayLocation = crateLocations.find((location) =>
@@ -52,6 +44,24 @@ const AddAssemblyCrate = () => {
       assemblies: [],
     })
   }, [crateLocations, project])
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+
+    if (!assemblyCrate) return
+
+    setAssemblyCrate({
+      ...assemblyCrate,
+      crate: {
+        ...assemblyCrate.crate,
+        number: '',
+      },
+    })
+  }
 
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
@@ -80,8 +90,6 @@ const AddAssemblyCrate = () => {
       )
     },
   })
-
-  const { assemblyCrate } = useAssemblyCrate()
 
   const handleSubmit = () => {
     if (!project || !assemblyCrate?.crate.number) return

@@ -1,6 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Shipment from './shipment.js'
 
 class SentShipment extends Model {}
 

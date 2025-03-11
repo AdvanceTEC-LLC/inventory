@@ -29,4 +29,13 @@ export const quantity: GridColDef = {
   valueGetter: (_value, row: StockType) => row.quantity,
 }
 
+export const project: GridColDef = {
+  field: 'project',
+  headerName: 'Project',
+  flex: 2,
+  valueGetter: (_value, row: StockType) => {
+    return `${row.project.number} ${row.project.name}`
+  },
+}
+
 export const columns: GridColDef[] = [name, manufacturer, unit, quantity]

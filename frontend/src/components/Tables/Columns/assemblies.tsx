@@ -13,7 +13,7 @@ export const code: GridColDef = {
 export const project: GridColDef = {
   field: 'project',
   headerName: 'Project',
-  flex: 1,
+  flex: 3,
   valueGetter: (_value, row: AssemblyType) =>
     `${row.project.number} ${row.project.name}`,
 }

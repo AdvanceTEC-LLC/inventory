@@ -16,7 +16,7 @@ const NavLink = ({ link }: NavLinkProps) => {
     <div className="relative group">
       {/* Parent Navigation Tab */}
       <Link to={`/${link.path}`}>
-        <div className="w-full h-full py-2 px-8 md:px-2 hover:bg-atec-dark transition duration-200">
+        <div className="w-full h-full py-2 px-8 md:px-2 hover:bg-white hover:text-atec transition duration-200">
           {link.name}
         </div>
       </Link>

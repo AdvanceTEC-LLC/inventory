@@ -1,49 +1,102 @@
-import { Crate } from '../models/index.js'
+import { Crate, CrateLocation } from '../models/index.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { info } from '../util/logger.js'
-import { crateStocksService } from './crateStockService.js'
 import { projectsService } from './projectsService.js'
 import { shelfLocationsService } from './shelfLocationsService.js'
-import { stagingAreasService } from './stagingAreasService.js'
 import { stockService } from './stockService.js'
-import { warehouseLocationsService } from './warehouseLocationsService.js'
+import { crateLocationsService } from './crateLocationsService.js'
+import { materialCratesService } from './materialCratesService.js'
+import { info } from '../util/logger.js'
 
-const create = async (crate, transaction) => {
-  let crateInDb = await Crate.findOne({
-    where: { number: crate.number },
+const validateCrateNumber = async (number, transaction) => {
+  info('ENTERING VALIDATE CRATE NUMBER')
+
+  const crateInDb = await Crate.findOne({
+    where: { number },
     transaction,
   })
 
   if (crateInDb) {
     throw new CustomError(
       'ValidationError',
-      `Crate with number ${crate.number} already exists.`,
+      `Crate with number ${number} already exists.`,
       400,
     )
   }
+}
 
-  crateInDb = await Crate.create(crate, { transaction })
+const find = async (crateId, transaction) => {
+  info('ENTERING CRATE FIND')
+
+  const crateInDb = await Crate.findByPk(crateId, {
+    transaction,
+  })
+
+  if (!crateInDb) {
+    throw new CustomError(
+      'NotFoundError',
+      `Crate with id ${crateId} not found.`,
+      404,
+    )
+  }
 
   return crateInDb
 }
 
+const create = async (crate, transaction) => {
+  info('ENTERING CRATE CREATE')
+
+  await validateCrateNumber(crate.number)
+
+  const crateInDb = await Crate.create(crate, { transaction })
+
+  return crateInDb
+}
+
+const update = async (crate, transaction) => {
+  info('ENTERING CRATE UPDATE')
+
+  let crateLocationId = null
+  if (crate.crateLocation) crateLocationId = crate.crateLocation.id
+
+  let shelfLocationId = null
+  if (crate.shelfLocation) shelfLocationId = crate.shelfLocation.id
+
+  let projectId = null
+  if (crate.project) projectId = crate.project.id
+
+  const updatedCrate = {
+    id: crate.id,
+    number: crate.number,
+    crateLocationId,
+    shelfLocationId,
+    projectId,
+  }
+
+  const updatedCrateInDb = await Crate.update(updatedCrate, {
+    where: { id: updatedCrate.id },
+    transaction,
+  })
+
+  return updatedCrateInDb
+}
+
 const deepCreate = async (crate, transaction) => {
-  let warehouseLocationInDb
-  if (crate.warehouseLocation) {
-    warehouseLocationInDb = await warehouseLocationsService.findOrCreate(
-      crate.warehouseLocation,
+  let crateLocationInDb
+  if (crate.crateLocation) {
+    crateLocationInDb = await crateLocationsService.findOrCreate(
+      crate.crateLocation,
       transaction,
     )
   }
 
-  const defaultWarehouseLocation = await warehouseLocationsService.findOrCreate(
-    { name: 'Shipping Bay', isDefault: true },
+  const defaultCrateLocation = await crateLocationsService.findOrCreate(
+    { name: 'Shipping Bay', isMaterialCrateDefault: true },
     transaction,
   )
 
-  const warehouseLocationId = warehouseLocationInDb
-    ? warehouseLocationInDb.id
-    : defaultWarehouseLocation.id
+  const crateLocationId = crateLocationInDb
+    ? crateLocationInDb.id
+    : defaultCrateLocation.id
 
   let shelfLocationInDb
   if (crate.shelfLocation) {
@@ -54,15 +107,6 @@ const deepCreate = async (crate, transaction) => {
   }
   const shelfLocationId = shelfLocationInDb ? shelfLocationInDb.id : null
 
-  let stagingAreaInDb
-  if (crate.stagingArea) {
-    stagingAreaInDb = await stagingAreasService.findOrCreate(
-      crate.stagingArea,
-      transaction,
-    )
-  }
-  const stagingAreaId = stagingAreaInDb ? stagingAreaInDb.id : null
-
   const projectInDb = await projectsService.findOrCreate(
     crate.project,
     transaction,
@@ -71,7 +115,7 @@ const deepCreate = async (crate, transaction) => {
   const crateInDb = await create(
     {
       ...crate,
-      warehouseLocationId,
+      crateLocationId,
       shelfLocationId,
       stagingAreaId,
       projectId: projectInDb.id,
@@ -80,72 +124,27 @@ const deepCreate = async (crate, transaction) => {
   )
 
   if (Array.isArray(crate.stock)) {
-    await Promise.all(
-      crate.stock.map(async (stock) => {
-        const stockInDb = await stockService.deepCreate(
-          {
-            ...stock,
-            project: crate.project,
-          },
-          transaction,
-        )
-
-        await crateStocksService.create(
-          {
-            crateId: crateInDb.id,
-            stockId: stockInDb.id,
-          },
-          transaction,
-        )
-      }),
-    )
+    await materialCratesService.deepCreate(crate)
   }
 
   return crateInDb
 }
 
 const bulkUpdate = async (crates, transaction) => {
+  info('ENTERING CRATES BULK UPDATE')
+
   const updatedCrates = await Promise.all(
     crates.map(async (crate) => {
-      let warehouseLocationId = null
-      if (crate.warehouseLocation)
-        warehouseLocationId = crate.warehouseLocation.id
-
-      let shelfLocationId = null
-      if (crate.shelfLocation) shelfLocationId = crate.shelfLocation.id
-
-      let stagingAreaId = null
-      if (crate.stagingArea) stagingAreaId = crate.stagingArea.id
-
-      let projectId = null
-      if (crate.project) projectId = crate.project.id
-
-      const updatedCrate = {
-        id: crate.id,
-        number: crate.number,
-        warehouseLocationId,
-        shelfLocationId,
-        stagingAreaId,
-        opened: crate.opened,
-        projectId,
-      }
-
-      await Crate.update(updatedCrate, {
-        where: { id: updatedCrate.id },
-        transaction,
-      })
-
-      await Promise.all(
-        crate.stock.map(async (stock) => {
-          await stockService.updateOrRemove(stock, transaction)
-        }),
-      )
+      await update(crate, transaction)
     }),
   )
   return updatedCrates
 }
 
 export const cratesService = {
+  find,
+  create,
+  update,
   deepCreate,
   bulkUpdate,
 }

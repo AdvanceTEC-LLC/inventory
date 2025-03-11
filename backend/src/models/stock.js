@@ -1,9 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Project from './project.js'
-import Material from './material.js'
-import Crate from './crate.js'
-import CrateStock from './crateStock.js'
 
 class Stock extends Model {}
 

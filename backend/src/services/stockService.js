@@ -1,25 +1,32 @@
-import { Material, Stock } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
+import { Stock } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { crateStocksService } from './crateStockService.js'
 import { materialsService } from './materialsService.js'
 import { projectsService } from './projectsService.js'
 
-const create = async (stock, transaction) => {
-  const { materialId } = stock
+const find = async (stockId, transaction) => {
+  const stockInDb = await Stock.findByPk(stockId, { transaction })
 
-  const materialInDb = await Material.findByPk(materialId, { transaction })
-
-  if (!materialInDb) {
+  if (!stockInDb) {
     throw new CustomError(
       'NotFoundError',
-      `Material with id ${materialId} not found`,
+      `Stock with id ${stockId} not found`,
       404,
     )
   }
 
+  return stockInDb
+}
+
+const create = async (stock, transaction) => {
+  info('ENTERING STOCK CREATE')
+
+  const { materialId, projectId } = stock
+
+  await materialsService.find(materialId, transaction)
+
+  await projectsService.find(projectId, transaction)
+
   const stockInDb = await Stock.create(stock, {
-    cascade: true,
     transaction,
   })
 
@@ -27,6 +34,8 @@ const create = async (stock, transaction) => {
 }
 
 const update = async (stock, transaction) => {
+  info('ENTERING STOCK UPDATE')
+
   const stockInDb = await Stock.update(stock, {
     where: { id: stock.id },
     transaction,
@@ -35,8 +44,7 @@ const update = async (stock, transaction) => {
 }
 
 const remove = async (stock, transaction) => {
-  //await crateStocksService.removeStock(stock, transaction)
-
+  info('ENTERING STOCK REMOVE')
   await Stock.destroy({
     where: { id: stock.id },
     transaction,
@@ -63,6 +71,7 @@ const deepCreate = async (stock, transaction) => {
 }
 
 const updateOrRemove = async (stock, transaction) => {
+  info('ENTERING STOCK UPDATE OR REMOVE')
   const { quantity } = stock
 
   if (quantity <= 0) {
@@ -73,6 +82,7 @@ const updateOrRemove = async (stock, transaction) => {
 }
 
 export const stockService = {
+  find,
   create,
   deepCreate,
   updateOrRemove,

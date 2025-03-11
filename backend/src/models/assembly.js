@@ -1,8 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Project from './project.js'
-import AssemblyMaterial from './assemblyMaterials.js'
-import Material from './material.js'
 
 class Assembly extends Model {}
 
@@ -16,10 +13,6 @@ Assembly.init(
     code: {
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false,
-    },
-    type: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
     projectId: {

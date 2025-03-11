@@ -17,7 +17,7 @@ import { notifyWithTimeout } from '../../reducers/notificationsReducer'
 import materialsService from '../../services/materialsService'
 import { AppDispatch } from '../../store'
 import { NewMaterialType } from '../../types/material'
-import { ManufacturerType } from '../../types/manufacturer'
+import { useManufacturer } from './ManufacturerContext'
 
 const units = [
   { display: 'each', value: 'ea' },
@@ -26,12 +26,10 @@ const units = [
 const defaultName = ''
 const defaultUnit = units[0].value
 
-interface AddMaterialProps {
-  manufacturer: ManufacturerType | null
-}
-
-const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
+const AddMaterial = () => {
   const [open, setOpen] = useState(false)
+
+  const { manufacturer } = useManufacturer()
 
   const [name, setName] = useState<string>(defaultName)
   const [unit, setUnit] = useState<string>(defaultUnit)
@@ -39,7 +37,7 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
 
-  const creatematerialMutation = useMutation({
+  const createMaterialMutation = useMutation({
     mutationFn: (material: NewMaterialType) =>
       materialsService.create(material),
     onSuccess: async () => {
@@ -78,7 +76,7 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
 
     const material = { name: name.trim(), unit, manufacturer: manufacturer.id }
 
-    creatematerialMutation.mutate(material)
+    createMaterialMutation.mutate(material)
   }
 
   return (
@@ -132,7 +130,11 @@ const AddMaterial = ({ manufacturer }: AddMaterialProps) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit} variant="contained">
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
+            loading={createMaterialMutation.isPending ? true : null}
+          >
             Add
           </Button>
         </DialogActions>

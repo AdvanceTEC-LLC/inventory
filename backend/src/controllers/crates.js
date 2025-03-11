@@ -3,27 +3,21 @@ import {
   Crate,
   ShelfLocation,
   Project,
-  Stock,
-  WarehouseLocation,
-  StagingArea,
+  CrateLocation,
 } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
 import { shelfLocationFindOptions } from './shelfLocations.js'
-import { stockFindOptions } from './stock.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { warehouseLocationFindOptions } from './warehouseLocations.js'
+import { crateLocationFindOptions } from './crateLocations.js'
 import { sequelize } from '../util/db.js'
 import { cratesService } from '../services/cratesService.js'
-import { info } from '../util/logger.js'
-import { stagingAreaFindOptions } from './stagingAreas.js'
 const cratesRouter = Router()
 
 export const crateFindOptions = {
   attributes: {
     exclude: [
-      'warehouseLocationId',
+      'crateLocationId',
       'shelfLocationId',
-      'stagingAreaId',
       'projectId',
       'vendorId',
       'createdAt',
@@ -32,9 +26,9 @@ export const crateFindOptions = {
   },
   include: [
     {
-      model: WarehouseLocation,
-      as: 'warehouseLocation',
-      ...warehouseLocationFindOptions,
+      model: CrateLocation,
+      as: 'crateLocation',
+      ...crateLocationFindOptions,
     },
     {
       model: ShelfLocation,
@@ -42,20 +36,9 @@ export const crateFindOptions = {
       ...shelfLocationFindOptions,
     },
     {
-      model: StagingArea,
-      as: 'stagingArea',
-      ...stagingAreaFindOptions,
-    },
-    {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Stock,
-      as: 'stock',
-      through: { attributes: [] },
-      ...stockFindOptions,
     },
   ],
 }
@@ -81,67 +64,19 @@ cratesRouter.get('/:id', crateFinder, async (request, response) => {
   response.status(200).send(request.crate)
 })
 
-cratesRouter.post('/', async (request, response) => {
-  const {
-    number,
-    warehouseLocationId,
-    shelfLocationId,
-    stagingAreaId,
-    projectId,
-    opened,
-  } = request.body
+cratesRouter.post('/', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
 
-  const warehouseLocationExists =
-    await WarehouseLocation.findByPk(warehouseLocationId)
+  try {
+    const crate = await cratesService.create(request.body, transaction)
 
-  if (!warehouseLocationExists) {
-    throw new CustomError(
-      'NotFoundError',
-      `Warehouse location with id ${warehouseLocationId} not found`,
-      404,
-    )
+    await transaction.commit()
+
+    response.status(201).send(crate)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
-
-  const shelfLocationExists = await shelfLocation.findByPk(shelfLocationId)
-
-  if (!shelfLocationExists) {
-    throw new CustomError(
-      'NotFoundError',
-      `Shelf location with id ${shelfLocationId} not found`,
-      404,
-    )
-  }
-
-  const stagingAreaExists = await StagingArea.findByPk(stagingAreaId)
-
-  if (!stagingAreaExists) {
-    throw new CustomError(
-      'NotFoundError',
-      `Staging area with id ${stagingAreaId} not found`,
-      404,
-    )
-  }
-
-  const projectExists = await Project.findByPk(projectId)
-
-  if (!projectExists) {
-    throw new CustomError(
-      'NotFoundError',
-      `Project with id ${projectId} not found`,
-      404,
-    )
-  }
-
-  const crate = await Crate.create({
-    number,
-    warehouseLocationId,
-    shelfLocationId,
-    stagingAreaId,
-    projectId,
-    opened,
-  })
-
-  response.status(201).send(crate)
 })
 
 cratesRouter.post('/deep/', async (request, response, next) => {

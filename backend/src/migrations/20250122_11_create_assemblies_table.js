@@ -12,10 +12,6 @@ export const up = async ({ context: queryInterface }) => {
       unique: true,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     project_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

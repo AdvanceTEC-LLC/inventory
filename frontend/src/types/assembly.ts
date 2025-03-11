@@ -7,7 +7,6 @@ export interface AssemblyType {
   code: string
   project: ProjectType
   prefabricated: boolean
-  type: string
   billOfMaterials?: AssemblyMaterialType[]
 }
 

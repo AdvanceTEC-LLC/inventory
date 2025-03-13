@@ -1,4 +1,4 @@
-const initialVendors = [
+const initialManufacturers = [
   {
     id: 0,
     name: 'Plascore',
@@ -9,12 +9,12 @@ const initialVendors = [
   },
 ]
 
-const newVendor = {
+const newManufacturer = {
   id: 2,
   name: 'KSC',
 }
 
 export default {
-  initialVendors,
-  newVendor,
+  initialManufacturers,
+  newManufacturer,
 }

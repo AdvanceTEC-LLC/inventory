@@ -1,42 +1,21 @@
 import { Router } from 'express'
-import {
-  Shipment,
-  Project,
-  Vendor,
-  ShipmentCrate,
-  Crate,
-  CrateStock,
-  Stock,
-  Material,
-} from '../models/index.js'
+import { Shipment, Project, Crate } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { vendorFindOptions } from './vendors.js'
 import { crateFindOptions } from './crates.js'
-import { sequelize } from '../util/db.js'
 import { CustomError } from '../util/errors/CustomError.js'
-import { info } from '../util/logger.js'
+import { sequelize } from '../util/db.js'
+import { shipmentsService } from '../services/shipmentsService.js'
 const shipmentsRouter = Router()
 
 export const shipmentFindOptions = {
   attributes: {
-    exclude: ['projectId', 'vendorId', 'createdAt', 'updatedAt'],
+    exclude: ['projectId', 'createdAt', 'updatedAt'],
   },
   include: [
     {
       model: Project,
       as: 'project',
       ...projectFindOptions,
-    },
-    {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
-    },
-    {
-      model: Crate,
-      as: 'crates',
-      through: { attributes: [] },
-      ...crateFindOptions,
     },
   ],
 }
@@ -80,159 +59,37 @@ shipmentsRouter.get('/:id', shipmentFinder, async (request, response) => {
 })
 
 shipmentsRouter.post('/', async (request, response, next) => {
-  const { direction, sendDate, receivedDate, project, vendor, crates } =
-    request.body
+  const { trackingNumber, projectId } = request.body
 
-  if (!['In', 'Out'].includes(direction)) {
+  const projectInDb = await Project.findByPk(projectId)
+
+  if (!projectInDb) {
     throw new CustomError(
-      'ValidationError',
-      `Shipment direction of ${direction} is neither 'In' nor 'Out'.`,
-      400,
+      'NotFoundError',
+      `Project with id ${projectId} not found`,
+      404,
     )
   }
 
-  // Convert sendDate and receivedDate to Date objects
-  const parsedSendDate = new Date(sendDate)
-  const parsedReceivedDate = new Date(receivedDate)
+  const shipment = await Shipment.create({
+    trackingNumber,
+    projectId,
+  })
 
-  if (
-    (sendDate !== null && isNaN(parsedSendDate.getTime())) ||
-    isNaN(parsedReceivedDate.getTime())
-  ) {
-    throw new CustomError(
-      'ValidationError',
-      'One or both of the provided dates are invalid.',
-      400,
-    )
-  }
+  response.status(201).send(shipment)
+})
 
-  if (parsedSendDate > parsedReceivedDate) {
-    const formattedSendDate = sendDate.toLocaleDateString()
-    const formattedReceivedDate = receivedDate.toLocaleDateString()
-    throw new CustomError(
-      'ValidationError',
-      `Shipment can not be received on ${formattedReceivedDate} if sent on ${formattedSendDate}`,
-      400,
-    )
-  }
-
+shipmentsRouter.post('/deep', async (request, response, next) => {
   const transaction = await sequelize.transaction()
 
   try {
-    // Check if project and vendor exist in the database
-    let projectInDb = await Project.findOne({
-      where: { number: project.number },
+    const shipment = await shipmentsService.deepCreate(
+      request.body,
       transaction,
-    })
-
-    if (!projectInDb) {
-      projectInDb = await Project.create(project, { transaction })
-    }
-
-    let vendorInDb = await Vendor.findOne({
-      where: { name: vendor.name },
-      transaction,
-    })
-
-    if (!vendorInDb) {
-      vendorInDb = await Vendor.create(vendor, { transaction })
-    }
-
-    info(sendDate)
-
-    // Create shipment entry
-    const shipment = await Shipment.create(
-      {
-        direction,
-        sendDate: parsedSendDate,
-        receivedDate: parsedReceivedDate,
-        projectId: projectInDb.id,
-        vendorId: vendorInDb.id,
-      },
-      { transaction },
     )
-
-    // Create crates and stock entries
-    for (const crate of crates) {
-      let crateInDb = await Crate.findOne(
-        { attributes: { where: { number: crate.number } } },
-        { transaction },
-      )
-
-      if (crateInDb) {
-        throw new CustomError(
-          'ValidationError',
-          `Crate with number ${crate.number} already exists.`,
-          400,
-        )
-      }
-
-      crateInDb = await Crate.create(
-        {
-          number: crate.number,
-          location: crate.location,
-          storageId: null,
-          projectId: projectInDb.id,
-          vendorId: vendorInDb.id,
-        },
-        { transaction },
-      )
-
-      await ShipmentCrate.create(
-        {
-          crateId: crateInDb.id,
-          shipmentId: shipment.id,
-        },
-        { transaction },
-      )
-
-      // Create stock entries for each crate
-      for (const stock of crate.stock) {
-        let materialInDb = await Material.findOne({
-          where: { partNumber: stock.material.partNumber },
-          transaction,
-        })
-
-        if (!materialInDb) {
-          materialInDb = await Material.create(
-            {
-              partNumber: stock.material.partNumber,
-              description: stock.material.description,
-              thickness: stock.material.thickness,
-              width: stock.material.width,
-              length: stock.material.length,
-              topFinish: stock.material.topFinish,
-              bottomFinish: stock.material.bottomFinish,
-              xDimension: stock.material.xDimension,
-              cutout: stock.material.cutout,
-              tag: stock.material.tag,
-              vendorId: vendorInDb.id,
-            },
-            { transaction },
-          )
-        }
-
-        const stockInDb = await Stock.create(
-          {
-            materialId: materialInDb.id,
-            quantity: stock.quantity,
-          },
-          { transaction },
-        )
-
-        await CrateStock.create(
-          {
-            stockId: stockInDb.id,
-            crateId: crateInDb.id,
-          },
-          { transaction },
-        )
-      }
-    }
 
     await transaction.commit()
 
-    // Send the shipment data back as response
     response.status(201).send(shipment)
   } catch (error) {
     await transaction.rollback()

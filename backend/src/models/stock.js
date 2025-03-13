@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+
 class Stock extends Model {}
 
 Stock.init(
@@ -12,9 +13,23 @@ Stock.init(
     materialId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'materials', key: 'id' },
+      references: {
+        model: 'materials',
+        key: 'id',
+      },
     },
-    quantity: { type: DataTypes.INTEGER, defaultValue: 0 },
+    projectId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'projects',
+        key: 'id',
+      },
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     sequelize,

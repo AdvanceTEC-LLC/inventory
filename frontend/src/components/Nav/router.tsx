@@ -2,10 +2,9 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from '../ATEC UI/Layout'
 import ErrorPage from '../ATEC UI/ErrorPage'
-import Debug from '../Debug/Debug'
 import { routes } from './routes'
 import { LinkType } from '../../types/link'
-import Inventory from '../Inventory/Stock/Stock'
+import Projects from '../Projects/Projects'
 
 const generateRoutes = (routes: LinkType[]) => {
   return routes.flatMap((parentLink) => {
@@ -18,7 +17,7 @@ const generateRoutes = (routes: LinkType[]) => {
       parentLink.dropdown?.map((dropdownLink) => ({
         path: `/${parentLink.path}/${dropdownLink.path}`,
         element: dropdownLink.element ?? parentLink.element,
-      })) || []
+      })) ?? []
 
     return [parentRoute, ...childRoutes]
   })
@@ -29,10 +28,6 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     errorElement: <ErrorPage />,
-    children: [
-      { path: '/', element: <Inventory /> },
-      { path: '/debug', element: <Debug /> },
-      ...generateRoutes(routes),
-    ],
+    children: [{ path: '/', element: <Projects /> }, ...generateRoutes(routes)],
   },
 ])

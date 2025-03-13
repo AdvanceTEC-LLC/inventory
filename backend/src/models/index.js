@@ -1,122 +1,297 @@
-import Material from './material.js'
-import Stock from './stock.js'
-import Project from './project.js'
-import Vendor from './vendor.js'
-import Storage from './storage.js'
+import Assembly from './assembly.js'
+import AssemblyMaterial from './assemblyMaterial.js'
+import AssemblyCrate from './assemblyCrate.js'
+import AssemblyCrateAssemblies from './assemblyCrateAssemblies.js'
 import Crate from './crate.js'
-import CrateStock from './crateStock.js'
+import CrateLocation from './crateLocation.js'
+import Manufacturer from './manufacturer.js'
+import Material from './material.js'
+import MaterialCrate from './materialCrate.js'
+import MaterialCrateStock from './materialCrateStock.js'
+import Project from './project.js'
+import ReceivedShipment from './receivedShipment.js'
+import ReceivedShipmentMaterialCrate from './receivedShipmentMaterialCrate.js'
+import SentShipment from './sentShipment.js'
+import SentShipmentAssemblyCrate from './sentShipmentAssemblyCrate.js'
+import ShelfLocation from './shelfLocation.js'
 import Shipment from './shipment.js'
-import ShipmentCrate from './shipmentCrate.js'
+import StagingArea from './stagingArea.js'
+import Stock from './stock.js'
 
-// Define relationships
-const defineRelationships = () => {
-  // Material to Vendor relationship
-  Vendor.hasMany(Material, { foreignKey: 'vendorId', as: 'material' })
-  Material.belongsTo(Vendor, { foreignKey: 'vendorId', as: 'vendor' })
+const assemblyRelationships = () => {
+  Assembly.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
 
-  // Stock to Material relationship
-  Material.hasMany(Stock, { foreignKey: 'materialId', as: 'stock' })
-  Stock.belongsTo(Material, { foreignKey: 'materialId', as: 'material' })
-
-  // Crate to Location relationship
-  Crate.belongsTo(Storage, { foreignKey: 'storageId', as: 'storage' })
-  Storage.hasMany(Crate, { foreignKey: 'storageId', as: 'crates' })
-
-  // Crate to Project relationship
-  Crate.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
-  Project.hasMany(Crate, { foreignKey: 'projectId', as: 'crates' })
-
-  // Crate to Vendor relationship
-  Crate.belongsTo(Vendor, { foreignKey: 'vendorId', as: 'vendor' })
-  Vendor.hasMany(Crate, { foreignKey: 'vendorId', as: 'crates' })
-
-  // Shipment to Project relationship
-  Shipment.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
-  Project.hasMany(Shipment, { foreignKey: 'projectId', as: 'shipments' })
-
-  // Shipment to Vendor relationship
-  Shipment.belongsTo(Vendor, { foreignKey: 'vendorId', as: 'vendor' })
-  Vendor.hasMany(Shipment, { foreignKey: 'vendorId', as: 'shipments' })
-
-  // Shipment to Crate relationship
-  Shipment.belongsToMany(Crate, {
-    through: ShipmentCrate,
-    foreignKey: 'shipmentId',
-    otherKey: 'crateId',
-    as: 'crates',
-  })
-  Crate.belongsToMany(Shipment, {
-    through: ShipmentCrate,
-    foreignKey: 'crateId',
-    otherKey: 'shipmentId',
-    as: 'shipments',
+  Assembly.belongsToMany(Material, {
+    through: AssemblyMaterial,
+    foreignKey: 'assemblyId',
+    otherKey: 'materialId',
+    as: 'materials',
   })
 
-  // Crate to Stock through CrateStock
-  Crate.belongsToMany(Stock, {
-    through: CrateStock,
-    foreignKey: 'crateId',
-    otherKey: 'stockId',
-    as: 'stock',
-  })
-  Stock.belongsToMany(Crate, {
-    through: CrateStock,
-    foreignKey: 'stockId',
-    otherKey: 'crateId',
-    as: 'crates',
-  })
-
-  // ShipmentCrate to Shipment relationship
-  ShipmentCrate.belongsTo(Shipment, {
-    foreignKey: 'shipmentId',
-    as: 'shipment',
-  })
-  Shipment.hasMany(ShipmentCrate, {
-    foreignKey: 'shipmentId',
-    as: 'shipmentCrates',
-  })
-
-  // ShipmentCrate to Crate relationship
-  ShipmentCrate.belongsTo(Crate, {
-    foreignKey: 'crateId',
-    as: 'crate',
-  })
-  Crate.hasMany(ShipmentCrate, {
-    foreignKey: 'crateId',
-    as: 'shipmentCrates',
-  })
-
-  // CrateStock to Stock relationship
-  CrateStock.belongsTo(Stock, {
-    foreignKey: 'stockId',
-    as: 'stock',
-  })
-  Stock.hasMany(CrateStock, {
-    foreignKey: 'stockId',
-    as: 'crateStock',
-  })
-
-  // CrateStock to Crate relationship
-  CrateStock.belongsTo(Crate, {
-    foreignKey: 'crateId',
-    as: 'crate',
-  })
-  Crate.hasMany(CrateStock, {
-    foreignKey: 'crateId',
-    as: 'crateStock',
+  Assembly.belongsToMany(AssemblyCrate, {
+    through: AssemblyCrateAssemblies,
+    foreignKey: 'assemblyId',
+    otherKey: 'assemblyCrateId',
+    as: 'assemblyCrates',
+    onDelete: 'CASCADE',
   })
 }
 
-defineRelationships()
+const assemblyCrateRelationships = () => {
+  AssemblyCrate.belongsTo(Crate, { foreignKey: 'crateId', as: 'crate' })
+  AssemblyCrate.belongsTo(StagingArea, {
+    foreignKey: 'stagingAreaId',
+    as: 'stagingArea',
+  })
+
+  AssemblyCrate.belongsToMany(Assembly, {
+    through: AssemblyCrateAssemblies,
+    foreignKey: 'assemblyCrateId',
+    otherKey: 'assemblyId',
+    as: 'assemblies',
+  })
+}
+
+const assemblyCrateAssembliesRelationships = () => {
+  AssemblyCrateAssemblies.belongsTo(Crate, {
+    foreignKey: 'assemblyCrateId',
+    as: 'assemblyCrate',
+  })
+  AssemblyCrateAssemblies.belongsTo(Assembly, {
+    foreignKey: 'assemblyId',
+    as: 'assembly',
+  })
+}
+
+const assemblyMaterialsRelationships = () => {
+  AssemblyMaterial.belongsTo(Assembly, {
+    foreignKey: 'assemblyId',
+    as: 'assembly',
+  })
+  AssemblyMaterial.belongsTo(Material, {
+    foreignKey: 'materialId',
+    as: 'material',
+  })
+}
+
+const crateRelationships = () => {
+  Crate.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
+  Crate.belongsTo(CrateLocation, {
+    foreignKey: 'crateLocationId',
+    as: 'crateLocation',
+  })
+  Crate.belongsTo(ShelfLocation, {
+    foreignKey: 'shelfLocationId',
+    as: 'shelfLocation',
+  })
+}
+
+const crateLocationRelationships = () => {
+  CrateLocation.hasMany(Crate, {
+    foreignKey: 'crateLocationId',
+    as: 'crates',
+  })
+}
+
+const manufacturerRelationships = () => {
+  Manufacturer.hasMany(Material, {
+    foreignKey: 'manufacturerId',
+    as: 'material',
+  })
+  Manufacturer.hasMany(ReceivedShipment, {
+    foreignKey: 'manufacturerId',
+    as: 'receivedShipments',
+  })
+}
+
+const materialRelationships = () => {
+  Material.hasMany(Stock, { foreignKey: 'materialId', as: 'stock' })
+
+  Material.belongsTo(Manufacturer, {
+    foreignKey: 'manufacturerId',
+    as: 'manufacturer',
+  })
+
+  Material.belongsToMany(Assembly, {
+    through: AssemblyMaterial,
+    foreignKey: 'materialId',
+    otherKey: 'assemblyId',
+    as: 'assemblies',
+  })
+}
+
+const materialCrateRelationships = () => {
+  MaterialCrate.belongsTo(Crate, { foreignKey: 'crateId', as: 'crate' })
+
+  MaterialCrate.belongsToMany(Stock, {
+    through: MaterialCrateStock,
+    foreignKey: 'materialCrateId',
+    otherKey: 'stockId',
+    as: 'stock',
+    onDelete: 'CASCADE',
+  })
+}
+
+const materialCrateStockRelationships = () => {
+  MaterialCrateStock.belongsTo(MaterialCrate, {
+    foreignKey: 'materialCrateId',
+    as: 'materialCrate',
+  })
+  MaterialCrateStock.belongsTo(Stock, {
+    foreignKey: 'stockId',
+    as: 'stock',
+  })
+}
+
+const projectRelationships = () => {
+  Project.hasMany(Assembly, { foreignKey: 'projectId', as: 'assemblies' })
+  Project.hasMany(Crate, { foreignKey: 'projectId', as: 'crates' })
+  Project.hasMany(Shipment, { foreignKey: 'projectId', as: 'shipments' })
+  Project.hasMany(StagingArea, { foreignKey: 'projectId', as: 'stagingAreas' })
+  Project.hasMany(Stock, { foreignKey: 'projectId', as: 'stock' })
+}
+
+const receivedShipmentRelationships = () => {
+  ReceivedShipment.belongsTo(Manufacturer, {
+    foreignKey: 'manufacturerId',
+    as: 'manufacturer',
+  })
+  ReceivedShipment.belongsTo(Shipment, {
+    foreignKey: 'shipmentId',
+    as: 'shipment',
+  })
+
+  ReceivedShipment.hasMany(ReceivedShipmentMaterialCrate, {
+    foreignKey: 'receivedShipmentId',
+    as: 'aeceivedShipmentMaterialCrates',
+  })
+
+  ReceivedShipment.belongsToMany(MaterialCrate, {
+    through: ReceivedShipmentMaterialCrate,
+    foreignKey: 'receivedShipmentId',
+    otherKey: 'materialCrateId',
+    as: 'materialCrates',
+  })
+}
+
+const receivedShipmentMaterialCrateRelationships = () => {
+  ReceivedShipmentMaterialCrate.belongsTo(MaterialCrate, {
+    foreignKey: 'materialCrateId',
+    as: 'materialCrate',
+  })
+  ReceivedShipmentMaterialCrate.belongsTo(ReceivedShipment, {
+    foreignKey: 'receivedShipmentId',
+    as: 'receivedShipment',
+  })
+}
+
+const sentShipmentRelationships = () => {
+  SentShipment.belongsTo(Shipment, {
+    foreignKey: 'shipmentId',
+    as: 'shipment',
+  })
+
+  SentShipment.hasMany(SentShipmentAssemblyCrate, {
+    foreignKey: 'sentShipmentId',
+    as: 'sentShipmentAssemblyCrates',
+  })
+
+  SentShipment.belongsToMany(AssemblyCrate, {
+    through: SentShipmentAssemblyCrate,
+    foreignKey: 'sentShipmentId',
+    otherKey: 'assemblyCrateId',
+    as: 'assemblyCrates',
+  })
+}
+
+const sentShipmentAssemblyCrateRelationships = () => {
+  SentShipmentAssemblyCrate.belongsTo(AssemblyCrate, {
+    foreignKey: 'assemblyCrateId',
+    as: 'assemblyCrate',
+  })
+  SentShipmentAssemblyCrate.belongsTo(SentShipment, {
+    foreignKey: 'sentShipmentId',
+    as: 'sentShipment',
+  })
+}
+
+const shelfLocationRelationships = () => {
+  ShelfLocation.hasMany(Crate, { foreignKey: 'shelfLocationId', as: 'crates' })
+}
+
+const shipmentRelationships = () => {
+  Shipment.hasMany(SentShipment, {
+    foreignKey: 'shipmentId',
+    as: 'sentShipments',
+  })
+  Shipment.hasMany(ReceivedShipment, {
+    foreignKey: 'shipmentId',
+    as: 'receivedShipments',
+  })
+
+  Shipment.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
+}
+
+const stagingAreaRelationships = () => {
+  StagingArea.hasMany(AssemblyCrate, {
+    foreignKey: 'stagingAreaId',
+    as: 'assemblyCrates',
+  })
+
+  StagingArea.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
+}
+
+const stockRelationships = () => {
+  Stock.belongsTo(Material, { foreignKey: 'materialId', as: 'material' })
+  Stock.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
+
+  Stock.belongsToMany(MaterialCrate, {
+    through: MaterialCrateStock,
+    foreignKey: 'stockId',
+    otherKey: 'materialCrateId',
+    as: 'materialCrates',
+    onDelete: 'CASCADE',
+  })
+}
+
+assemblyRelationships()
+assemblyCrateRelationships()
+assemblyMaterialsRelationships()
+crateRelationships()
+assemblyCrateAssembliesRelationships()
+crateLocationRelationships()
+manufacturerRelationships()
+materialRelationships()
+materialCrateRelationships()
+materialCrateStockRelationships()
+projectRelationships()
+receivedShipmentRelationships()
+receivedShipmentMaterialCrateRelationships()
+sentShipmentRelationships()
+sentShipmentAssemblyCrateRelationships()
+shelfLocationRelationships()
+shipmentRelationships()
+stagingAreaRelationships()
+stockRelationships()
 
 export {
-  Storage,
-  Vendor,
-  Material,
-  Project,
-  Shipment,
-  Stock,
+  Assembly,
+  AssemblyCrate,
+  AssemblyMaterial,
   Crate,
-  ShipmentCrate,
-  CrateStock,
+  AssemblyCrateAssemblies,
+  CrateLocation,
+  Manufacturer,
+  Material,
+  MaterialCrate,
+  MaterialCrateStock,
+  Project,
+  ReceivedShipment,
+  ReceivedShipmentMaterialCrate,
+  SentShipment,
+  SentShipmentAssemblyCrate,
+  ShelfLocation,
+  Shipment,
+  StagingArea,
+  Stock,
 }

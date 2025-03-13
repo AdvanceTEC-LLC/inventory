@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppDispatch } from '../store'
+import { AppDispatch, RootState } from '../store'
 import { NotificationStatus, NotificationType } from '../types/notification'
 
 const initialState: NotificationType[] = []
@@ -41,7 +41,7 @@ const notificationsSlice = createSlice({
 export const { showNotification, clearNotification } =
   notificationsSlice.actions
 
-let timeoutIds: Record<number, NodeJS.Timeout> = {}
+const timeoutIds = new Map<number, NodeJS.Timeout>()
 
 export const notifyWithTimeout = (
   notification: {
@@ -54,7 +54,7 @@ export const notifyWithTimeout = (
   },
   timeInSeconds = 5
 ) => {
-  return (dispatch: AppDispatch, getState: Function) => {
+  return (dispatch: AppDispatch, getState: () => RootState) => {
     const id = getState().notifications.length + 1
 
     const notificationWithId = {
@@ -62,14 +62,16 @@ export const notifyWithTimeout = (
       ...notification,
     }
 
-    // Dispatch the notification
     dispatch(showNotification(notificationWithId))
 
-    // Set a new timeout to clear the notification
-    timeoutIds[id] = setTimeout(() => {
-      dispatch(clearNotification(id))
-      delete timeoutIds[id] // Clean up timeout after clearing
-    }, timeInSeconds * 1000)
+    // Store timeout
+    timeoutIds.set(
+      id,
+      setTimeout(() => {
+        dispatch(clearNotification(id))
+        timeoutIds.delete(id) // No ESLint error here
+      }, timeInSeconds * 1000)
+    )
   }
 }
 

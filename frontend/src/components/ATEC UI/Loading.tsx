@@ -1,4 +1,4 @@
-import Body from './ATEC UI/Body'
+import Body from './Body'
 
 const Loading = () => {
   return (

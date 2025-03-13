@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { routes } from './routes'
 import NavLink from './NavLink'
 
@@ -48,11 +47,6 @@ const Nav = () => {
         {sortedLinks.map((link, index) => (
           <NavLink key={index} link={link} />
         ))}
-        <Link to={`/debug`}>
-          <div className="w-full h-full py-2 px-8 md:px-0 hover:bg-white hover:text-atec transition duration-200">
-            Debug
-          </div>
-        </Link>
       </div>
     </div>
   )

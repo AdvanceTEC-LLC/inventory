@@ -7,8 +7,8 @@ describe('example', () => {
     await page.goto('/')
   })
 
-  test(`default 'app' text is shown`, async ({ page }) => {
-    const appText = page.getByText('app')
-    await expect(appText).toBeVisible()
+  test(`default 'Debug' text is shown`, async ({ page }) => {
+    const debugText = page.getByText('Debug')
+    await expect(debugText).toBeVisible()
   })
 })

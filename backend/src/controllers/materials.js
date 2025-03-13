@@ -1,16 +1,21 @@
 import { Router } from 'express'
-import { Material, Vendor } from '../models/index.js'
-import { vendorFindOptions } from './vendors.js'
+import { Material, Manufacturer } from '../models/index.js'
+import { manufacturerFindOptions } from './manufacturers.js'
 import { CustomError } from '../util/errors/CustomError.js'
+import { materialsService } from '../services/materialsService.js'
+import { sequelize } from '../util/db.js'
+import { info } from '../util/logger.js'
 const materialsRouter = Router()
 
 export const materialFindOptions = {
-  attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
+  attributes: {
+    exclude: ['manufacturerId', 'createdAt', 'updatedAt'],
+  },
   include: [
     {
-      model: Vendor,
-      as: 'vendor',
-      ...vendorFindOptions,
+      model: Manufacturer,
+      as: 'manufacturer',
+      ...manufacturerFindOptions,
     },
   ],
 }
@@ -40,54 +45,60 @@ materialsRouter.get('/:id', materialFinder, async (request, response) => {
   response.status(200).send(request.material)
 })
 
-materialsRouter.post('/', async (request, response) => {
-  const {
-    partNumber,
-    description,
-    thickness,
-    width,
-    length,
-    topFinish,
-    bottomFinish,
-    xDimension,
-    cutout,
-    tag,
-    vendorId,
-  } = request.body
+materialsRouter.post('/', async (request, response, next) => {
+  const { manufacturer, name } = request.body
 
-  if (thickness < 0 || width < 0 || length < 0) {
-    throw new CustomError(
-      'BadRequest',
-      'Material cannot have negative dimensions.',
-      400,
+  const transaction = await sequelize.transaction()
+
+  try {
+    const material = await materialsService.create(
+      { ...request.body, manufacturerId: manufacturer },
+      transaction,
     )
+
+    await transaction.commit()
+
+    response.status(201).send(material)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
+})
 
-  const vendorExists = await Vendor.findByPk(vendorId)
+materialsRouter.post('/bulk', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
 
-  if (!vendorExists) {
-    throw new CustomError(
-      'NotFoundError',
-      `Vendor with id ${vendorId} not found`,
-      404,
+  try {
+    const material = await materialsService.bulkCreate(
+      request.body,
+      transaction,
     )
+
+    await transaction.commit()
+
+    response.status(201).send(material)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
+})
 
-  const material = await Material.create({
-    partNumber,
-    description,
-    thickness,
-    width,
-    length,
-    topFinish,
-    bottomFinish,
-    xDimension,
-    cutout,
-    tag,
-    vendorId,
-  })
+materialsRouter.post('/deep', async (request, response, next) => {
+  const transaction = await sequelize.transaction()
 
-  response.status(201).send(material)
+  try {
+    const material = await materialsService.deepCreate(
+      request.body,
+      transaction,
+    )
+
+    await transaction.commit()
+
+    response.status(201).send(material)
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 })
 
 materialsRouter.delete('/:id', materialFinder, async (request, response) => {

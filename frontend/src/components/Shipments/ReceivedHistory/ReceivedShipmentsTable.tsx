@@ -3,6 +3,7 @@ import { paginationModel, pageSizeOptions } from '../../Tables/pagination'
 import {
   manufacturer,
   project as projectColumn,
+  receivedDate,
   trackingNumber,
 } from '../../Tables/Columns/receivedShipments'
 import { useProject } from '../../Projects/Projects/ProjectContext'
@@ -29,8 +30,8 @@ const ReceivedShipmentsTable = () => {
   }
 
   const columns: GridColDef[] = project
-    ? [trackingNumber, manufacturer, actions]
-    : [trackingNumber, projectColumn, manufacturer, actions]
+    ? [trackingNumber, manufacturer, receivedDate, actions]
+    : [trackingNumber, projectColumn, manufacturer, receivedDate, actions]
 
   return (
     <DataGrid

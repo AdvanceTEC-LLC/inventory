@@ -31,7 +31,7 @@ export const delivered: GridColDef = {
 export const sendDate: GridColDef = {
   field: 'sendDate',
   headerName: 'Send Date',
-  flex: 2,
+  flex: 1,
   valueGetter: (_value, row: SentShipmentType) =>
     new Date(row.sendDate).toDateString(),
 }

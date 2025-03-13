@@ -28,7 +28,7 @@ export const manufacturer: GridColDef = {
 export const receivedDate: GridColDef = {
   field: 'receivedDate',
   headerName: 'Received Date',
-  flex: 2,
+  flex: 1,
   valueGetter: (_value, row: ReceivedShipmentType) =>
     new Date(row.receivedDate).toDateString(),
 }

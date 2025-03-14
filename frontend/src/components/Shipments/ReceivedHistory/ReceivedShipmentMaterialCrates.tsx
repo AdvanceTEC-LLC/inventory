@@ -66,7 +66,7 @@ const ReceivedShipmentMaterialCrates = ({
               pageSizeOptions={pageSizeOptions}
             />
           ) : (
-            <p>This shipment had no shipments</p>
+            <p>This shipment had no crates</p>
           )}
         </DialogContent>
         <DialogActions>

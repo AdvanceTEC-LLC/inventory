@@ -1,5 +1,10 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 import { ReceivedShipmentType } from '../types'
+import dayjs from 'dayjs'
+
+const defaultReceivedShipment: ReceivedShipmentType = {
+  receivedDate: dayjs(),
+}
 
 interface ReceivedShipmentContextType {
   receivedShipment: ReceivedShipmentType | undefined
@@ -16,7 +21,7 @@ export const ReceivedShipmentProvider = ({
   children: ReactNode
 }) => {
   const [receivedShipment, setReceivedShipment] =
-    useState<ReceivedShipmentType>()
+    useState<ReceivedShipmentType>(defaultReceivedShipment)
 
   return (
     <ReceivedShipmentContext.Provider

@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs'
 import { AssemblyCrateType } from '../../types/assemblyCrate'
 import { ManufacturerType } from '../../types/manufacturer'
 import { MaterialType } from '../../types/material'
@@ -10,7 +11,7 @@ export interface ShipmentType {
 
 export interface ReceivedShipmentType {
   shipment?: ShipmentType
-  receivedDate?: Date
+  receivedDate?: Dayjs
   manufacturer?: ManufacturerType
   materialCrates?: ReceivedMaterialCrateType[]
 }

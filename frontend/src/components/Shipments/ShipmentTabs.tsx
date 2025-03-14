@@ -2,7 +2,7 @@ import { Tabs, Tab } from '@mui/material'
 import { Stack, Box } from '@mui/system'
 import { useState } from 'react'
 import OutgoingForm from './Outgoing/OutgoingForm'
-import IncomingForm from './Incoming/IncomingForm'
+import ReceivedShipmentForm from './Received Shipment Form/ReceivedShipmentForm'
 import { useShipment } from './ShipmentContext'
 import ReceivedShipmentsTable from './ReceivedHistory/ReceivedShipmentsTable'
 import SentShipmentsTable from './SentHistory/SentShipmentsTable'
@@ -39,7 +39,7 @@ const ShipmentTabs = () => {
       </Box>
 
       {value == 0 && <ReceivedShipmentsTable />}
-      {value == 1 && <IncomingForm />}
+      {value == 1 && <ReceivedShipmentForm />}
       {value == 2 && <SentShipmentsTable />}
       {value == 3 && <OutgoingForm />}
     </Stack>

@@ -54,7 +54,9 @@ const ConfirmButton = () => {
     if (
       !shipment?.trackingNumber ||
       !project ||
-      !receivedShipment?.materialCrates?.length
+      !receivedShipment?.materialCrates?.length ||
+      !receivedShipment.manufacturer ||
+      !receivedShipment.receivedDate
     )
       return
 
@@ -89,8 +91,8 @@ const ConfirmButton = () => {
 
     const newReceivedShipment: NewReceivedShipmentType = {
       shipment: newShipment,
-      manufacturerId: receivedShipment.manufacturer!.id,
-      receivedDate: new Date(),
+      manufacturerId: receivedShipment.manufacturer.id,
+      receivedDate: receivedShipment.receivedDate.toDate(),
       materialCrates,
     }
 

@@ -4,7 +4,7 @@ import { MaterialType } from '../../types/material'
 import { ProjectType } from '../../types/project'
 
 export interface ShipmentType {
-  trackingNumber?: number
+  trackingNumber?: string
   project?: ProjectType
 }
 

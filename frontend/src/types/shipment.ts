@@ -2,7 +2,7 @@ import { ProjectType } from './project'
 
 export interface ShipmentType {
   id: number
-  trackingNumber: number
+  trackingNumber: string
   project: ProjectType
 }
 

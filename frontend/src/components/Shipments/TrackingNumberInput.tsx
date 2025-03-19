@@ -6,8 +6,7 @@ const TrackingNumberInput = () => {
   const { shipment, setShipment } = useShipment()
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.replace(/\D/g, '') // Remove non-numeric characters
-    const trackingNumber = value === '' ? undefined : parseInt(value, 10)
+    const trackingNumber = event.target.value
 
     setShipment({
       ...shipment,

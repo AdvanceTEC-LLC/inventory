@@ -75,7 +75,7 @@ const ConfirmButton = () => {
 
     const newSentShipment: NewSentShipmentType = {
       shipment: newShipment,
-      sendDate: new Date(),
+      sendDate: sentShipment.sendDate ?? new Date(),
       delivered: false,
       assemblyCrates: updatedCrates,
     }

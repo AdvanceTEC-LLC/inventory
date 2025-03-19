@@ -8,7 +8,7 @@ export const up = async ({ context: queryInterface }) => {
       primaryKey: true,
     },
     tracking_number: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },

@@ -6,6 +6,7 @@ import IncomingCrateList from './IncomingCrateList'
 import ManufacturerSelector from './ManufacturerSelector'
 import { ReceivedShipmentProvider } from './ReceivedShipmentContext'
 import ConfirmButton from './ConfirmButton'
+import ReceivedDateInput from './ReceivedDateInput'
 
 const IncomingForm = () => {
   const { project } = useProject()
@@ -18,6 +19,7 @@ const IncomingForm = () => {
         <Stack spacing={2}>
           <TrackingNumberInput />
           <ManufacturerSelector />
+          <ReceivedDateInput />
           <IncomingCrateList />
         </Stack>
         <ConfirmButton />

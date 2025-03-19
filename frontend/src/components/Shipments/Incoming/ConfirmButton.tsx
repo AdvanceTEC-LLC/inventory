@@ -90,7 +90,7 @@ const ConfirmButton = () => {
     const newReceivedShipment: NewReceivedShipmentType = {
       shipment: newShipment,
       manufacturerId: receivedShipment.manufacturer!.id,
-      receivedDate: new Date(),
+      receivedDate: receivedShipment.receivedDate ?? new Date(),
       materialCrates,
     }
 

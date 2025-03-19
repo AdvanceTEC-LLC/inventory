@@ -17,7 +17,7 @@ Shipment.init(
       primaryKey: true,
     },
     trackingNumber: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },

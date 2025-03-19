@@ -5,6 +5,7 @@ import TrackingNumberInput from '../TrackingNumberInput'
 import OutgoingCratesTable from './OutgoingCratesTable'
 import { useProject } from '../../Projects/Projects/ProjectContext'
 import { Subtext } from '../../ATEC UI/Text'
+import SendDateInput from './SendDateInput'
 
 const OutgoingForm = () => {
   const { project } = useProject()
@@ -16,6 +17,7 @@ const OutgoingForm = () => {
       <Stack spacing={2} justifyContent={'space-between'} height={'100%'}>
         <Stack spacing={2}>
           <TrackingNumberInput />
+          <SendDateInput />
           <OutgoingCratesTable />
         </Stack>
         <ConfirmButton />

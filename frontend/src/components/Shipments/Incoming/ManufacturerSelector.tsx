@@ -1,34 +1,42 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { useReceivedShipment } from './ReceivedShipmentContext'
 import { useManufacturers } from '../../../hooks/useManufacturersHook'
-import { ManufacturerType } from '../../../types/manufacturer'
-import { SyntheticEvent } from 'react'
+import { useFormContext, useController } from 'react-hook-form'
+import { ReceivedShipmentType } from '../types'
 
 const ManufacturerSelector = () => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
   const { data: manufacturers = [] } = useManufacturers()
 
   const sortedManufacturers = [...manufacturers].sort((a, b) =>
     a.name.localeCompare(b.name)
   )
 
-  const handleChange = (_: SyntheticEvent, value: ManufacturerType | null) => {
-    setReceivedShipment({
-      ...receivedShipment,
-      manufacturer: value ?? undefined,
-    })
-  }
+  const { control } = useFormContext<ReceivedShipmentType>()
+
+  const {
+    field,
+    fieldState: { error },
+  } = useController<ReceivedShipmentType, 'manufacturer'>({
+    name: 'manufacturer',
+    control,
+  })
 
   return (
     <Autocomplete
       options={sortedManufacturers}
       getOptionLabel={(option) => option.name}
-      value={receivedShipment?.manufacturer ?? null}
-      onChange={(event, value) => {
-        handleChange(event, value)
+      value={field.value ?? null}
+      onChange={(_, newValue) => {
+        field.onChange(newValue)
       }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderInput={(params) => <TextField {...params} label="Manufacturer" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Manufacturer"
+          error={!!error}
+          helperText={error?.message}
+        />
+      )}
     />
   )
 }

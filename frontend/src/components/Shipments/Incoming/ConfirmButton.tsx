@@ -9,15 +9,17 @@ import { NewCrateType } from '../../../types/crate'
 import { NewReceivedShipmentType } from '../../../types/receivedShipment'
 import { NewShipmentType } from '../../../types/shipment'
 import { useReceivedShipment } from './ReceivedShipmentContext'
-import { useShipment } from '../ShipmentContext'
 import { useProject } from '../../Projects/Projects/ProjectContext'
 import { NewMaterialCrateType } from '../../../types/materialCrate'
 import { NewStockType } from '../../../types/stock'
+import { useFormContext } from 'react-hook-form'
+import { ReceivedShipmentType } from './types'
 
 const ConfirmButton = () => {
-  const { shipment } = useShipment()
   const { receivedShipment } = useReceivedShipment()
   const { project } = useProject()
+
+  const { handleSubmit } = useFormContext<ReceivedShipmentType>()
 
   const queryClient = useQueryClient()
   const dispatch: AppDispatch = useDispatch()
@@ -26,11 +28,7 @@ const ConfirmButton = () => {
     mutationFn: (receivedShipment: NewReceivedShipmentType) =>
       receivedShipmentsService.deepCreate(receivedShipment),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['receivedShipments'] })
-      await queryClient.invalidateQueries({ queryKey: ['shipments'] })
-      await queryClient.invalidateQueries({ queryKey: ['materialCrates'] })
-      await queryClient.invalidateQueries({ queryKey: ['crates'] })
-      await queryClient.invalidateQueries({ queryKey: ['stock'] })
+      await queryClient.invalidateQueries()
       dispatch(
         notifyWithTimeout({
           title: 'Success',
@@ -50,13 +48,8 @@ const ConfirmButton = () => {
     },
   })
 
-  const submitReceivedShipment = () => {
-    if (
-      !shipment?.trackingNumber ||
-      !project ||
-      !receivedShipment?.materialCrates?.length
-    )
-      return
+  const onSubmit = (formData: ReceivedShipmentType) => {
+    if (!project || !receivedShipment?.materialCrates?.length) return
 
     const materialCrates: NewMaterialCrateType[] =
       receivedShipment.materialCrates
@@ -83,14 +76,14 @@ const ConfirmButton = () => {
         })
 
     const newShipment: NewShipmentType = {
-      trackingNumber: shipment.trackingNumber,
+      trackingNumber: formData.trackingNumber,
       projectId: project.id,
     }
 
     const newReceivedShipment: NewReceivedShipmentType = {
       shipment: newShipment,
-      manufacturerId: receivedShipment.manufacturer!.id,
-      receivedDate: receivedShipment.receivedDate ?? new Date(),
+      manufacturerId: formData.manufacturer.id,
+      receivedDate: new Date(formData.receivedDate.toISOString()),
       materialCrates,
     }
 
@@ -99,7 +92,9 @@ const ConfirmButton = () => {
 
   return (
     <Button
-      onClick={submitReceivedShipment}
+      onClick={() => {
+        void handleSubmit(onSubmit)
+      }}
       loading={createReceivedShipmentMutation.isPending ? true : null}
     >
       Confirm Shipment

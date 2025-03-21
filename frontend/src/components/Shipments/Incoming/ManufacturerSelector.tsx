@@ -18,7 +18,6 @@ const ManufacturerSelector = () => {
   } = useController<ReceivedShipmentType, 'manufacturer'>({
     name: 'manufacturer',
     control,
-    defaultValue: null,
   })
 
   return (

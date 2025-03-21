@@ -11,7 +11,6 @@ const ReceivedTrackingNumberInput = () => {
   } = useController<ReceivedShipmentType, 'trackingNumber'>({
     name: 'trackingNumber',
     control,
-    defaultValue: '',
   })
 
   return (

@@ -13,13 +13,26 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { ReceivedShipmentType } from './types'
 import { receivedShipmentValidationSchema } from './validationSchema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import dayjs from 'dayjs'
 
 const IncomingForm = () => {
   const { project } = useProject()
 
   const methods = useForm<ReceivedShipmentType>({
     resolver: yupResolver(receivedShipmentValidationSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
+    defaultValues: {
+      trackingNumber: '',
+      manufacturer: null,
+      receivedDate: dayjs(),
+      materialCrates: [
+        {
+          number: '',
+          stock: [{ material: null, quantity: null }],
+          open: true,
+        },
+      ],
+    },
   })
 
   if (!project) return <Subtext text="Select a project" />

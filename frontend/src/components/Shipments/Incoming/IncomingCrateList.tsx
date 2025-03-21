@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
 import IncomingCrate from './IncomingCrate'
-import { Button, Divider, Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { useFormContext, useFieldArray } from 'react-hook-form'
 
 const IncomingCrateList = () => {
@@ -11,13 +10,6 @@ const IncomingCrateList = () => {
     name: 'materialCrates',
   })
 
-  useEffect(() => {
-    // Initialize with first crate if none exists
-    if (fields.length === 0) {
-      addCrate()
-    }
-  }, [append, fields.length])
-
   const addCrate = () => {
     append({
       number: '',
@@ -27,19 +19,14 @@ const IncomingCrateList = () => {
   }
 
   return (
-    <>
-      <Stack spacing={4}>
-        {fields.map((field, index) => (
-          <Stack key={field.id} spacing={2}>
-            <Divider flexItem>Crate {index + 1}</Divider>
-            <IncomingCrate index={index} />
-          </Stack>
-        ))}
-        <Button variant="outlined" onClick={addCrate}>
-          Add Crate
-        </Button>
-      </Stack>
-    </>
+    <Stack spacing={4}>
+      {fields.map((field, index) => (
+        <IncomingCrate key={field.id} index={index} />
+      ))}
+      <Button variant="outlined" onClick={addCrate}>
+        Add Crate
+      </Button>
+    </Stack>
   )
 }
 

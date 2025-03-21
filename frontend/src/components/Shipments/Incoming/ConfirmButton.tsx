@@ -16,6 +16,7 @@ const ConfirmButton = () => {
   const {
     handleSubmit,
     formState: { isValid },
+    reset,
   } = useFormContext<ReceivedShipmentType>()
 
   const createReceivedShipmentMutation = useMutationWithNotifications<
@@ -23,11 +24,12 @@ const ConfirmButton = () => {
     NewReceivedShipmentType
   >({
     mutationFn: receivedShipmentsService.deepCreate,
+    onSuccess: () => {
+      reset()
+    },
   })
 
   const onSubmit = (formData: ReceivedShipmentType) => {
-    console.log('Form Data:', formData)
-
     const materialCrates: NewMaterialCrateType[] = formData.materialCrates
       .filter((crate) => crate.number)
       .map((crate) => {
@@ -53,8 +55,6 @@ const ConfirmButton = () => {
         }
       })
 
-    console.log('Processed material crates:', materialCrates)
-
     const newShipment: NewShipmentType = {
       trackingNumber: formData.trackingNumber,
       projectId: project!.id,
@@ -67,7 +67,6 @@ const ConfirmButton = () => {
       materialCrates,
     }
 
-    console.log('Submitting received shipment:', newReceivedShipment)
     createReceivedShipmentMutation.mutate(newReceivedShipment)
   }
 

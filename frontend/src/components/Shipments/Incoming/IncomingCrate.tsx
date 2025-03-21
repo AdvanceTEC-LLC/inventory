@@ -18,6 +18,9 @@ const IncomingCrate = ({ index }: IncomingCrateProps) => {
 
   const crate = watch(`materialCrates.${index}`)
 
+  // Don't render if crate doesn't exist
+  if (!crate) return null
+
   const toggleOpen = () => {
     update(index, {
       ...crate,
@@ -30,23 +33,26 @@ const IncomingCrate = ({ index }: IncomingCrateProps) => {
   }
 
   return (
-    <Stack spacing={4} direction={{ xs: 'column', md: 'row' }}>
-      <Stack spacing={2} flex={1}>
-        <CrateNumberInput index={index} />
+    <>
+      <Divider flexItem>Crate {index + 1}</Divider>
+      <Stack spacing={4} direction={{ xs: 'column', md: 'row' }}>
+        <Stack spacing={2} flex={1}>
+          <CrateNumberInput index={index} />
 
-        <Stack spacing={2} direction="row">
-          <Button fullWidth onClick={handleRemove}>
-            Remove
-          </Button>
-          <Button fullWidth onClick={toggleOpen}>
-            {crate.open ? 'close' : 'open'}
-          </Button>
+          <Stack spacing={2} direction="row">
+            <Button fullWidth onClick={handleRemove}>
+              Remove
+            </Button>
+            <Button fullWidth onClick={toggleOpen}>
+              {crate.open ? 'close' : 'open'}
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
 
-      <Divider orientation="vertical" flexItem />
-      {crate.open && <IncomingCrateStockList index={index} />}
-    </Stack>
+        <Divider orientation="vertical" flexItem />
+        {crate.open && <IncomingCrateStockList index={index} />}
+      </Stack>
+    </>
   )
 }
 

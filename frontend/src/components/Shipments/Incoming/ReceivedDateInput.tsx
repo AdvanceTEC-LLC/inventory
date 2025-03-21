@@ -14,7 +14,6 @@ const ReceivedDateInput = () => {
   } = useController<ReceivedShipmentType, 'receivedDate'>({
     name: 'receivedDate',
     control,
-    defaultValue: dayjs(),
   })
 
   return (

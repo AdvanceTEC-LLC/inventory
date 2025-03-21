@@ -13,7 +13,7 @@ const IncomingCrateStock = ({
   crateIndex,
   stockIndex,
 }: IncomingCrateStockProps) => {
-  const { control } = useFormContext<{
+  const { control, watch } = useFormContext<{
     materialCrates: CrateType[]
   }>()
 
@@ -21,6 +21,9 @@ const IncomingCrateStock = ({
     name: `materialCrates.${crateIndex}.stock`,
     control,
   })
+
+  const stock = watch(`materialCrates.${crateIndex}.stock.${stockIndex}`)
+  if (!stock) return null
 
   const handleRemove = () => {
     remove(stockIndex)

@@ -7,11 +7,12 @@ import { useStagingAreas } from '../../../hooks/useStagingAreas'
 import { useAssemblyCrates } from '../../../hooks/useAssemblyCratesHook'
 import { useEffect } from 'react'
 import OutgoingCrateContents from './OutgoingCrateContents'
-import { useSentShipment } from './SentShipmentContext'
+import { useFormContext } from 'react-hook-form'
+import { SentShipmentType } from './types'
 
 const OutgoingCratesTable = () => {
   const { project } = useProject()
-  const { sentShipment, setSentShipment } = useSentShipment()
+  const { setValue, watch } = useFormContext<SentShipmentType>()
   const { data: stagingAreas = [] } = useStagingAreas()
   const { data: assemblyCrates = [] } = useAssemblyCrates()
 
@@ -26,30 +27,32 @@ const OutgoingCratesTable = () => {
       !stagingArea ? false : assemblyCrate.stagingArea?.id === stagingArea.id
     )
 
-    setSentShipment({
-      ...sentShipment,
-      assemblyCrates: stagedCrates,
-    })
-  }, [project, stagingAreas, assemblyCrates])
+    setValue('assemblyCrates', stagedCrates)
+  }, [project, stagingAreas, assemblyCrates, setValue])
 
-  const actions: GridColDef = {
-    field: 'actions',
-    headerName: 'Actions',
-    width: 150,
-    renderCell: (params: GridRenderCellParams<AssemblyCrateType>) => (
-      <OutgoingCrateContents assemblyCrate={params.row} />
-    ),
-  }
+  const columns: GridColDef[] = [
+    number,
+    {
+      field: 'contents',
+      headerName: 'Contents',
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<AssemblyCrateType>) => (
+        <OutgoingCrateContents assemblyCrate={params.row} />
+      ),
+    },
+  ]
 
-  const columns: GridColDef[] = [number, actions]
+  const assemblyCratesList = watch('assemblyCrates')
 
   return (
     <DataGrid
-      rows={sentShipment?.assemblyCrates}
+      sx={{
+        border: 0,
+      }}
+      rows={assemblyCratesList}
       columns={columns}
-      initialState={{ pagination: { paginationModel } }}
+      paginationModel={paginationModel}
       pageSizeOptions={pageSizeOptions}
-      sx={{ border: 0 }}
       disableRowSelectionOnClick
     />
   )

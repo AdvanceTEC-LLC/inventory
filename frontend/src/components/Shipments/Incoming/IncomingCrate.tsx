@@ -1,44 +1,38 @@
 import { Button, Divider, Stack } from '@mui/material'
 import CrateNumberInput from './CrateNumberInput'
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import { ReceivedMaterialCrateType } from '../types'
 import IncomingCrateStockList from './IncomingCrateStockList'
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import { CrateType } from './types'
 
 interface IncomingCrateProps {
-  crate: ReceivedMaterialCrateType
+  index: number
 }
 
-const IncomingCrate = ({ crate }: IncomingCrateProps) => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+const IncomingCrate = ({ index }: IncomingCrateProps) => {
+  const { watch } = useFormContext<{
+    materialCrates: CrateType[]
+  }>()
+  const { remove, update } = useFieldArray({
+    name: 'materialCrates',
+  })
+
+  const crate = watch(`materialCrates.${index}`)
 
   const toggleOpen = () => {
-    const updatedCrate = { ...crate, open: !crate.open }
-
-    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
-      c.id === crate.id ? updatedCrate : c
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
+    update(index, {
+      ...crate,
+      open: !crate.open,
     })
   }
 
   const handleRemove = () => {
-    const materialCrates = receivedShipment?.materialCrates?.filter(
-      (c) => c.id !== crate.id
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
-    })
+    remove(index)
   }
 
   return (
     <Stack spacing={4} direction={{ xs: 'column', md: 'row' }}>
       <Stack spacing={2} flex={1}>
-        <CrateNumberInput crate={crate} />
+        <CrateNumberInput index={index} />
 
         <Stack spacing={2} direction="row">
           <Button fullWidth onClick={handleRemove}>
@@ -51,7 +45,7 @@ const IncomingCrate = ({ crate }: IncomingCrateProps) => {
       </Stack>
 
       <Divider orientation="vertical" flexItem />
-      {crate.open && <IncomingCrateStockList crate={crate} />}
+      {crate.open && <IncomingCrateStockList index={index} />}
     </Stack>
   )
 }

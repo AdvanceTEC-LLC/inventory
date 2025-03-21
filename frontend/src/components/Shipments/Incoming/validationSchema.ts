@@ -28,15 +28,13 @@ export const receivedShipmentValidationSchema: ObjectSchema<ReceivedShipmentType
         (value) => dayjs.isDayjs(value) && value.isValid()
       )
       .required('Received date is required'),
-    crates: array()
+    materialCrates: array()
       .of(
         object<CrateType>().shape({
-          id: number().required(),
           number: string().required('Crate number is required'),
           stock: array()
             .of(
               object<StockType>().shape({
-                id: number().required(),
                 material: object<MaterialType>()
                   .shape({
                     id: number().required(),

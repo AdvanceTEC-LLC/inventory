@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from '@mui/material'
 import { useManufacturers } from '../../../hooks/useManufacturersHook'
 import { useFormContext, useController } from 'react-hook-form'
-import { ReceivedShipmentType } from '../types'
+import { ReceivedShipmentType } from './types'
 
 const ManufacturerSelector = () => {
   const { data: manufacturers = [] } = useManufacturers()
@@ -18,6 +18,7 @@ const ManufacturerSelector = () => {
   } = useController<ReceivedShipmentType, 'manufacturer'>({
     name: 'manufacturer',
     control,
+    defaultValue: null,
   })
 
   return (

@@ -1,33 +1,29 @@
 import { Box, Button, Stack } from '@mui/material'
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import { ReceivedMaterialCrateType, StockType } from '../types'
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import { CrateType } from './types'
 import MaterialSelector from './MaterialSelector'
 import QuantityInput from './QuantityInput'
 
 interface IncomingCrateStockProps {
-  crate: ReceivedMaterialCrateType
-  stock: StockType
+  crateIndex: number
+  stockIndex: number
 }
 
-const IncomingCrateStock = ({ crate, stock }: IncomingCrateStockProps) => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+const IncomingCrateStock = ({
+  crateIndex,
+  stockIndex,
+}: IncomingCrateStockProps) => {
+  const { control } = useFormContext<{
+    materialCrates: CrateType[]
+  }>()
+
+  const { remove } = useFieldArray({
+    name: `materialCrates.${crateIndex}.stock`,
+    control,
+  })
 
   const handleRemove = () => {
-    const updatedStock = crate.stock?.filter((s) => s.id !== stock.id)
-
-    const updatedCrate = {
-      ...crate,
-      stock: updatedStock,
-    }
-
-    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
-      c.id === crate.id ? updatedCrate : c
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
-    })
+    remove(stockIndex)
   }
 
   return (
@@ -43,9 +39,9 @@ const IncomingCrateStock = ({ crate, stock }: IncomingCrateStockProps) => {
         direction={{ xs: 'column', md: 'row' }}
       >
         <Box flex={{ xs: 0, md: 3 }}>
-          <MaterialSelector crate={crate} stock={stock} />
+          <MaterialSelector crateIndex={crateIndex} stockIndex={stockIndex} />
         </Box>
-        <QuantityInput crate={crate} stock={stock} />
+        <QuantityInput crateIndex={crateIndex} stockIndex={stockIndex} />
       </Stack>
       <Box>
         <Button onClick={handleRemove}>Remove</Button>

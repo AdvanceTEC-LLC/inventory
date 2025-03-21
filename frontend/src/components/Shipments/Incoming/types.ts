@@ -5,19 +5,17 @@ import { MaterialType } from '../../../types/material'
 export interface ReceivedShipmentType {
   trackingNumber: string
   receivedDate: Dayjs
-  manufacturer: ManufacturerType
-  crates: CrateType[]
+  manufacturer: ManufacturerType | null
+  materialCrates: CrateType[]
 }
 
 export interface CrateType {
-  id: number
   number: string
   stock: StockType[]
   open: boolean
 }
 
 export interface StockType {
-  id: number
   material: MaterialType | null
-  quantity: number
+  quantity: number | null
 }

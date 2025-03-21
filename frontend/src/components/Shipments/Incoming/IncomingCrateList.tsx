@@ -1,52 +1,38 @@
 import { useEffect } from 'react'
 import IncomingCrate from './IncomingCrate'
-import { useReceivedShipment } from './ReceivedShipmentContext'
 import { Button, Divider, Stack } from '@mui/material'
+import { useFormContext, useFieldArray } from 'react-hook-form'
 
 const IncomingCrateList = () => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+  const { control } = useFormContext()
+
+  const { fields, append } = useFieldArray({
+    control,
+    name: 'materialCrates',
+  })
 
   useEffect(() => {
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates: [
-        {
-          id: 0,
-          stock: [{ id: 0 }],
-          open: true,
-        },
-      ],
-    })
-  }, [])
+    // Initialize with first crate if none exists
+    if (fields.length === 0) {
+      addCrate()
+    }
+  }, [append, fields.length])
 
   const addCrate = () => {
-    const id = (receivedShipment?.materialCrates?.length ?? 0) + 1
-
-    const newCrate = {
-      id,
+    append({
       number: '',
-      stock: [{ id: 0 }],
+      stock: [{ material: null, quantity: null }],
       open: true,
-    }
-
-    const materialCrates = [
-      ...(receivedShipment?.materialCrates ?? []),
-      newCrate,
-    ]
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
     })
   }
 
   return (
     <>
       <Stack spacing={4}>
-        {receivedShipment?.materialCrates?.map((crate, index) => (
-          <Stack key={index} spacing={2}>
+        {fields.map((field, index) => (
+          <Stack key={field.id} spacing={2}>
             <Divider flexItem>Crate {index + 1}</Divider>
-            <IncomingCrate crate={crate} />
+            <IncomingCrate index={index} />
           </Stack>
         ))}
         <Button variant="outlined" onClick={addCrate}>

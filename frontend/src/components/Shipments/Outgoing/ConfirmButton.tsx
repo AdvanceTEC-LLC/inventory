@@ -61,7 +61,7 @@ const ConfirmButton = () => {
   return (
     <Button
       onClick={handleSubmit(onSubmit)}
-      disabled={isPending || !isValid}
+      disabled={isPending}
       loading={isPending ? true : null}
     >
       Confirm Shipment

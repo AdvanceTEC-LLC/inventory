@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button } from '@mui/material'
 import receivedShipmentsService from '../../../services/receivedShipmentsService'
 import { NewCrateType } from '../../../types/crate'
@@ -13,11 +14,7 @@ import { useMutationWithNotifications } from '../../../hooks/useMutationWithNoti
 const ConfirmButton = () => {
   const { project } = useProject()
 
-  const {
-    handleSubmit,
-    formState: { isValid },
-    reset,
-  } = useFormContext<ReceivedShipmentType>()
+  const { handleSubmit, reset } = useFormContext<ReceivedShipmentType>()
 
   const createReceivedShipmentMutation = useMutationWithNotifications<
     unknown,
@@ -73,7 +70,7 @@ const ConfirmButton = () => {
   return (
     <Button
       onClick={handleSubmit(onSubmit)}
-      disabled={createReceivedShipmentMutation.isPending || !isValid}
+      disabled={createReceivedShipmentMutation.isPending}
       loading={createReceivedShipmentMutation.isPending ? true : null}
     >
       Confirm Shipment

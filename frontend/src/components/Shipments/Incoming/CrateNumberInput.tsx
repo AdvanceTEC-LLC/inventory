@@ -1,34 +1,33 @@
 import { TextField } from '@mui/material'
-import { ReceivedMaterialCrateType } from '../types'
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import { ChangeEvent } from 'react'
+import { useFormContext, useController } from 'react-hook-form'
+import { CrateType } from './types'
 
 interface CrateNumberInputProps {
-  crate: ReceivedMaterialCrateType
+  index: number
 }
 
-const CrateNumberInput = ({ crate }: CrateNumberInputProps) => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+const CrateNumberInput = ({ index }: CrateNumberInputProps) => {
+  const { control } = useFormContext<{
+    materialCrates: CrateType[]
+  }>()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedCrate = { ...crate, number: event.target.value }
-
-    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
-      c.id === crate.id ? updatedCrate : c
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
-    })
-  }
+  const {
+    field,
+    fieldState: { error },
+  } = useController({
+    name: `materialCrates.${index}.number`,
+    control,
+    defaultValue: '',
+  })
 
   return (
     <TextField
       variant="standard"
       label="Crate Number"
-      value={crate.number ?? ''}
-      onChange={handleChange}
+      value={field.value}
+      onChange={field.onChange}
+      error={!!error}
+      helperText={error?.message}
     />
   )
 }

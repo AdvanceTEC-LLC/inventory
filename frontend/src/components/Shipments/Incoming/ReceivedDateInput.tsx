@@ -1,36 +1,33 @@
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { useController, useFormContext } from 'react-hook-form'
+import { ReceivedShipmentType } from './types'
 
 const ReceivedDateInput = () => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+  const { control } = useFormContext<ReceivedShipmentType>()
 
-  const handleChange = (date: Dayjs | null) => {
-    const receivedDate = date?.isValid()
-      ? new Date(date.toISOString())
-      : undefined
-
-    setReceivedShipment({
-      ...receivedShipment,
-      receivedDate,
-    })
-  }
+  const {
+    field,
+    fieldState: { error },
+  } = useController<ReceivedShipmentType, 'receivedDate'>({
+    name: 'receivedDate',
+    control,
+  })
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label={'Received Date'}
-        value={
-          receivedShipment?.receivedDate
-            ? dayjs(receivedShipment.receivedDate)
-            : null
-        }
-        onChange={handleChange}
+        label="Received Date"
+        value={field.value}
+        onChange={(date) => {
+          field.onChange(date?.isValid() ? date : null)
+        }}
         slotProps={{
           textField: {
-            error: false, // Prevents red border
+            error: !!error,
+            helperText: error?.message,
           },
         }}
       />

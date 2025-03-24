@@ -1,43 +1,37 @@
 import { Button, Stack } from '@mui/material'
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import { ReceivedMaterialCrateType } from '../types'
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import { CrateType } from './types'
 import IncomingCrateStock from './IncomingCrateStock'
 
 interface IncomingCrateStockListProps {
-  crate: ReceivedMaterialCrateType
+  index: number
 }
 
-const IncomingCrateStockList = ({ crate }: IncomingCrateStockListProps) => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+const IncomingCrateStockList = ({ index }: IncomingCrateStockListProps) => {
+  const { control } = useFormContext<{
+    materialCrates: CrateType[]
+  }>()
+
+  const { fields, append } = useFieldArray({
+    name: `materialCrates.${index}.stock`,
+    control,
+  })
 
   const addItem = () => {
-    const id = (crate.stock?.length ?? 0) + 1
-
-    const newStock = {
-      id,
-    }
-
-    const stock = [...(crate.stock ?? []), newStock]
-
-    const updatedCrate = {
-      ...crate,
-      stock,
-    }
-
-    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
-      c.id === crate.id ? updatedCrate : c
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
+    append({
+      material: null,
+      quantity: null,
     })
   }
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      {crate.stock?.map((stock, index) => (
-        <IncomingCrateStock key={index} crate={crate} stock={stock} />
+      {fields.map((field, stockIndex) => (
+        <IncomingCrateStock
+          key={field.id}
+          crateIndex={index}
+          stockIndex={stockIndex}
+        />
       ))}
       <Button fullWidth onClick={addItem}>
         Add Item

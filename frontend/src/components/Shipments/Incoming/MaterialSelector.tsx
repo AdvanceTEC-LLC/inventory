@@ -1,62 +1,62 @@
 import { Autocomplete, TextField } from '@mui/material'
 import { useMaterials } from '../../../hooks/useMaterialsHook'
-import { ReceivedMaterialCrateType, StockType } from '../types'
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import { SyntheticEvent } from 'react'
+import { CrateType } from './types'
+import { useFormContext, useController } from 'react-hook-form'
 import { MaterialType } from '../../../types/material'
+import { ManufacturerType } from '../../../types/manufacturer'
 
 interface MaterialSelectorProps {
-  crate: ReceivedMaterialCrateType
-  stock: StockType
+  crateIndex: number
+  stockIndex: number
 }
 
-const MaterialSelector = ({ crate, stock }: MaterialSelectorProps) => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+const MaterialSelector = ({
+  crateIndex,
+  stockIndex,
+}: MaterialSelectorProps) => {
+  const { control, watch } = useFormContext<{
+    materialCrates: CrateType[]
+    manufacturer: ManufacturerType | null
+  }>()
 
   const { data: materials = [] } = useMaterials()
 
-  const filteredMaterials = materials.filter(
-    (material) =>
-      material.manufacturer.id === receivedShipment?.manufacturer?.id
-  )
+  const manufacturer = watch('manufacturer')
+
+  const {
+    field,
+    fieldState: { error },
+  } = useController({
+    name: `materialCrates.${crateIndex}.stock.${stockIndex}.material`,
+    control,
+    defaultValue: null,
+  })
+
+  const filteredMaterials = manufacturer
+    ? materials.filter(
+        (material) => material.manufacturer.id === manufacturer.id
+      )
+    : []
 
   const sortedMaterials = [...filteredMaterials].sort((a, b) =>
     a.name.localeCompare(b.name)
   )
 
-  const handleChange = (_: SyntheticEvent, value: MaterialType | null) => {
-    const updatedStock = {
-      ...stock,
-      material: value ?? undefined,
-    }
-
-    const updatedCrate = {
-      ...crate,
-      stock: crate.stock?.map((s) => (s.id === stock.id ? updatedStock : s)),
-    }
-
-    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
-      c.id === crate.id ? updatedCrate : c
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
-    })
-  }
-
-  const materialValue = stock.material ?? null
-
   return (
     <Autocomplete
       options={sortedMaterials}
       getOptionLabel={(option) => option.name}
-      value={materialValue}
-      onChange={(event, value) => {
-        handleChange(event, value)
-      }}
+      value={field.value}
+      onChange={(_, value) => field.onChange(value)}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderInput={(params) => <TextField {...params} label="Material" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Material"
+          error={!!error}
+          helperText={error?.message}
+        />
+      )}
     />
   )
 }

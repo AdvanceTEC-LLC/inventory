@@ -1,30 +1,32 @@
-import { useSentShipment } from './SentShipmentContext'
-import dayjs, { Dayjs } from 'dayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { useController, useFormContext } from 'react-hook-form'
+import { SentShipmentType } from './types'
 
 const SendDateInput = () => {
-  const { sentShipment, setSentShipment } = useSentShipment()
+  const { control } = useFormContext<SentShipmentType>()
 
-  const handleChange = (date: Dayjs | null) => {
-    const sendDate = date?.isValid() ? new Date(date.toISOString()) : undefined
-
-    setSentShipment({
-      ...sentShipment,
-      sendDate,
-    })
-  }
+  const {
+    field,
+    fieldState: { error },
+  } = useController<SentShipmentType, 'sendDate'>({
+    name: 'sendDate',
+    control,
+  })
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label={'Send Date'}
-        value={sentShipment?.sendDate ? dayjs(sentShipment.sendDate) : null}
-        onChange={handleChange}
+        label="Send Date"
+        value={field.value}
+        onChange={(date) => {
+          field.onChange(date?.isValid() ? date : null)
+        }}
         slotProps={{
           textField: {
-            error: false, // Prevents red border
+            error: !!error,
+            helperText: error?.message,
           },
         }}
       />

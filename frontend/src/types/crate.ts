@@ -13,7 +13,7 @@ export interface CrateType {
 export interface NewCrateType
   extends Omit<
     CrateType,
-    'id' | 'crateLocation' | 'shelfLocation' | 'project' | 'stock'
+    'id' | 'crateLocation' | 'shelfLocation' | 'project'
   > {
   crateLocationId?: number
   shelfLocationId?: number

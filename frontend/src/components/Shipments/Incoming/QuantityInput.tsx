@@ -1,55 +1,54 @@
 import { InputAdornment, TextField } from '@mui/material'
-import { ReceivedMaterialCrateType, StockType } from '../types'
-import { useReceivedShipment } from './ReceivedShipmentContext'
-import { ChangeEvent } from 'react'
+import { CrateType } from './types'
+import { useFormContext, useController } from 'react-hook-form'
 
 interface QuantityInputProps {
-  crate: ReceivedMaterialCrateType
-  stock: StockType
+  crateIndex: number
+  stockIndex: number
 }
 
-const QuantityInput = ({ crate, stock }: QuantityInputProps) => {
-  const { receivedShipment, setReceivedShipment } = useReceivedShipment()
+const QuantityInput = ({ crateIndex, stockIndex }: QuantityInputProps) => {
+  const { control, watch } = useFormContext<{
+    materialCrates: CrateType[]
+  }>()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const material = watch(
+    `materialCrates.${crateIndex}.stock.${stockIndex}.material`
+  )
+
+  const {
+    field,
+    fieldState: { error },
+  } = useController({
+    name: `materialCrates.${crateIndex}.stock.${stockIndex}.quantity`,
+    control,
+    defaultValue: null,
+  })
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.replace(/\D/g, '') // Remove non-numeric characters
-    const quantity = value === '' ? undefined : parseInt(value, 10)
-
-    const updatedStock = { ...stock, quantity }
-
-    const updatedCrate = {
-      ...crate,
-      stock: crate.stock?.map((s) => (s.id === stock.id ? updatedStock : s)),
-    }
-
-    const materialCrates = receivedShipment?.materialCrates?.map((c) =>
-      c.id === crate.id ? updatedCrate : c
-    )
-
-    setReceivedShipment({
-      ...receivedShipment,
-      materialCrates,
-    })
+    const parsedQuantity = value === '' ? null : parseInt(value, 10)
+    field.onChange(parsedQuantity)
   }
 
   return (
-    <>
-      <TextField
-        variant="standard"
-        label="Quanitity"
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                {stock.material?.unit ?? 'ea'}
-              </InputAdornment>
-            ),
-          },
-        }}
-        value={stock.quantity ?? ''}
-        onChange={handleChange}
-      />
-    </>
+    <TextField
+      variant="standard"
+      label="Quantity"
+      error={!!error}
+      helperText={error?.message}
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              {material?.unit ?? 'ea'}
+            </InputAdornment>
+          ),
+        },
+      }}
+      value={field.value ?? ''}
+      onChange={handleChange}
+    />
   )
 }
 

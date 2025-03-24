@@ -60,7 +60,6 @@ const ConfirmButton = () => {
 
   return (
     <Button
-      variant="outlined"
       onClick={handleSubmit(onSubmit)}
       disabled={isPending || !isValid}
       loading={isPending ? true : null}

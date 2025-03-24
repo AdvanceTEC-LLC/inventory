@@ -10,11 +10,7 @@ import { useMutationWithNotifications } from '../../../hooks/useMutationWithNoti
 
 const ConfirmButton = () => {
   const { project } = useProject()
-  const {
-    handleSubmit,
-    formState: { isValid },
-    reset,
-  } = useFormContext<SentShipmentType>()
+  const { handleSubmit, reset } = useFormContext<SentShipmentType>()
 
   const { data: crateLocations = [] } = useCrateLocations()
   const shippedLocation = crateLocations.find((crateLocation) =>

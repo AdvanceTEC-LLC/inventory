@@ -2,7 +2,6 @@ import { Autocomplete, TextField } from '@mui/material'
 import { useMaterials } from '../../../hooks/useMaterialsHook'
 import { CrateType } from './types'
 import { useFormContext, useController } from 'react-hook-form'
-import { MaterialType } from '../../../types/material'
 import { ManufacturerType } from '../../../types/manufacturer'
 
 interface MaterialSelectorProps {
@@ -47,7 +46,9 @@ const MaterialSelector = ({
       options={sortedMaterials}
       getOptionLabel={(option) => option.name}
       value={field.value}
-      onChange={(_, value) => field.onChange(value)}
+      onChange={(_, value) => {
+        field.onChange(value)
+      }}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField

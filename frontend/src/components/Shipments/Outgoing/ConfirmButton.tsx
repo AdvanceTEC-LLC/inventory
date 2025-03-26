@@ -1,7 +1,6 @@
 import { Button } from '@mui/material'
 import sentShipmentsService from '../../../services/sentShipmentsService'
 import { NewSentShipmentType } from '../../../types/sentShipment'
-import { NewShipmentType } from '../../../types/shipment'
 import { useProject } from '../../Projects/Projects/ProjectContext'
 import { useCrateLocations } from '../../../hooks/useCrateLocationsHook'
 import { useFormContext } from 'react-hook-form'
@@ -32,13 +31,9 @@ const ConfirmButton = () => {
       return
     }
 
-    const newShipment: NewShipmentType = {
-      trackingNumber: data.trackingNumber,
-      projectId: project.id,
-    }
-
     const newSentShipment: NewSentShipmentType = {
-      shipment: newShipment,
+      transmittal: data.transmittal,
+      projectId: project.id,
       sendDate: new Date(data.sendDate.toISOString()),
       delivered: false,
       assemblyCrates: data.assemblyCrates.map((assemblyCrate) => ({

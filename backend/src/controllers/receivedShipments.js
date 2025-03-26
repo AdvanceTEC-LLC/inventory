@@ -1,27 +1,29 @@
 import {
   Manufacturer,
   ReceivedShipment,
-  Shipment,
   MaterialCrate,
+  Project,
 } from '../models/index.js'
 import { receivedShipmentsService } from '../services/receivedShipmentsService.js'
 import createGenericRouter from '../util/genericRouter.js'
 import { manufacturerFindOptions } from './manufacturers.js'
 import { materialCrateFindOptions } from './materialCrates.js'
-import { shipmentFindOptions } from './shipments.js'
+import { projectFindOptions } from './projects.js'
 
 export const receivedShipmentFindOptions = {
-  attributes: { exclude: ['createdAt', 'updatedAt'] },
+  attributes: {
+    exclude: ['manufacturerId', 'projectId', 'createdAt', 'updatedAt'],
+  },
   include: [
-    {
-      model: Shipment,
-      as: 'shipment',
-      ...shipmentFindOptions,
-    },
     {
       model: Manufacturer,
       as: 'manufacturer',
       ...manufacturerFindOptions,
+    },
+    {
+      model: Project,
+      as: 'project',
+      ...projectFindOptions,
     },
     {
       model: MaterialCrate,

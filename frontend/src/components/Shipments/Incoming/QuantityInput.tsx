@@ -33,6 +33,7 @@ const QuantityInput = ({ crateIndex, stockIndex }: QuantityInputProps) => {
 
   return (
     <TextField
+      required
       variant="standard"
       label="Quantity"
       error={!!error}

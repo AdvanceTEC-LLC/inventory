@@ -1,15 +1,15 @@
 import { Stack } from '@mui/material'
 import { Subtext } from '../../ATEC UI/Text'
 import { useProject } from '../../Projects/Projects/ProjectContext'
-import TrackingNumberInput from './SentTrackingNumberInput'
 import OutgoingCratesTable from './OutgoingCratesTable'
-import SendDateInput from './SendDateInput'
 import ConfirmButton from './ConfirmButton'
 import { FormProvider, useForm } from 'react-hook-form'
 import { SentShipmentType } from './types'
 import { outgoingShipmentValidationSchema } from './validationSchema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import dayjs from 'dayjs'
+import StringInput from '../../Inputs/StringInput'
+import DateInput from '../../Inputs/DateInput'
 
 const OutgoingForm = () => {
   const { project } = useProject()
@@ -18,7 +18,7 @@ const OutgoingForm = () => {
     resolver: yupResolver(outgoingShipmentValidationSchema),
     mode: 'onTouched',
     defaultValues: {
-      trackingNumber: '',
+      transmittal: '',
       sendDate: dayjs(),
       assemblyCrates: [],
     },
@@ -30,8 +30,8 @@ const OutgoingForm = () => {
     <FormProvider {...methods}>
       <Stack spacing={2} justifyContent={'space-between'} height={'100%'}>
         <Stack spacing={2}>
-          <TrackingNumberInput />
-          <SendDateInput />
+          <StringInput label="Transmittal" required />
+          <DateInput label="Send Date" required />
           <OutgoingCratesTable />
         </Stack>
         <ConfirmButton />

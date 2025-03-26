@@ -1,7 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Shipment from './shipment.js'
-import Manufacturer from './manufacturer.js'
 
 class ReceivedShipment extends Model {}
 
@@ -12,13 +10,29 @@ ReceivedShipment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    shipmentId: {
+    projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'shipments',
+        model: 'projects',
         key: 'id',
       },
+    },
+    trackingNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    purchaseOrder: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    orderAcknowledgement: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    salesOrder: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     receivedDate: {
       type: DataTypes.DATE,

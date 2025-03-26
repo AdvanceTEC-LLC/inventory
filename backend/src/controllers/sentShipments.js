@@ -1,16 +1,16 @@
-import { AssemblyCrate, SentShipment, Shipment } from '../models/index.js'
-import { shipmentFindOptions } from './shipments.js'
+import { AssemblyCrate, Project, SentShipment } from '../models/index.js'
 import { assemblyCrateFindOptions } from './assemblyCrates.js'
 import createGenericRouter from '../util/genericRouter.js'
 import { sentShipmentsService } from '../services/sentShipmentsService.js'
+import { projectFindOptions } from './projects.js'
 
 export const sentShipmentFindOptions = {
-  attributes: { exclude: ['createdAt', 'updatedAt'] },
+  attributes: { exclude: ['projectId', 'createdAt', 'updatedAt'] },
   include: [
     {
-      model: Shipment,
-      as: 'shipment',
-      ...shipmentFindOptions,
+      model: Project,
+      as: 'project',
+      ...projectFindOptions,
     },
     {
       model: AssemblyCrate,

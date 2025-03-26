@@ -3,7 +3,10 @@ import { ManufacturerType } from '../../../types/manufacturer'
 import { MaterialType } from '../../../types/material'
 
 export interface ReceivedShipmentType {
-  trackingNumber: string
+  trackingNumber?: string
+  purchaseOrder?: string
+  orderAcknowledgement?: string
+  salesOrder?: string
   receivedDate: Dayjs
   manufacturer: ManufacturerType | null
   materialCrates: CrateType[]

@@ -1,16 +1,17 @@
 import { AssemblyCrateType } from './assemblyCrate'
-import { NewShipmentType, ShipmentType } from './shipment'
+import { ProjectType } from './project'
 
 export interface SentShipmentType {
   id: number
-  shipment: ShipmentType
+  project: ProjectType
+  transmittal: string
   sendDate: Date
   delivered: boolean
   assemblyCrates: AssemblyCrateType[]
 }
 
 export interface NewSentShipmentType
-  extends Omit<SentShipmentType, 'id' | 'shipment' | 'assemblyCrates'> {
-  shipment: NewShipmentType | number
+  extends Omit<SentShipmentType, 'id' | 'project' | 'assemblyCrates'> {
+  projectId: number
   assemblyCrates: AssemblyCrateType[]
 }

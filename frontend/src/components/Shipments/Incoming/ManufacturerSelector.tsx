@@ -31,6 +31,7 @@ const ManufacturerSelector = () => {
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
+          required
           {...params}
           label="Manufacturer"
           error={!!error}

@@ -53,9 +53,7 @@ const SentShipmentsAssemblyCrates = ({
         closeAfterTransition={false}
         fullWidth
       >
-        <DialogTitle>
-          Shipment {sentShipment.shipment.trackingNumber} Crates
-        </DialogTitle>
+        <DialogTitle>Shipment {sentShipment.transmittal} Crates</DialogTitle>
         <DialogContent>
           {sentShipment.assemblyCrates.length > 0 ? (
             <DataGrid

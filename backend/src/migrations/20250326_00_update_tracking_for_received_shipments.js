@@ -22,6 +22,10 @@ export const up = async ({ context: queryInterface }) => {
     queryInterface.addColumn('received_shipments', 'project_id', {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: 'projects',
+        key: 'id',
+      },
     }),
   ])
 
@@ -29,6 +33,14 @@ export const up = async ({ context: queryInterface }) => {
     UPDATE received_shipments rs
     SET tracking_number = (
         SELECT s.tracking_number 
+        FROM shipments s
+        WHERE s.id = rs.shipment_id
+    )`)
+
+  await sequelize.query(`
+    UPDATE received_shipments rs
+    SET project_id = (
+        SELECT s.project_id 
         FROM shipments s
         WHERE s.id = rs.shipment_id
     )`)

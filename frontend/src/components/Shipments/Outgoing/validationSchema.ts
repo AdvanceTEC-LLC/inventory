@@ -12,7 +12,7 @@ import dayjs, { Dayjs } from 'dayjs'
 
 export const outgoingShipmentValidationSchema: ObjectSchema<SentShipmentType> =
   object({
-    trackingNumber: string().required('Tracking number is required'),
+    transmittal: string().required('Transmittal is required'),
     sendDate: mixed<Dayjs>()
       .test(
         'is-dayjs',

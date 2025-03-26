@@ -19,8 +19,6 @@ const ReceivedShipmentsTable = () => {
   const { data: receivedShipments = [] } = useReceivedShipments()
   const { project } = useProject()
 
-  console.log(receivedShipments)
-
   const filteredReceivedShipments = receivedShipments.filter(
     (receivedShipments) =>
       !project ? true : receivedShipments.project.id === project.id

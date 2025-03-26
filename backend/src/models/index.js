@@ -14,7 +14,6 @@ import ReceivedShipmentMaterialCrate from './receivedShipmentMaterialCrate.js'
 import SentShipment from './sentShipment.js'
 import SentShipmentAssemblyCrate from './sentShipmentAssemblyCrate.js'
 import ShelfLocation from './shelfLocation.js'
-import Shipment from './shipment.js'
 import StagingArea from './stagingArea.js'
 import Stock from './stock.js'
 
@@ -146,7 +145,6 @@ const materialCrateStockRelationships = () => {
 const projectRelationships = () => {
   Project.hasMany(Assembly, { foreignKey: 'projectId', as: 'assemblies' })
   Project.hasMany(Crate, { foreignKey: 'projectId', as: 'crates' })
-  Project.hasMany(Shipment, { foreignKey: 'projectId', as: 'shipments' })
   Project.hasMany(StagingArea, { foreignKey: 'projectId', as: 'stagingAreas' })
   Project.hasMany(Stock, { foreignKey: 'projectId', as: 'stock' })
 }
@@ -187,9 +185,9 @@ const receivedShipmentMaterialCrateRelationships = () => {
 }
 
 const sentShipmentRelationships = () => {
-  SentShipment.belongsTo(Shipment, {
-    foreignKey: 'shipmentId',
-    as: 'shipment',
+  SentShipment.belongsTo(Project, {
+    foreignKey: 'projectId',
+    as: 'project',
   })
 
   SentShipment.hasMany(SentShipmentAssemblyCrate, {
@@ -218,15 +216,6 @@ const sentShipmentAssemblyCrateRelationships = () => {
 
 const shelfLocationRelationships = () => {
   ShelfLocation.hasMany(Crate, { foreignKey: 'shelfLocationId', as: 'crates' })
-}
-
-const shipmentRelationships = () => {
-  Shipment.hasMany(SentShipment, {
-    foreignKey: 'shipmentId',
-    as: 'sentShipments',
-  })
-
-  Shipment.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
 }
 
 const stagingAreaRelationships = () => {
@@ -267,7 +256,6 @@ receivedShipmentMaterialCrateRelationships()
 sentShipmentRelationships()
 sentShipmentAssemblyCrateRelationships()
 shelfLocationRelationships()
-shipmentRelationships()
 stagingAreaRelationships()
 stockRelationships()
 
@@ -288,7 +276,6 @@ export {
   SentShipment,
   SentShipmentAssemblyCrate,
   ShelfLocation,
-  Shipment,
   StagingArea,
   Stock,
 }

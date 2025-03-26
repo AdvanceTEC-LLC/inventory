@@ -1,49 +1,30 @@
-import { Tabs, Tab } from '@mui/material'
-import { Stack, Box } from '@mui/system'
-import { useState } from 'react'
-import OutgoingForm from './Outgoing/OutgoingForm'
 import IncomingForm from './Incoming/IncomingForm'
-import { useShipment } from './ShipmentContext'
+import OutgoingForm from './Outgoing/OutgoingForm'
 import ReceivedShipmentsTable from './ReceivedHistory/ReceivedShipmentsTable'
 import SentShipmentsTable from './SentHistory/SentShipmentsTable'
+import TabSelector from '../TabSelector'
 
-const ShipmentTabs = () => {
-  const { shipment, setShipment } = useShipment()
+export const ShipmentTabs = () => {
+  const shipmentTabs = [
+    {
+      label: 'Received History',
+      component: <ReceivedShipmentsTable />,
+    },
+    {
+      label: 'Receiving Form',
+      component: <IncomingForm />,
+    },
+    {
+      label: 'Sent History',
+      component: <SentShipmentsTable />,
+    },
+    {
+      label: 'Sending Form',
+      component: <OutgoingForm />,
+    },
+  ]
 
-  const [value, setValue] = useState(0)
-
-  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-
-    setShipment({
-      ...shipment,
-      trackingNumber: undefined,
-    })
-  }
-
-  return (
-    <Stack flex={3} spacing={4}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="project tabs"
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          <Tab label="Received History" />
-          <Tab label="Receiving Form" />
-          <Tab label="Sent History" />
-          <Tab label="Sending Form" />
-        </Tabs>
-      </Box>
-
-      {value == 0 && <ReceivedShipmentsTable />}
-      {value == 1 && <IncomingForm />}
-      {value == 2 && <SentShipmentsTable />}
-      {value == 3 && <OutgoingForm />}
-    </Stack>
-  )
+  return <TabSelector tabs={shipmentTabs} />
 }
 
 export default ShipmentTabs

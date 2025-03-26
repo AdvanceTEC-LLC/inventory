@@ -4,7 +4,7 @@ import {
   delivered,
   project as projectColumn,
   sendDate,
-  trackingNumber,
+  transmittal,
 } from '../../Tables/Columns/sentShipments'
 import { useProject } from '../../Projects/Projects/ProjectContext'
 import { SentShipmentType } from '../../../types/sentShipment'
@@ -16,7 +16,7 @@ const SentShipmentsTable = () => {
   const { project } = useProject()
 
   const filteredSentShipments = sentShipments.filter((sentShipments) =>
-    !project ? true : sentShipments.shipment.project.id === project.id
+    !project ? true : sentShipments.project.id === project.id
   )
 
   const actions: GridColDef = {
@@ -29,8 +29,8 @@ const SentShipmentsTable = () => {
   }
 
   const columns: GridColDef[] = project
-    ? [trackingNumber, delivered, sendDate, actions]
-    : [trackingNumber, projectColumn, delivered, sendDate, actions]
+    ? [transmittal, delivered, sendDate, actions]
+    : [transmittal, projectColumn, delivered, sendDate, actions]
 
   return (
     <DataGrid

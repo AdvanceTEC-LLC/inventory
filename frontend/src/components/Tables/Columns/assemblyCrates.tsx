@@ -59,7 +59,7 @@ export const status: GridColDef = {
   valueGetter: (_value, row: AssemblyCrateType) => {
     if (row.assemblies.length <= 0) return 'Empty'
     if (row.assemblies.every((assembly) => assembly.prefabricated))
-      return 'Filled'
+      return 'Holding'
     if (row.assemblies.every((assembly) => !assembly.prefabricated))
       return 'Pending'
     if (row.assemblies.some((assembly) => !assembly.prefabricated))

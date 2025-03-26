@@ -3,11 +3,11 @@ import { SentShipmentType } from '../../../types/sentShipment'
 import CheckIcon from '@mui/icons-material/Check'
 import ClearIcon from '@mui/icons-material/Clear'
 
-export const trackingNumber: GridColDef = {
-  field: 'trackingNumber',
-  headerName: 'Tracking Number',
+export const transmittal: GridColDef = {
+  field: 'transmittal',
+  headerName: 'Transmittal',
   flex: 1,
-  valueGetter: (_value, row: SentShipmentType) => row.shipment.trackingNumber,
+  valueGetter: (_value, row: SentShipmentType) => row.transmittal,
 }
 
 export const project: GridColDef = {
@@ -15,7 +15,7 @@ export const project: GridColDef = {
   headerName: 'Project',
   flex: 2,
   valueGetter: (_value, row: SentShipmentType) => {
-    return `${row.shipment.project.number} ${row.shipment.project.name}`
+    return `${row.project.number} ${row.project.name}`
   },
 }
 
@@ -36,4 +36,4 @@ export const sendDate: GridColDef = {
     new Date(row.sendDate).toDateString(),
 }
 
-export const columns: GridColDef[] = [trackingNumber, project]
+export const columns: GridColDef[] = [transmittal, project]

@@ -156,10 +156,6 @@ const receivedShipmentRelationships = () => {
     foreignKey: 'manufacturerId',
     as: 'manufacturer',
   })
-  ReceivedShipment.belongsTo(Shipment, {
-    foreignKey: 'shipmentId',
-    as: 'shipment',
-  })
 
   ReceivedShipment.hasMany(ReceivedShipmentMaterialCrate, {
     foreignKey: 'receivedShipmentId',
@@ -182,6 +178,11 @@ const receivedShipmentMaterialCrateRelationships = () => {
   ReceivedShipmentMaterialCrate.belongsTo(ReceivedShipment, {
     foreignKey: 'receivedShipmentId',
     as: 'receivedShipment',
+  })
+
+  ReceivedShipment.belongsTo(Project, {
+    foreignKey: 'projectId',
+    as: 'project',
   })
 }
 
@@ -223,10 +224,6 @@ const shipmentRelationships = () => {
   Shipment.hasMany(SentShipment, {
     foreignKey: 'shipmentId',
     as: 'sentShipments',
-  })
-  Shipment.hasMany(ReceivedShipment, {
-    foreignKey: 'shipmentId',
-    as: 'receivedShipments',
   })
 
   Shipment.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })

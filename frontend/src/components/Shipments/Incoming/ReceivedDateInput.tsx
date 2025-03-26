@@ -25,6 +25,7 @@ const ReceivedDateInput = () => {
         }}
         slotProps={{
           textField: {
+            required: true,
             error: !!error,
             helperText: error?.message,
           },

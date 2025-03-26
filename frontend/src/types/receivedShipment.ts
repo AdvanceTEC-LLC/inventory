@@ -1,10 +1,14 @@
 import { ManufacturerType } from './manufacturer'
 import { MaterialCrateType, NewMaterialCrateType } from './materialCrate'
-import { NewShipmentType, ShipmentType } from './shipment'
+import { ProjectType } from './project'
 
 export interface ReceivedShipmentType {
   id: number
-  shipment: ShipmentType
+  project: ProjectType
+  trackingNumber: string
+  orderAcknowledgement: string
+  purchaseOrder: string
+  salesOrder: string
   receivedDate: Date
   manufacturer: ManufacturerType
   materialCrates: MaterialCrateType[]
@@ -13,9 +17,20 @@ export interface ReceivedShipmentType {
 export interface NewReceivedShipmentType
   extends Omit<
     ReceivedShipmentType,
-    'id' | 'shipment' | 'manufacturer' | 'materialCrates'
+    | 'id'
+    | 'project'
+    | 'trackingNumber'
+    | 'orderAcknowledgement'
+    | 'purchaseOrder'
+    | 'salesOrder'
+    | 'manufacturer'
+    | 'materialCrates'
   > {
-  shipment: NewShipmentType
+  projectId: number
+  trackingNumber?: string
+  orderAcknowledgement?: string
+  purchaseOrder?: string
+  salesOrder?: string
   manufacturerId: number
   materialCrates: NewMaterialCrateType[]
 }

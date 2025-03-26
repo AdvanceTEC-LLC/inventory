@@ -3,7 +3,7 @@ import { Subtext } from '../../ATEC UI/Text'
 
 import { useProject } from '../../Projects/Projects/ProjectContext'
 
-import ReceivedTrackingNumberInput from './ReceivedTrackingNumberInput'
+//import ReceivedTrackingNumberInput from './ReceivedTrackingNumberInput'
 import ManufacturerSelector from './ManufacturerSelector'
 import ReceivedDateInput from './ReceivedDateInput'
 import IncomingCrateList from './IncomingCrateList'
@@ -14,6 +14,7 @@ import { ReceivedShipmentType } from './types'
 import { receivedShipmentValidationSchema } from './validationSchema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import dayjs from 'dayjs'
+import TrackingInputs from './TrackingOptions'
 
 const IncomingForm = () => {
   const { project } = useProject()
@@ -23,6 +24,9 @@ const IncomingForm = () => {
     mode: 'onTouched',
     defaultValues: {
       trackingNumber: '',
+      purchaseOrder: '',
+      orderAcknowledgement: '',
+      salesOrder: '',
       manufacturer: null,
       receivedDate: dayjs(),
       materialCrates: [
@@ -41,7 +45,8 @@ const IncomingForm = () => {
     <FormProvider {...methods}>
       <Stack spacing={2} justifyContent={'space-between'} height={'100%'}>
         <Stack spacing={2}>
-          <ReceivedTrackingNumberInput />
+          <TrackingInputs />
+          {/*<ReceivedTrackingNumberInput />*/}
           <ManufacturerSelector />
           <ReceivedDateInput />
           <IncomingCrateList />

@@ -22,6 +22,7 @@ const CrateNumberInput = ({ index }: CrateNumberInputProps) => {
 
   return (
     <TextField
+      required
       variant="standard"
       label="Crate Number"
       value={field.value}

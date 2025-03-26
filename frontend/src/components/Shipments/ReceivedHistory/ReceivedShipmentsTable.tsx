@@ -1,9 +1,13 @@
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { paginationModel, pageSizeOptions } from '../../Tables/pagination'
 import {
+  id,
   manufacturer,
+  orderAcknowledgement,
   project as projectColumn,
+  purchaseOrder,
   receivedDate,
+  salesOrder,
   trackingNumber,
 } from '../../Tables/Columns/receivedShipments'
 import { useProject } from '../../Projects/Projects/ProjectContext'
@@ -15,9 +19,11 @@ const ReceivedShipmentsTable = () => {
   const { data: receivedShipments = [] } = useReceivedShipments()
   const { project } = useProject()
 
+  console.log(receivedShipments)
+
   const filteredReceivedShipments = receivedShipments.filter(
     (receivedShipments) =>
-      !project ? true : receivedShipments.shipment.project.id === project.id
+      !project ? true : receivedShipments.project.id === project.id
   )
 
   const actions: GridColDef = {
@@ -30,8 +36,27 @@ const ReceivedShipmentsTable = () => {
   }
 
   const columns: GridColDef[] = project
-    ? [trackingNumber, manufacturer, receivedDate, actions]
-    : [trackingNumber, projectColumn, manufacturer, receivedDate, actions]
+    ? [
+        id,
+        trackingNumber,
+        orderAcknowledgement,
+        purchaseOrder,
+        salesOrder,
+        manufacturer,
+        receivedDate,
+        actions,
+      ]
+    : [
+        id,
+        trackingNumber,
+        orderAcknowledgement,
+        purchaseOrder,
+        salesOrder,
+        projectColumn,
+        manufacturer,
+        receivedDate,
+        actions,
+      ]
 
   return (
     <DataGrid

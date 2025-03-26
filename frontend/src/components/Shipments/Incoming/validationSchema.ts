@@ -14,7 +14,10 @@ import dayjs, { Dayjs } from 'dayjs'
 
 export const receivedShipmentValidationSchema: ObjectSchema<ReceivedShipmentType> =
   object({
-    trackingNumber: string().required('Tracking number is required'),
+    trackingNumber: string().optional(),
+    purchaseOrder: string().optional(),
+    orderAcknowledgement: string().optional(),
+    salesOrder: string().optional(),
     manufacturer: object<ManufacturerType>()
       .shape({
         id: number().required(),

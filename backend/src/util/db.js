@@ -34,6 +34,7 @@ export const connectToDatabase = async () => {
 const migrationConf = {
   migrations: {
     glob: 'src/migrations/*.js',
+    transactionMode: 'all',
   },
   storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
   context: sequelize.getQueryInterface(),

@@ -4,13 +4,18 @@ const generateShelfLocations = () => {
   const shelfLocations = []
 
   const addLocations = (aisleRange, colCount, shelfCount) => {
+    // Function to convert number to column letter
+    const numberToColumnLetter = (number) => {
+      return String.fromCharCode(64 + number) // 65 is 'A' in ASCII, so 64 + 1 = 'A', 64 + 2 = 'B', etc.
+    }
+
     for (const aisle of aisleRange) {
       for (let col = 1; col <= colCount; col++) {
         for (let shelf = 1; shelf <= shelfCount; shelf++) {
           shelfLocations.push({
             side: 'A'.trim(),
             aisle,
-            col: col.toString().trim(), // Convert col to string for consistency
+            col: numberToColumnLetter(col),
             shelf,
             created_at: new Date(),
             updated_at: new Date(),

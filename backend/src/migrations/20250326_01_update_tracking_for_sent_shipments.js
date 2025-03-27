@@ -25,7 +25,7 @@ export const up = async ({ context: queryInterface }) => {
     )`)
 
   await sequelize.query(`
-    UPDATE received_shipments ss
+    UPDATE sent_shipments ss
     SET project_id = (
         SELECT s.project_id 
         FROM shipments s

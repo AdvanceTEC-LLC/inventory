@@ -4,7 +4,6 @@ import cors from 'cors'
 import 'express-async-errors'
 import middleware from './util/middleware.js'
 import { error as _error } from './util/logger.js'
-import 'express-async-errors'
 
 import assembliesRouter from './controllers/assemblies.js'
 import assemblyCratesRouter from './controllers/assemblyCrates.js'

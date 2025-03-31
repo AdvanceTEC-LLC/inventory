@@ -1,10 +1,9 @@
 import { Router } from 'express'
 import { StagingArea, Project } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
 import { projectFindOptions } from './projects.js'
 import { stagingAreasService } from '../services/stagingAreasService.js'
 import { sequelize } from '../util/db.js'
-import { info } from '../util/logger.js'
+
 const stagingAreasRouter = Router()
 
 export const stagingAreaFindOptions = {
@@ -25,11 +24,7 @@ const stagingAreaFinder = async (request, _response, next) => {
   const stagingArea = await StagingArea.findByPk(id, stagingAreaFindOptions)
 
   if (!stagingArea) {
-    throw new CustomError(
-      'NotFoundError',
-      `Staging area with id ${id} not found`,
-      404,
-    )
+    throw new NotFoundError('Staging area', id)
   }
   request.stagingArea = stagingArea
   next()
@@ -51,11 +46,7 @@ stagingAreasRouter.post('/', async (request, response) => {
   const projectInDb = await Project.findByPk(projectId)
 
   if (!projectInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Project with id ${projectId} not found`,
-      404,
-    )
+    throw new NotFoundError('Project', projectId)
   }
 
   const stagingArea = await StagingArea.create({

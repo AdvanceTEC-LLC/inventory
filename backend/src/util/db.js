@@ -49,6 +49,7 @@ export const runMigrations = async () => {
       files: migrations.map((mig) => mig.name),
     })
   }
+  info('migrations complete')
 }
 
 export const rollbackMigration = async () => {

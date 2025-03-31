@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { sequelize } from './db.js'
-import { CustomError } from './errors/CustomError.js'
+import NotFoundError from './errors/NotFoundError.js'
 
 const createGenericRouter = ({ model, service, findOptions = {} }) => {
   const router = Router()
@@ -11,11 +11,7 @@ const createGenericRouter = ({ model, service, findOptions = {} }) => {
     const entity = await model.findByPk(id, findOptions)
 
     if (!entity) {
-      throw new CustomError(
-        'NotFoundError',
-        `${model.name} with id ${id} not found`,
-        404,
-      )
+      throw new NotFoundError(model.name, id)
     }
 
     request.entity = entity
@@ -61,6 +57,41 @@ const createGenericRouter = ({ model, service, findOptions = {} }) => {
     })
   }
 
+  // POST: Bulk create (if applicable)
+  if (service.bulkCreate) {
+    router.post('/bulk/', async (request, response, next) => {
+      const transaction = await sequelize.transaction()
+      try {
+        const entity = await service.bulkCreate(request.body, transaction)
+        await transaction.commit()
+        response.status(201).send(entity)
+      } catch (error) {
+        await transaction.rollback()
+        next(error)
+      }
+    })
+  }
+
+  if (service.update) {
+    router.put('/:id/', async (request, response, next) => {
+      const { id } = request.params
+
+      const transaction = await sequelize.transaction()
+      try {
+        const updatedEntities = await service.update(
+          id,
+          request.body,
+          transaction,
+        )
+        await transaction.commit()
+        response.status(200).send(updatedEntities)
+      } catch (error) {
+        await transaction.rollback()
+        next(error)
+      }
+    })
+  }
+
   // PUT: Bulk update
   if (service.bulkUpdate) {
     router.put('/bulk/', async (request, response, next) => {
@@ -71,7 +102,7 @@ const createGenericRouter = ({ model, service, findOptions = {} }) => {
           transaction,
         )
         await transaction.commit()
-        response.status(201).send(updatedEntities)
+        response.status(200).send(updatedEntities)
       } catch (error) {
         await transaction.rollback()
         next(error)

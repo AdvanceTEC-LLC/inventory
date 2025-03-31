@@ -7,11 +7,7 @@ const find = async (stockId, transaction) => {
   const stockInDb = await Stock.findByPk(stockId, { transaction })
 
   if (!stockInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Stock with id ${stockId} not found`,
-      404,
-    )
+    throw new NotFoundError('Stock', stockId)
   }
 
   return stockInDb

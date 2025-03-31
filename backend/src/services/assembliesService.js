@@ -10,11 +10,7 @@ const find = async (assemblyId, transaction) => {
   })
 
   if (!assemblyInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Assembly with id ${assemblyId} not found.`,
-      404,
-    )
+    throw new NotFoundError('Assembly', assemblyId)
   }
 
   return assemblyInDb

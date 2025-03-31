@@ -1,5 +1,4 @@
 import { Shipment } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 import { projectsService } from './projectsService.js'
 
@@ -10,10 +9,10 @@ const validateTrackingNumber = async (trackingNumber, transaction) => {
   })
 
   if (shipment) {
-    throw new CustomError(
-      'ValidationError',
-      `Shipment with tracking number ${shipment.trackingNumber} already exists.`,
-      400,
+    throw new UniqueConstraintError(
+      'Shipment',
+      'tracking number',
+      shipment.trackingNumber,
     )
   }
 }
@@ -24,11 +23,7 @@ const find = async (shipmentId, transaction) => {
   })
 
   if (!shipmentInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Shipment with id ${shipmentId} not found`,
-      404,
-    )
+    throw new NotFoundError('Shipment', shipmentId)
   }
 
   return shipmentInDb

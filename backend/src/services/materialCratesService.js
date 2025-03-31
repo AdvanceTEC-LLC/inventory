@@ -11,11 +11,7 @@ const find = async (materialCrateId, transaction) => {
   })
 
   if (!materialCrateInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Material crate with id ${materialCrateId} not found`,
-      404,
-    )
+    throw new NotFoundError('Material crate', materialCrateId)
   }
 
   return materialCrateInDb

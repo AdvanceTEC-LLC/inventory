@@ -1,5 +1,4 @@
 import { AssemblyCrate } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 import { assembliesService } from './assembliesService.js'
 import { assemblyCrateAssembliesService } from './assemblyCratesAssembliesService.js'
@@ -14,11 +13,7 @@ const find = async (assemblyCrateId, transaction) => {
   })
 
   if (!assemblyCrateInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `AssemblyCrate with id ${assemblyCrateId} not found.`,
-      404,
-    )
+    throw new NotFoundError('AssemblyCrate', assemblyCrateId)
   }
 
   return assemblyCrateInDb
@@ -44,10 +39,8 @@ const update = async (assemblyCrate, transaction) => {
     stagingAreaId = stagingArea.id
 
     if (stagingArea.project && crate.project.id !== stagingArea.project.id) {
-      throw new CustomError(
-        'ValidationError',
+      throw new ValidationError(
         'Cannot move crates from different projects into the same staging area',
-        400,
       )
     }
   }

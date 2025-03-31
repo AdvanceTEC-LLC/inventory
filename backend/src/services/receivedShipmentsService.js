@@ -1,5 +1,4 @@
 import { ReceivedShipment } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 import { manufacturersService } from './manufacturersService.js'
 import { materialCratesService } from './materialCratesService.js'
@@ -10,7 +9,7 @@ const parseReceivedDate = (receivedDate) => {
   const parsedReceivedDate = new Date(receivedDate)
 
   if (receivedDate !== null && isNaN(parsedReceivedDate.getTime())) {
-    throw new CustomError('ValidationError', 'Received date is invalid.', 400)
+    throw new ValidationError('Received date is invalid')
   }
 
   return parsedReceivedDate
@@ -27,11 +26,7 @@ const find = async (receivedShipmentId, transaction) => {
   )
 
   if (!receivedShipmentInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Received shipment with id ${receivedShipmentId} not found.`,
-      404,
-    )
+    throw new NotFoundError('Received shipment', receivedShipmentId)
   }
 
   return receivedShipmentInDb

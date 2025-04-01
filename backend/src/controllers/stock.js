@@ -1,5 +1,5 @@
 import { Material, Project, Stock } from '../models/index.js'
-import { materialFindOptions } from './materials.js'
+import { materialFindOptions } from './material.controller.js'
 import { projectFindOptions } from './projects.js'
 import { stockService } from '../services/stockService.js'
 import createGenericRouter from '../util/genericRouter.js'

@@ -6,9 +6,9 @@ export const getAllManufacturers = async (req, res) => {
   res.json(Manufacturers)
 }
 
-export const getManufacturerById = async (req, res) => {
+export const getManufacturer = async (req, res) => {
   const { id } = req.params
-  const manufacturer = await manufacturerService.getManufacturerById(id)
+  const manufacturer = await manufacturerService.getManufacturer(id)
   res.status(200).json(manufacturer)
 }
 

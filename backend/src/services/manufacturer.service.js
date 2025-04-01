@@ -33,7 +33,7 @@ const getAllManufacturers = async () => {
   return manufacturer
 }
 
-const getManufacturerById = async (id) => {
+const getManufacturer = async (id) => {
   const manufacturer = await Manufacturer.findByPk(id, manufacturerFindOptions)
 
   if (!manufacturer) {
@@ -64,13 +64,13 @@ const createManufacturer = async (data, transaction) => {
 const updateManufacturer = async (id, data, transaction) => {
   await validateName(data.name)
 
-  const manufacturer = await getManufacturerById(id)
+  const manufacturer = await getManufacturer(id)
 
   return await manufacturer.update(data, { transaction })
 }
 
 const deleteManufacturer = async (id, transaction) => {
-  const manufacturer = await getManufacturerById(id, transaction)
+  const manufacturer = await getManufacturer(id, transaction)
 
   return await manufacturer.destroy({ transaction })
 }
@@ -98,7 +98,7 @@ export const manufacturerService = {
   updateManufacturer,
   deleteManufacturer,
   deleteAllManufacturers,
-  getManufacturerById,
+  getManufacturer,
   getManufacturerByName,
   createBulkManufacturers,
 }

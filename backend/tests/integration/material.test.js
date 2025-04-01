@@ -62,7 +62,12 @@ describe('Materials API', () => {
     })
 
     test('returns 400 for invalid data', async () => {
-      const response = await api.post('/api/materials', { name: null }, 400)
+      const manufacturer = await createTestManufacturer()
+      const response = await api.post(
+        '/api/materials',
+        { name: null, manufacturerId: manufacturer.id, unit: 'each' },
+        400,
+      )
       expectMissingRequiredError(response, 'Material', 'name')
     })
 

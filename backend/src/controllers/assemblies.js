@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { Assembly, Material, Project } from '../models/index.js'
 import { projectFindOptions } from './projects.js'
-import { materialFindOptions } from './materials.js'
+import { materialFindOptions } from './material.controller.js'
 import { sequelize } from '../util/db.js'
 import { assembliesService } from '../services/assembliesService.js'
 

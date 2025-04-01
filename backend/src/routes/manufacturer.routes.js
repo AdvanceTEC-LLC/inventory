@@ -3,7 +3,7 @@ import {
   getAllManufacturers,
   createManufacturer,
   deleteAllManufacturers,
-  getManufacturerById,
+  getManufacturer,
   updateManufacturer,
   deleteManufacturer,
   getManufacturerByName,
@@ -20,12 +20,12 @@ router
 
 router
   .route('/:id')
-  .get(getManufacturerById)
+  .get(getManufacturer)
   .put(updateManufacturer)
   .delete(deleteManufacturer)
 
 router.route('/:name').get(getManufacturerByName)
 
-router.route('/bulk/').post(createBulkManufacturers)
+router.route('/bulk').post(createBulkManufacturers)
 
 export default router

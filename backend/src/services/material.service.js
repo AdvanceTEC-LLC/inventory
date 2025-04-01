@@ -1,5 +1,5 @@
 import { Manufacturer, Material } from '../models/index.js'
-import { info } from '../util/logger.js'
+import { trace } from '../util/logger.js'
 import {
   manufacturerFindOptions,
   manufacturerService,
@@ -25,6 +25,8 @@ export const materialFindOptions = {
 }
 
 const validateMaterials = async (materials) => {
+  trace()
+
   if (!Array.isArray(materials) || materials.length === 0) {
     throw new ValidationError('Materials must be a non-empty array')
   }
@@ -38,7 +40,8 @@ const validateMaterials = async (materials) => {
 }
 
 const validateMaterial = async (material) => {
-  info('ENTERING MATERIAL VALIDATE')
+  trace()
+
   if (material === undefined || material === null) {
     throw new MissingRequiredError('Material', 'material', 'is required')
   } else if (typeof material !== 'object')
@@ -58,7 +61,8 @@ const validateMaterial = async (material) => {
 }
 
 const validateName = async (name) => {
-  info('ENTERING MATERIAL VALIDATE NAME')
+  trace()
+
   if (name === undefined || name === null) {
     throw new MissingRequiredError('Material', 'name', 'is required')
   } else if (typeof name !== 'string')
@@ -71,7 +75,8 @@ const validateName = async (name) => {
 }
 
 const validateManufacturer = async (manufacturerId) => {
-  info('ENTERING MATERIAL VALIDATE MANUFACTURER')
+  trace()
+
   if (manufacturerId === undefined || manufacturerId === null) {
     throw new MissingRequiredError('Material', 'manufacturerId', 'is required')
   }
@@ -95,7 +100,8 @@ const validateManufacturer = async (manufacturerId) => {
 }
 
 const validateUnit = async (unit) => {
-  info('ENTERING MATERIAL VALIDATE UNIT')
+  trace()
+
   if (unit === undefined || unit === null) {
     throw new MissingRequiredError('Material', 'unit', 'is required')
   } else if (typeof unit !== 'string')
@@ -106,6 +112,8 @@ const validateUnit = async (unit) => {
 }
 
 const getAllMaterials = async () => {
+  trace()
+
   const material = await Material.findAll(materialFindOptions)
 
   if (!material) {
@@ -116,6 +124,8 @@ const getAllMaterials = async () => {
 }
 
 const getMaterial = async (id) => {
+  trace()
+
   const material = await Material.findByPk(id, materialFindOptions)
 
   if (!material) {
@@ -126,7 +136,8 @@ const getMaterial = async (id) => {
 }
 
 const createMaterial = async (data, transaction) => {
-  info('ENTERING MATERIAL CREATE')
+  trace()
+
   await validateMaterial(data)
 
   const material = await Material.create(data, {
@@ -137,6 +148,8 @@ const createMaterial = async (data, transaction) => {
 }
 
 const createDeepMaterial = async (data, transaction) => {
+  trace()
+
   const manufacturerInDb = await manufacturerService.create(data, transaction)
 
   const material = await createMaterial(
@@ -150,7 +163,8 @@ const createDeepMaterial = async (data, transaction) => {
 }
 
 const createBulkMaterials = async (data, transaction) => {
-  info('ENTERING MATERIAL BULK CREATE')
+  trace()
+
   await validateMaterials(data)
 
   const materials = await Material.bulkCreate(data, {
@@ -161,6 +175,8 @@ const createBulkMaterials = async (data, transaction) => {
 }
 
 const updateMaterial = async (id, data, transaction) => {
+  trace()
+
   await validateName(data.name)
 
   const material = await getMaterial(id)
@@ -169,12 +185,16 @@ const updateMaterial = async (id, data, transaction) => {
 }
 
 const deleteMaterial = async (id, transaction) => {
+  trace()
+
   const material = await getMaterial(id, transaction)
 
   return await material.destroy({ transaction })
 }
 
 const deleteAllMaterials = async (transaction) => {
+  trace()
+
   return await Material.destroy({ where: {}, transaction })
 }
 

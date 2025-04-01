@@ -12,7 +12,6 @@ import assemblyCrateAssembliesRouter from './controllers/assemblyCrateAssemblies
 import cratesRouter from './controllers/crates.js'
 import crateLocationsRouter from './controllers/crateLocations.js'
 import materialCrateStockRouter from './controllers/materialCrateStock.js'
-import manufacturersRouter from './controllers/manufacturers.js'
 import materialsRouter from './controllers/materials.js'
 import materialCratesRouter from './controllers/materialCrates.js'
 import projectsRouter from './controllers/projects.js'
@@ -22,6 +21,8 @@ import shelfLocationsRouter from './controllers/shelfLocations.js'
 import shipmentsRouter from './controllers/shipments.js'
 import stagingAreasRouter from './controllers/stagingAreas.js'
 import stockRouter from './controllers/stock.js'
+
+import routes from './routes/index.js'
 
 app.use(cors())
 app.use(express.static('dist'))
@@ -39,7 +40,6 @@ app.use('/api/assemblyMaterials', assemblyMaterialsRouter)
 app.use('/api/crates', cratesRouter)
 app.use('/api/crateLocations', crateLocationsRouter)
 app.use('/api/materialCrateStock', materialCrateStockRouter)
-app.use('/api/manufacturers', manufacturersRouter)
 app.use('/api/materials', materialsRouter)
 app.use('/api/materialCrates', materialCratesRouter)
 app.use('/api/projects', projectsRouter)
@@ -49,6 +49,7 @@ app.use('/api/shelfLocations', shelfLocationsRouter)
 app.use('/api/shipments', shipmentsRouter)
 app.use('/api/stagingAreas', stagingAreasRouter)
 app.use('/api/stock', stockRouter)
+app.use('/api', routes)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

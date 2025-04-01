@@ -6,7 +6,7 @@ import {
 } from '../models/index.js'
 import { receivedShipmentsService } from '../services/receivedShipmentsService.js'
 import createGenericRouter from '../util/genericRouter.js'
-import { manufacturerFindOptions } from './manufacturers.js'
+import { manufacturerFindOptions } from '../services/manufacturer.service.js'
 import { materialCrateFindOptions } from './materialCrates.js'
 import { shipmentFindOptions } from './shipments.js'
 

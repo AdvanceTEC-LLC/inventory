@@ -2,7 +2,7 @@ import { Manufacturer, Material } from '../models/index.js'
 import MissingRequiredError from '../util/errors/MissingRequiredError.js'
 import ValidationError from '../util/errors/ValidationError.js'
 import { info } from '../util/logger.js'
-import { manufacturersService } from './manufacturersService.js'
+import { manufacturersService } from './manufacturer.service.js'
 import NotFoundError from '../util/errors/NotFoundError.js'
 import UniqueConstraintError from '../util/errors/UniqueConstraintError.js'
 

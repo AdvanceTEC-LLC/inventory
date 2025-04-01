@@ -1,6 +1,6 @@
 import { ReceivedShipment } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { manufacturersService } from './manufacturersService.js'
+import { manufacturersService } from './manufacturer.service.js'
 import { materialCratesService } from './materialCratesService.js'
 import { receivedShipmentMaterialCratesService } from './receivedShipmentMaterialCratesService.js'
 import { shipmentsService } from './shipmentsService.js'

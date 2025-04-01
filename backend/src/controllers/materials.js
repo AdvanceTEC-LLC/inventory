@@ -1,5 +1,5 @@
 import { Material, Manufacturer } from '../models/index.js'
-import { manufacturerFindOptions } from './manufacturers.js'
+import { manufacturerFindOptions } from '../services/manufacturer.service.js'
 import { materialsService } from '../services/materialsService.js'
 import createGenericRouter from '../util/genericRouter.js'
 

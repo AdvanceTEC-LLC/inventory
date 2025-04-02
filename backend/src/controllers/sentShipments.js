@@ -2,7 +2,7 @@ import { AssemblyCrate, Project, SentShipment } from '../models/index.js'
 import { assemblyCrateFindOptions } from './assemblyCrates.js'
 import createGenericRouter from '../util/genericRouter.js'
 import { sentShipmentsService } from '../services/sentShipmentsService.js'
-import { projectFindOptions } from './projects.js'
+import { projectService } from '../services/index.js'
 
 export const sentShipmentFindOptions = {
   attributes: { exclude: ['projectId', 'createdAt', 'updatedAt'] },
@@ -10,7 +10,7 @@ export const sentShipmentFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
     {
       model: AssemblyCrate,

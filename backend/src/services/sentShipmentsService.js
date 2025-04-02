@@ -1,7 +1,7 @@
 import SentShipment from '../models/sentShipment.js'
 import { info } from '../util/logger.js'
 import { assemblyCratesService } from './assemblyCratesService.js'
-import { projectsService } from './projectsService.js'
+import { projectService } from './index.js'
 import { sentShipmentAssemblyCratesService } from './sentShipmentAssemblyCratesService.js'
 import { NotFoundError, ValidationError } from '../util/errors/index.js'
 
@@ -37,7 +37,7 @@ const create = async (sentShipment, transaction) => {
 
   const parsedSendDate = parseSendDate(sendDate)
 
-  await projectsService.find(projectId, transaction)
+  await projectService.find(projectId, transaction)
 
   const sentShipmentInDb = await SentShipment.create(
     {

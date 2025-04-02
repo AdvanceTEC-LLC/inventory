@@ -51,7 +51,7 @@ const create = async (receivedShipment, transaction) => {
 
   const parsedReceivedDate = parseReceivedDate(receivedDate)
 
-  await manufacturerService.find(manufacturerId, transaction)
+  await manufacturerService.get(manufacturerId)
 
   const receivedShipmentInDb = await ReceivedShipment.create(
     {

@@ -8,7 +8,7 @@ import { receivedShipmentsService } from '../services/receivedShipmentsService.j
 import createGenericRouter from '../util/genericRouter.js'
 import { manufacturerService } from '../services/index.js'
 import { materialCrateFindOptions } from './materialCrates.js'
-import { projectFindOptions } from './projects.js'
+import { projectService } from '../services/index.js'
 
 export const receivedShipmentFindOptions = {
   attributes: {
@@ -23,7 +23,7 @@ export const receivedShipmentFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
     {
       model: MaterialCrate,

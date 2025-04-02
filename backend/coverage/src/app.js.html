@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96% </span>
+                <span class="strong">95.55% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>48/50</span>
+                <span class='fraction'>43/45</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96% </span>
+                <span class="strong">95.55% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/50</span>
+                <span class='fraction'>43/45</span>
             </div>
         
             
@@ -115,12 +115,7 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -140,8 +135,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -153,8 +147,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -180,7 +172,6 @@ const app = express()
 import cors from 'cors'
 import 'express-async-errors'
 import middleware from './util/middleware.js'
-import { error as _error } from './util/logger.js'
 &nbsp;
 import assembliesRouter from './controllers/assemblies.js'
 import assemblyCratesRouter from './controllers/assemblyCrates.js'
@@ -189,10 +180,7 @@ import assemblyCrateAssembliesRouter from './controllers/assemblyCrateAssemblies
 import cratesRouter from './controllers/crates.js'
 import crateLocationsRouter from './controllers/crateLocations.js'
 import materialCrateStockRouter from './controllers/materialCrateStock.js'
-import manufacturersRouter from './controllers/manufacturers.js'
-import materialsRouter from './controllers/materials.js'
 import materialCratesRouter from './controllers/materialCrates.js'
-import projectsRouter from './controllers/projects.js'
 import receivedShipmentsRouter from './controllers/receivedShipments.js'
 import sentShipmentsRouter from './controllers/sentShipments.js'
 import shelfLocationsRouter from './controllers/shelfLocations.js'
@@ -200,12 +188,14 @@ import shipmentsRouter from './controllers/shipments.js'
 import stagingAreasRouter from './controllers/stagingAreas.js'
 import stockRouter from './controllers/stock.js'
 &nbsp;
+import routes from './routes/index.js'
+&nbsp;
 app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 &nbsp;
-app.get('/api/health', (req, res) =&gt; {
+app.get('/api/health', (_req, res) =&gt; {
 <span class="cstat-no" title="statement not covered" >  res.send('ok')</span>
 <span class="cstat-no" title="statement not covered" >})</span>
 &nbsp;
@@ -216,16 +206,14 @@ app.use('/api/assemblyMaterials', assemblyMaterialsRouter)
 app.use('/api/crates', cratesRouter)
 app.use('/api/crateLocations', crateLocationsRouter)
 app.use('/api/materialCrateStock', materialCrateStockRouter)
-app.use('/api/manufacturers', manufacturersRouter)
-app.use('/api/materials', materialsRouter)
 app.use('/api/materialCrates', materialCratesRouter)
-app.use('/api/projects', projectsRouter)
 app.use('/api/receivedShipments', receivedShipmentsRouter)
 app.use('/api/sentShipments', sentShipmentsRouter)
 app.use('/api/shelfLocations', shelfLocationsRouter)
 app.use('/api/shipments', shipmentsRouter)
 app.use('/api/stagingAreas', stagingAreasRouter)
 app.use('/api/stock', stockRouter)
+app.use('/api', routes)
 &nbsp;
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
@@ -238,7 +226,7 @@ export default app
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-31T19:23:24.996Z
+                at 2025-04-02T20:28:12.338Z
             </div>
         <script src="../prettify.js"></script>
         <script>

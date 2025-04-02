@@ -1,13 +1,24 @@
-import { info } from '../../src/util/logger'
-
-export const expectValidationError = (response, message) => {
-  info('Validating error response:', response.body)
-  expect(response.status).toBe(400)
-  expect(response.body).toHaveProperty('error')
-  expect(response.body.error).toMatch(/ValidationError/i)
-  expect(response.body).toHaveProperty('message')
-  info('Validating error message:', response.body.error.message)
-  expect(response.body.message).toMatch(new RegExp(message, 'i'))
+export const expectValidationError = (
+  response,
+  modelName,
+  expectedErrors = [],
+) => {
+  const { status, body } = response
+  expect(status).toBe(400)
+  expect(body).toHaveProperty('error')
+  expect(body.error).toMatch(/ValidationError/i)
+  expect(body).toHaveProperty('message')
+  expect(body.message).toMatch(
+    new RegExp(`${modelName} validation failed`, 'i'),
+  )
+  expect(body).toHaveProperty('errors')
+  expect(Array.isArray(body.errors)).toBe(true)
+  if (expectedErrors.length > 0) {
+    expect(body.errors).toHaveLength(expectedErrors.length)
+    expectedErrors.forEach((expectedError, index) => {
+      expect(body.errors[index]).toMatch(new RegExp(expectedError, 'i'))
+    })
+  }
 }
 
 export const expectNotFoundError = (
@@ -21,23 +32,5 @@ export const expectNotFoundError = (
   expect(response.body).toHaveProperty('message')
   expect(response.body.message).toMatch(
     new RegExp(`${resource} with id ${id} not found`, 'i'),
-  )
-}
-
-export const expectMissingRequiredError = (
-  response,
-  resource = 'Resource',
-  field = 'field',
-  requirements = null,
-) => {
-  expect(response.status).toBe(400)
-  expect(response.body).toHaveProperty('error')
-  expect(response.body.error).toMatch(/MissingRequiredError/i)
-  expect(response.body).toHaveProperty('message')
-  expect(response.body.message).toMatch(
-    new RegExp(
-      `${resource} ${field} is required${requirements ? ` and ${requirements}` : ''}`,
-      'i',
-    ),
   )
 }

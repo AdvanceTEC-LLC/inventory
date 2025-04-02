@@ -1,7 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Project from './project.js'
-import Crate from './crate.js'
 
 class StagingArea extends Model {}
 

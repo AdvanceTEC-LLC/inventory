@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach } from 'vitest'
+import { afterAll, beforeEach } from 'vitest'
 import { runMigrations, sequelize } from '../src/util/db.js'
 import logger from '../src/util/logger.js'
 

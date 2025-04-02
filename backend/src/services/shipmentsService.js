@@ -1,6 +1,7 @@
 import { Shipment } from '../models/index.js'
 import { info } from '../util/logger.js'
 import { projectService } from './index.js'
+import { NotFoundError, UniqueConstraintError } from '../util/errors/index.js'
 
 const validateTrackingNumber = async (trackingNumber, transaction) => {
   const shipment = await Shipment.findOne({

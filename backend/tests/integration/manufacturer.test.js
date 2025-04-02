@@ -2,7 +2,7 @@ import { test, describe, expect } from 'vitest'
 import { createTestManufacturer } from '../utils/testUtils'
 import api from '../utils/apiHelper'
 import {
-  expectMissingRequiredError,
+  expectValidationError,
   expectNotFoundError,
 } from '../utils/expectErrors'
 
@@ -44,7 +44,9 @@ describe('Manufacturers API', () => {
 
     test('returns 400 for invalid data', async () => {
       const response = await api.post('/api/manufacturers', { name: null }, 400)
-      expectMissingRequiredError(response, 'Manufacturer', 'name')
+      expectValidationError(response, 'Manufacturer', [
+        'Manufacturer name is required',
+      ])
     })
   })
 
@@ -72,7 +74,9 @@ describe('Manufacturers API', () => {
         { name: null },
         400,
       )
-      expectMissingRequiredError(response, 'Manufacturer', 'name')
+      expectValidationError(response, 'Manufacturer', [
+        'Manufacturer name is required',
+      ])
     })
   })
 

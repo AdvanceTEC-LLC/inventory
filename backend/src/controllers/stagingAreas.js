@@ -3,6 +3,7 @@ import { StagingArea, Project } from '../models/index.js'
 import { projectService } from '../services/index.js'
 import { stagingAreasService } from '../services/stagingAreasService.js'
 import { sequelize } from '../util/db.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const stagingAreasRouter = Router()
 

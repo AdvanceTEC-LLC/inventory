@@ -1,10 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect } from 'vitest'
 import api from '../utils/apiHelper.js'
 import { createTestProject } from '../utils/testUtils.js'
 import {
-  expectMissingRequiredError,
-  expectNotFoundError,
   expectValidationError,
+  expectNotFoundError,
 } from '../utils/expectErrors.js'
 
 describe('projects API', () => {
@@ -47,7 +46,7 @@ describe('projects API', () => {
         },
         400,
       )
-      expectMissingRequiredError(response, 'Project', 'name')
+      expectValidationError(response, 'Project', ['Project name is required'])
     })
 
     test('creates new project', async () => {

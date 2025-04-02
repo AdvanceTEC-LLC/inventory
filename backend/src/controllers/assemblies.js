@@ -4,6 +4,7 @@ import { projectService } from '../services/index.js'
 import { materialService } from '../services/index.js'
 import { sequelize } from '../util/db.js'
 import { assembliesService } from '../services/assembliesService.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const assembliesRouter = Router()
 
@@ -73,7 +74,7 @@ assembliesRouter.get('/:id', assemblyFinder, async (request, response) => {
   response.status(200).send(request.assembly)
 })
 
-assembliesRouter.post('/', async (request, response, next) => {
+assembliesRouter.post('/', async (request, response) => {
   const { code, type, projectId, prefabricated } = request.body
 
   const projectInDb = await Project.findByPk(projectId)

@@ -1,5 +1,4 @@
-import { expect } from 'vitest'
-import logger, { info, error } from '../../src/util/logger.js'
+import { info, error } from '../../src/util/logger.js'
 import { sequelize } from '../../src/util/db.js'
 
 let manufacturerCount = 0
@@ -10,7 +9,6 @@ export const clearDatabase = async () => {
   try {
     // Get all table names
     const tables = await sequelize.query(
-      // eslint-disable-next-line quotes
       "SELECT tablename FROM pg_tables WHERE schemaname = 'public'",
       { type: sequelize.QueryTypes.SELECT },
     )

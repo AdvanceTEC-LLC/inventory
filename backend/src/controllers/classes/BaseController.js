@@ -1,5 +1,5 @@
 import { sequelize } from '../../util/db.js'
-import { info, trace } from '../../util/logger.js'
+import { trace } from '../../util/logger.js'
 
 class BaseController {
   constructor(service) {

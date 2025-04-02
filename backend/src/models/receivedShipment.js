@@ -1,7 +1,5 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-import Shipment from './shipment.js'
-import Manufacturer from './manufacturer.js'
 
 class ReceivedShipment extends Model {}
 

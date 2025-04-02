@@ -79,7 +79,7 @@ const bulkCreate = async (stagingAreas, transaction) => {
 }
 
 const deepCreate = async (stagingArea, transaction) => {
-  const { name, project } = stagingArea
+  const { project } = stagingArea
 
   const projectInDb = await projectService.create(project, transaction)
 

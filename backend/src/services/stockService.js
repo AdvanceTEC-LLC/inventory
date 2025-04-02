@@ -1,6 +1,7 @@
 import { Stock } from '../models/index.js'
 import { info } from '../util/logger.js'
 import { materialService, projectService } from './index.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const find = async (stockId, transaction) => {
   const stockInDb = await Stock.findByPk(stockId, { transaction })

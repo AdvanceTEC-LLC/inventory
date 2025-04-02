@@ -53,7 +53,7 @@ class BaseService {
     return await this.Model.destroy({ where: {}, transaction })
   }
 
-  async validate(data) {
+  async validate(schema, data) {
     trace()
 
     if (data === undefined || data === null) {
@@ -64,6 +64,22 @@ class BaseService {
       throw new ValidationError(`${this.Model.name} must not be an array`)
     else if (Object.keys(data).length === 0)
       throw new ValidationError(`${this.Model.name} must not be empty`)
+
+    try {
+      await schema.validate(data, { abortEarly: false })
+    } catch (error) {
+      const modelName = `${this.Model.name.charAt(0).toUpperCase() + this.Model.name.slice(1)}`
+
+      // Transform Yup errors into structured validation errors
+      const validationErrors = error.inner.map(
+        ({ message }) => `${modelName} ${message}`,
+      )
+
+      throw new ValidationError(
+        `${modelName} validation failed`,
+        validationErrors,
+      )
+    }
   }
 
   async validateArray(array) {

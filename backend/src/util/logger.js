@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const logInfo = true
 const logError = true
 const logTrace = true

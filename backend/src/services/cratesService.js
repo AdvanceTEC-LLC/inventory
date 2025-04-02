@@ -4,6 +4,7 @@ import { shelfLocationsService } from './shelfLocationsService.js'
 import { crateLocationsService } from './crateLocationsService.js'
 import { materialCratesService } from './materialCratesService.js'
 import { info } from '../util/logger.js'
+import { NotFoundError, UniqueConstraintError } from '../util/errors/index.js'
 
 const validateCrateNumber = async (number, transaction) => {
   info('ENTERING VALIDATE CRATE NUMBER')
@@ -107,7 +108,6 @@ const deepCreate = async (crate, transaction) => {
       ...crate,
       crateLocationId,
       shelfLocationId,
-      stagingAreaId,
       projectId: projectInDb.id,
     },
     transaction,

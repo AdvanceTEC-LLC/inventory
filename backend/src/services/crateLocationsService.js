@@ -1,5 +1,6 @@
 import { CrateLocation } from '../models/index.js'
 import { info } from '../util/logger.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const findMaterialCrateDefault = async (transaction) => {
   info('ENTERING CRATE LOCATION FIND MATERIAL CRATE DEFAULT')

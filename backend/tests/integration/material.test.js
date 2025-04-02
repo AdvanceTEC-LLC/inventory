@@ -4,7 +4,6 @@ import api from '../utils/apiHelper'
 import {
   expectValidationError,
   expectNotFoundError,
-  expectMissingRequiredError,
 } from '../utils/expectErrors'
 import { info } from '../../src/util/logger'
 
@@ -68,7 +67,7 @@ describe('Materials API', () => {
         { name: null, manufacturerId: manufacturer.id, unit: 'each' },
         400,
       )
-      expectMissingRequiredError(response, 'Material', 'name')
+      expectValidationError(response, 'Material', ['Material name is required'])
     })
 
     test('returns 400 for non-existent manufacturer', async () => {
@@ -82,10 +81,9 @@ describe('Materials API', () => {
         },
         400,
       )
-      expectValidationError(
-        response,
-        `Manufacturer with id ${manufacturerId} does not exist`,
-      )
+      expectValidationError(response, 'Material', [
+        `Manufacturer does not exist`,
+      ])
     })
   })
 
@@ -108,7 +106,10 @@ describe('Materials API', () => {
         [{ name: null, manufacturerId: 1, unit: 'each' }],
         400,
       )
-      expectMissingRequiredError(response, 'Material', 'name')
+      expectValidationError(response, 'Material', [
+        'Material name is required',
+        'Manufacturer does not exist',
+      ])
     })
   })
 

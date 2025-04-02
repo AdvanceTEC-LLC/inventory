@@ -3,7 +3,6 @@ const app = express()
 import cors from 'cors'
 import 'express-async-errors'
 import middleware from './util/middleware.js'
-import { error as _error } from './util/logger.js'
 
 import assembliesRouter from './controllers/assemblies.js'
 import assemblyCratesRouter from './controllers/assemblyCrates.js'
@@ -27,7 +26,7 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (_req, res) => {
   res.send('ok')
 })
 

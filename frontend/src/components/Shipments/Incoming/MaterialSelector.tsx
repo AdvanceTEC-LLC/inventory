@@ -53,6 +53,7 @@ const MaterialSelector = ({
       renderInput={(params) => (
         <TextField
           {...params}
+          required
           label="Material"
           error={!!error}
           helperText={error?.message}

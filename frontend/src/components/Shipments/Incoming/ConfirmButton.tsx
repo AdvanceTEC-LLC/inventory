@@ -3,7 +3,6 @@ import { Button } from '@mui/material'
 import receivedShipmentsService from '../../../services/receivedShipmentsService'
 import { NewCrateType } from '../../../types/crate'
 import { NewReceivedShipmentType } from '../../../types/receivedShipment'
-import { NewShipmentType } from '../../../types/shipment'
 import { useProject } from '../../Projects/Projects/ProjectContext'
 import { NewMaterialCrateType } from '../../../types/materialCrate'
 import { NewStockType } from '../../../types/stock'
@@ -52,13 +51,12 @@ const ConfirmButton = () => {
         }
       })
 
-    const newShipment: NewShipmentType = {
-      trackingNumber: formData.trackingNumber,
-      projectId: project!.id,
-    }
-
     const newReceivedShipment: NewReceivedShipmentType = {
-      shipment: newShipment,
+      projectId: project!.id,
+      trackingNumber: formData.trackingNumber,
+      purchaseOrder: formData.purchaseOrder,
+      salesOrder: formData.salesOrder,
+      orderAcknowledgement: formData.orderAcknowledgement,
       manufacturerId: formData.manufacturer!.id,
       receivedDate: new Date(formData.receivedDate.toISOString()),
       materialCrates,

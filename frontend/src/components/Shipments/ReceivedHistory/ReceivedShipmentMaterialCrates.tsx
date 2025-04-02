@@ -54,7 +54,7 @@ const ReceivedShipmentMaterialCrates = ({
         fullWidth
       >
         <DialogTitle>
-          Shipment {receivedShipment.shipment.trackingNumber} Crates
+          Shipment {receivedShipment.trackingNumber} Crates
         </DialogTitle>
         <DialogContent>
           {receivedShipment.materialCrates.length > 0 ? (

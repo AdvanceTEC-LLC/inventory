@@ -10,13 +10,17 @@ SentShipment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    shipmentId: {
+    projectId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'shipments',
+        model: 'projects',
         key: 'id',
       },
+    },
+    transmittal: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     sendDate: {
       type: DataTypes.DATE,

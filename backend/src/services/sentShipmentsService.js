@@ -1,8 +1,8 @@
 import SentShipment from '../models/sentShipment.js'
 import { info } from '../util/logger.js'
 import { assemblyCratesService } from './assemblyCratesService.js'
+import { projectsService } from './projectsService.js'
 import { sentShipmentAssemblyCratesService } from './sentShipmentAssemblyCratesService.js'
-import { shipmentsService } from './shipmentsService.js'
 import { NotFoundError, ValidationError } from '../util/errors/index.js'
 
 const parseSendDate = (sendDate) => {
@@ -33,15 +33,16 @@ const find = async (sentShipmentId, transaction) => {
 const create = async (sentShipment, transaction) => {
   info('ENTERING SENT SHIPMENT CREATE')
 
-  const { shipmentId, sendDate } = sentShipment
+  const { transmittal, projectId, sendDate } = sentShipment
 
   const parsedSendDate = parseSendDate(sendDate)
 
-  await shipmentsService.find(shipmentId, transaction)
+  await projectsService.find(projectId, transaction)
 
   const sentShipmentInDb = await SentShipment.create(
     {
-      shipmentId,
+      transmittal,
+      projectId,
       sendDate: parsedSendDate,
     },
     { transaction },
@@ -52,14 +53,9 @@ const create = async (sentShipment, transaction) => {
 
 const deepCreate = async (sentShipment, transaction) => {
   info('ENTERING SENT SHIPMENT DEEP CREATE')
-  const { shipment, assemblyCrates } = sentShipment
+  const { assemblyCrates } = sentShipment
 
-  const shipmentInDb = await shipmentsService.create(shipment, transaction)
-
-  const sentShipmentInDb = await create(
-    { ...sentShipment, shipmentId: shipmentInDb.id },
-    transaction,
-  )
+  const sentShipmentInDb = await create(sentShipment, transaction)
 
   await Promise.all(
     assemblyCrates.map(async (assemblyCrate) => {

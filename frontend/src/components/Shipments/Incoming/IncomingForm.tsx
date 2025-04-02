@@ -1,19 +1,16 @@
 import { Stack } from '@mui/material'
 import { Subtext } from '../../ATEC UI/Text'
-
 import { useProject } from '../../Projects/Projects/ProjectContext'
-
-import ReceivedTrackingNumberInput from './ReceivedTrackingNumberInput'
 import ManufacturerSelector from './ManufacturerSelector'
-import ReceivedDateInput from './ReceivedDateInput'
 import IncomingCrateList from './IncomingCrateList'
 import ConfirmButton from './ConfirmButton'
-
 import { FormProvider, useForm } from 'react-hook-form'
 import { ReceivedShipmentType } from './types'
 import { receivedShipmentValidationSchema } from './validationSchema'
 import { yupResolver } from '@hookform/resolvers/yup'
 import dayjs from 'dayjs'
+import TrackingInputs from './TrackingOptions'
+import DateInput from '../../Inputs/DateInput'
 
 const IncomingForm = () => {
   const { project } = useProject()
@@ -23,6 +20,9 @@ const IncomingForm = () => {
     mode: 'onTouched',
     defaultValues: {
       trackingNumber: '',
+      purchaseOrder: '',
+      orderAcknowledgement: '',
+      salesOrder: '',
       manufacturer: null,
       receivedDate: dayjs(),
       materialCrates: [
@@ -41,9 +41,9 @@ const IncomingForm = () => {
     <FormProvider {...methods}>
       <Stack spacing={2} justifyContent={'space-between'} height={'100%'}>
         <Stack spacing={2}>
-          <ReceivedTrackingNumberInput />
+          <TrackingInputs />
           <ManufacturerSelector />
-          <ReceivedDateInput />
+          <DateInput label="Received Date" required />
           <IncomingCrateList />
         </Stack>
         <ConfirmButton />

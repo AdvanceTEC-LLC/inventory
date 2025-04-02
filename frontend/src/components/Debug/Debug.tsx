@@ -10,8 +10,6 @@ import projectsService from '../../services/projectsService'
 import receivedShipmentsService from '../../services/receivedShipmentsService'
 import sentShipmentsService from '../../services/sentShipmentsService'
 import shelfLocationsService from '../../services/shelfLocationsService'
-import shipmentsService from '../../services/shipmentsService'
-import shipmentCratesService from '../../services/shipmentCratesService'
 import stagingAreasService from '../../services/stagingAreasService'
 import stockService from '../../services/stockService'
 
@@ -29,8 +27,6 @@ const Debug = () => {
       await receivedShipmentsService.removeAll()
       await sentShipmentsService.removeAll()
       await shelfLocationsService.removeAll()
-      await shipmentsService.removeAll()
-      await shipmentCratesService.removeAll()
       await stagingAreasService.removeAll()
       await stockService.removeAll()
 

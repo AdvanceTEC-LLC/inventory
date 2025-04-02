@@ -1,5 +1,5 @@
-import { NotFoundError, ValidationError } from '../util/errors/index.js'
-import { trace } from '../util/logger.js'
+import { NotFoundError, ValidationError } from '../../util/errors/index.js'
+import { trace } from '../../util/logger.js'
 
 class BaseService {
   constructor(Model, findOptions) {

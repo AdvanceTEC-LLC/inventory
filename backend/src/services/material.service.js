@@ -8,7 +8,7 @@ import {
   ValidationError,
   UniqueConstraintError,
 } from '../util/errors/index.js'
-import BaseService from './BaseService.js'
+import BaseService from './classes/BaseService.js'
 
 export const materialFindOptions = {
   attributes: {

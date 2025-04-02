@@ -1,6 +1,6 @@
 import ProjectController from '../controllers/project.controller.js'
 import { trace } from '../util/logger.js'
-import BaseRouter from './BaseRouter.js'
+import BaseRouter from './classes/BaseRouter.js'
 
 const controller = new ProjectController()
 

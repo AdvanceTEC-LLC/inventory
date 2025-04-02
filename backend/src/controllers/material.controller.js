@@ -1,7 +1,7 @@
 import MaterialService from '../services/material.service.js'
 import { sequelize } from '../util/db.js'
 import { trace } from '../util/logger.js'
-import BaseController from './BaseController.js'
+import BaseController from './classes/BaseController.js'
 
 const service = new MaterialService()
 

@@ -1,5 +1,5 @@
 import { Project } from '../models/index.js'
-import BaseService from './BaseService.js'
+import BaseService from './classes/BaseService.js'
 import {
   MissingRequiredError,
   UniqueConstraintError,

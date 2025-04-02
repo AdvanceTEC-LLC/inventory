@@ -28,7 +28,6 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'error',
-      'react/prop-types': 0,
       'max-lines-per-function': [
         'error',
         { max: 50, skipBlankLines: true, skipComments: true },
@@ -43,6 +42,7 @@ export default [
     files: ['tests/**/*.js'],
     rules: {
       'max-lines-per-function': 'off',
+      'max-lines': 'off',
     },
   },
 ]

@@ -1,5 +1,5 @@
 import ManufacturerController from '../controllers/manufacturer.controller.js'
-import BaseRouter from './BaseRouter.js'
+import BaseRouter from './classes/BaseRouter.js'
 import { trace } from '../util/logger.js'
 
 const controller = new ManufacturerController()

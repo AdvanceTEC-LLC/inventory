@@ -1,5 +1,5 @@
 import { Crate } from '../models/index.js'
-import { projectsService } from './project.service.js'
+import { projectService } from './index.js'
 import { shelfLocationsService } from './shelfLocationsService.js'
 import { crateLocationsService } from './crateLocationsService.js'
 import { materialCratesService } from './materialCratesService.js'
@@ -97,7 +97,7 @@ const deepCreate = async (crate, transaction) => {
   }
   const shelfLocationId = shelfLocationInDb ? shelfLocationInDb.id : null
 
-  const projectInDb = await projectsService.findOrCreate(
+  const projectInDb = await projectService.findOrCreate(
     crate.project,
     transaction,
   )

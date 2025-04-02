@@ -2,13 +2,12 @@ import { NotFoundError, ValidationError } from '../../util/errors/index.js'
 import { trace } from '../../util/logger.js'
 
 class BaseService {
-  constructor(Model, findOptions) {
+  constructor(Model) {
     trace()
     if (!Model) {
       throw new Error('Model is required for BaseService')
     }
     this.Model = Model
-    this.findOptions = findOptions
 
     this.getAll = this.getAll.bind(this)
     this.get = this.get.bind(this)

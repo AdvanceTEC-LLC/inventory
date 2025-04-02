@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { trace } from '../../util/logger'
+import { trace } from '../../util/logger.js'
 
 class BaseRouter {
   constructor(controller) {

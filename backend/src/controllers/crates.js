@@ -4,7 +4,7 @@ import {
   Project,
   CrateLocation,
 } from '../models/index.js'
-import { projectFindOptions } from './project.controller.js'
+import { projectService } from '../services/index.js'
 import { shelfLocationFindOptions } from './shelfLocations.js'
 import { crateLocationFindOptions } from './crateLocations.js'
 import createGenericRouter from '../util/genericRouter.js'
@@ -35,7 +35,7 @@ export const crateFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
   ],
 }

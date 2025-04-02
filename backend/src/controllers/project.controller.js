@@ -1,16 +1,14 @@
-import ProjectService from '../services/project.service.js'
-import { trace } from '../util/logger.js'
 import BaseController from './classes/BaseController.js'
+import { projectService } from '../services/index.js'
 import bulkCreate from './functions/bulkCreate.js'
-
-const service = new ProjectService()
+import { trace } from '../util/logger.js'
 
 class ProjectController extends BaseController {
   constructor() {
     trace()
-    super(service)
+    super(projectService)
 
-    this.bulkCreate = bulkCreate(service)
+    this.bulkCreate = bulkCreate(projectService)
   }
 }
 

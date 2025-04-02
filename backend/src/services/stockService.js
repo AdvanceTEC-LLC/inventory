@@ -1,7 +1,6 @@
 import { Stock } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { materialsService } from './material.service.js'
-import { projectsService } from './project.service.js'
+import { materialService, projectService } from './index.js'
 
 const find = async (stockId, transaction) => {
   const stockInDb = await Stock.findByPk(stockId, { transaction })
@@ -18,9 +17,9 @@ const create = async (stock, transaction) => {
 
   const { materialId, projectId } = stock
 
-  await materialsService.find(materialId, transaction)
+  await materialService.get(materialId, transaction)
 
-  await projectsService.find(projectId, transaction)
+  await projectService.get(projectId, transaction)
 
   const stockInDb = await Stock.create(stock, {
     transaction,
@@ -50,9 +49,9 @@ const remove = async (stock, transaction) => {
 const deepCreate = async (stock, transaction) => {
   const { material, project } = stock
 
-  const materialInDb = await materialsService.deepCreate(material, transaction)
+  const materialInDb = await materialService.createDeep(material, transaction)
 
-  const projectInDb = await projectsService.findOrCreate(project, transaction)
+  const projectInDb = await projectService.create(project, transaction)
 
   const stockInDb = await create(
     {

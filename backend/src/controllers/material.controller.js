@@ -1,43 +1,16 @@
-import MaterialService from '../services/material.service.js'
-import { sequelize } from '../util/db.js'
-import { trace } from '../util/logger.js'
 import BaseController from './classes/BaseController.js'
-
-const service = new MaterialService()
+import { materialService } from '../services/index.js'
+import deepCreate from './functions/deepCreate.js'
+import bulkCreate from './functions/bulkCreate.js'
+import { trace } from '../util/logger.js'
 
 class MaterialController extends BaseController {
   constructor() {
     trace()
-    super(service)
+    super(materialService)
 
-    this.deepCreate = this.deepCreate.bind(this)
-    this.bulkCreate = this.bulkCreate.bind(this)
-  }
-
-  async deepCreate(req, res, next) {
-    trace()
-    const transaction = await sequelize.transaction()
-    try {
-      const material = await service.deepCreate(req.body, transaction)
-      await transaction.commit()
-      res.status(201).json(material)
-    } catch (error) {
-      await transaction.rollback()
-      next(error)
-    }
-  }
-
-  async bulkCreate(req, res, next) {
-    trace()
-    const transaction = await sequelize.transaction()
-    try {
-      const newMaterials = await service.createBulk(req.body, transaction)
-      await transaction.commit()
-      res.status(201).json(newMaterials)
-    } catch (error) {
-      await transaction.rollback()
-      next(error)
-    }
+    this.deepCreate = deepCreate(materialService)
+    this.bulkCreate = bulkCreate(materialService)
   }
 }
 

@@ -1,5 +1,5 @@
 import { Shipment, Project } from '../models/index.js'
-import { projectFindOptions } from './project.controller.js'
+import { projectService } from '../services/index.js'
 import { shipmentsService } from '../services/shipmentsService.js'
 import createGenericRouter from '../util/genericRouter.js'
 
@@ -11,7 +11,7 @@ export const shipmentFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
   ],
 }

@@ -1,6 +1,6 @@
 import { AssemblyCrate, StagingArea } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { projectsService } from './project.service.js'
+import { projectService } from './index.js'
 import { assemblyCrateFindOptions } from '../controllers/assemblyCrates.js'
 import { stagingAreaFindOptions } from '../controllers/stagingAreas.js'
 
@@ -81,7 +81,7 @@ const bulkCreate = async (stagingAreas, transaction) => {
 const deepCreate = async (stagingArea, transaction) => {
   const { name, project } = stagingArea
 
-  const projectInDb = await projectsService.findOrCreate(project, transaction)
+  const projectInDb = await projectService.create(project, transaction)
 
   const stagingAreaInDb = await findOrCreate(
     {

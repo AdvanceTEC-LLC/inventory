@@ -1,6 +1,6 @@
 import { Shipment } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { projectsService } from './project.service.js'
+import { projectService } from './index.js'
 
 const validateTrackingNumber = async (trackingNumber, transaction) => {
   const shipment = await Shipment.findOne({
@@ -41,7 +41,7 @@ const create = async (shipment, transaction) => {
 const deepCreate = async (shipment, transaction) => {
   const { trackingNumber, project } = shipment
 
-  const projectInDb = await projectsService.findOrCreate(project, transaction)
+  const projectInDb = await projectService.findOrCreate(project, transaction)
 
   const shipmentInDb = await create(
     {

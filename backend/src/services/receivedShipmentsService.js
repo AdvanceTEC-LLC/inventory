@@ -1,6 +1,6 @@
 import { ReceivedShipment } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { manufacturersService } from './manufacturer.service.js'
+import { manufacturerService } from './index.js'
 import { materialCratesService } from './materialCratesService.js'
 import { receivedShipmentMaterialCratesService } from './receivedShipmentMaterialCratesService.js'
 import { shipmentsService } from './shipmentsService.js'
@@ -41,7 +41,7 @@ const create = async (receivedShipment, transaction) => {
 
   await shipmentsService.find(shipmentId, transaction)
 
-  await manufacturersService.find(manufacturerId, transaction)
+  await manufacturerService.find(manufacturerId, transaction)
 
   const receivedShipmentInDb = await ReceivedShipment.create(
     {

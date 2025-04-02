@@ -1,27 +1,11 @@
 import { Manufacturer, Material } from '../models/index.js'
 import { trace } from '../util/logger.js'
-import ManufacturerService, {
-  manufacturerFindOptions,
-} from './manufacturer.service.js'
 import {
   MissingRequiredError,
   ValidationError,
   UniqueConstraintError,
 } from '../util/errors/index.js'
 import BaseService from './classes/BaseService.js'
-
-export const materialFindOptions = {
-  attributes: {
-    exclude: ['manufacturerId', 'createdAt', 'updatedAt'],
-  },
-  include: [
-    {
-      model: Manufacturer,
-      as: 'manufacturer',
-      ...manufacturerFindOptions,
-    },
-  ],
-}
 
 const validateName = async (name) => {
   trace()
@@ -75,9 +59,28 @@ const validateUnit = async (unit) => {
 }
 
 class MaterialService extends BaseService {
-  constructor() {
+  constructor(manufacturerService) {
     trace()
     super(Material)
+
+    this.manufacturerService = manufacturerService
+
+    this.createDeep = this.createDeep.bind(this)
+  }
+
+  get findOptions() {
+    return {
+      attributes: {
+        exclude: ['manufacturerId', 'createdAt', 'updatedAt'],
+      },
+      include: [
+        {
+          model: Manufacturer,
+          as: 'manufacturer',
+          ...this.manufacturerService.findOptions,
+        },
+      ],
+    }
   }
 
   async validate(material) {
@@ -94,7 +97,7 @@ class MaterialService extends BaseService {
 
     const { manufacturer } = data
 
-    const manufacturerInDb = await new ManufacturerService().create(
+    const manufacturerInDb = await this.manufacturerService.create(
       manufacturer,
       transaction,
     )

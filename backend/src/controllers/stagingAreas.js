@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { StagingArea, Project } from '../models/index.js'
-import { projectFindOptions } from './project.controller.js'
+import { projectService } from '../services/index.js'
 import { stagingAreasService } from '../services/stagingAreasService.js'
 import { sequelize } from '../util/db.js'
 
@@ -14,7 +14,7 @@ export const stagingAreaFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
   ],
 }

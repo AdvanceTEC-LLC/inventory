@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { Assembly, Material, Project } from '../models/index.js'
-import { projectFindOptions } from '../services/project.service.js'
-import { materialFindOptions } from './material.controller.js'
+import { projectService } from '../services/index.js'
+import { materialService } from '../services/index.js'
 import { sequelize } from '../util/db.js'
 import { assembliesService } from '../services/assembliesService.js'
 
@@ -34,13 +34,13 @@ export const assemblyFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
     {
       model: Material,
       as: 'materials',
       through: { attributes: ['quantity'] },
-      ...materialFindOptions,
+      ...materialService.findOptions,
     },
   ],
 }

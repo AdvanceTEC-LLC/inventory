@@ -1,6 +1,5 @@
 import { Material, Project, Stock } from '../models/index.js'
-import { materialFindOptions } from './material.controller.js'
-import { projectFindOptions } from './project.controller.js'
+import { materialService, projectService } from '../services/index.js'
 import { stockService } from '../services/stockService.js'
 import createGenericRouter from '../util/genericRouter.js'
 
@@ -12,12 +11,12 @@ export const stockFindOptions = {
     {
       model: Material,
       as: 'material',
-      ...materialFindOptions,
+      ...materialService.findOptions,
     },
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
   ],
 }

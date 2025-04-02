@@ -6,12 +6,6 @@ import {
 } from '../util/errors/index.js'
 import { trace } from '../util/logger.js'
 
-export const manufacturerFindOptions = {
-  attributes: {
-    exclude: ['createdAt', 'updatedAt'],
-  },
-}
-
 const validateName = async (name) => {
   trace()
 
@@ -30,6 +24,14 @@ class ManufacturerService extends BaseService {
   constructor() {
     trace()
     super(Manufacturer)
+  }
+
+  get findOptions() {
+    return {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    }
   }
 
   async validate(manufacturer) {

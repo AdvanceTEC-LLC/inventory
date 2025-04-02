@@ -6,10 +6,6 @@ import {
 } from '../util/errors/index.js'
 import { trace } from '../util/logger.js'
 
-export const projectFindOptions = {
-  attributes: { exclude: ['createdAt', 'updatedAt'] },
-}
-
 const validateName = async (name) => {
   trace()
 
@@ -54,6 +50,12 @@ class ProjectService extends BaseService {
   constructor() {
     trace()
     super(Project)
+  }
+
+  get findOptions() {
+    return {
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }
   }
 
   async validate(project) {

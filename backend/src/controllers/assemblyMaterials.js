@@ -1,7 +1,7 @@
 import { Assembly, AssemblyMaterial, Material } from '../models/index.js'
 import { assemblyMaterialsService } from '../services/assemblyMaterialsService.js'
 import createGenericRouter from '../util/genericRouter.js'
-import { materialFindOptions } from './material.controller.js'
+import { materialService } from '../services/index.js'
 
 export const assemblyMaterialFindOptions = {
   attributes: {
@@ -16,7 +16,7 @@ export const assemblyMaterialFindOptions = {
     {
       model: Material,
       as: 'material',
-      ...materialFindOptions,
+      ...materialService.findOptions,
     },
   ],
 }

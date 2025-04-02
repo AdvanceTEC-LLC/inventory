@@ -1,11 +1,13 @@
 import { Router } from 'express'
 
-import manufacturerRouter from './manufacturer.routes.js'
-import materialRouter from './material.routes.js'
+import ManufacturerRouter from './manufacturer.routes.js'
+import MaterialRouter from './material.routes.js'
+import ProjectRouter from './project.routes.js'
 
 const router = Router()
 
-router.use('/manufacturers', manufacturerRouter)
-router.use('/materials', materialRouter)
+router.use('/manufacturers', new ManufacturerRouter().getRouter())
+router.use('/materials', new MaterialRouter().getRouter())
+router.use('/projects', new ProjectRouter().getRouter())
 
 export default router

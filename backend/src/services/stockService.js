@@ -1,7 +1,7 @@
 import { Stock } from '../models/index.js'
 import { info } from '../util/logger.js'
 import { materialsService } from './material.service.js'
-import { projectsService } from './projectsService.js'
+import { projectsService } from './project.service.js'
 
 const find = async (stockId, transaction) => {
   const stockInDb = await Stock.findByPk(stockId, { transaction })

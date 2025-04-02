@@ -1,5 +1,5 @@
 import { Crate } from '../models/index.js'
-import { projectsService } from './projectsService.js'
+import { projectsService } from './project.service.js'
 import { shelfLocationsService } from './shelfLocationsService.js'
 import { crateLocationsService } from './crateLocationsService.js'
 import { materialCratesService } from './materialCratesService.js'

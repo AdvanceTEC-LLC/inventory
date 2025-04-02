@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { StagingArea, Project } from '../models/index.js'
-import { projectFindOptions } from './projects.js'
+import { projectFindOptions } from './project.controller.js'
 import { stagingAreasService } from '../services/stagingAreasService.js'
 import { sequelize } from '../util/db.js'
 

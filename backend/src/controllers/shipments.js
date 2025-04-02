@@ -1,5 +1,5 @@
 import { Shipment, Project } from '../models/index.js'
-import { projectFindOptions } from './projects.js'
+import { projectFindOptions } from './project.controller.js'
 import { shipmentsService } from '../services/shipmentsService.js'
 import createGenericRouter from '../util/genericRouter.js'
 

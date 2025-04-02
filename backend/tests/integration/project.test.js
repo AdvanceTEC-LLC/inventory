@@ -56,6 +56,17 @@ describe('projects API', () => {
       expect(response.status).toBe(201)
       expect(response.body.name).toBe(projectData.name)
     })
+
+    test('bulk creates new project', async () => {
+      const data = [
+        { number: 1000, name: 'Test Project A' },
+        { number: 2000, name: 'Test Project B' },
+      ]
+      const response = await api.post('/api/projects/bulk', data)
+      expect(response.body).toHaveLength(2)
+      expect(response.body[0].number).toBe(data[0].number)
+      expect(response.body[1].number).toBe(data[1].number)
+    })
   })
 
   describe('PUT /api/projects/:id', () => {

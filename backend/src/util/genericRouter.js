@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Router } from 'express'
 import { sequelize } from './db.js'
 import NotFoundError from './errors/NotFoundError.js'

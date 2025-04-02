@@ -1,6 +1,6 @@
 import { AssemblyCrate, StagingArea } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { projectsService } from './projectsService.js'
+import { projectsService } from './project.service.js'
 import { assemblyCrateFindOptions } from '../controllers/assemblyCrates.js'
 import { stagingAreaFindOptions } from '../controllers/stagingAreas.js'
 

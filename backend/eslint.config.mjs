@@ -1,5 +1,7 @@
 export default [
-  { ignores: ['dist'] },
+  {
+    ignores: ['dist'],
+  },
   {
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
@@ -27,6 +29,20 @@ export default [
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'error',
       'react/prop-types': 0,
+      'max-lines-per-function': [
+        'error',
+        { max: 50, skipBlankLines: true, skipComments: true },
+      ],
+      'max-lines': [
+        'warn',
+        { max: 300, skipBlankLines: true, skipComments: true },
+      ],
+    },
+  },
+  {
+    files: ['tests/**/*.js'],
+    rules: {
+      'max-lines-per-function': 'off',
     },
   },
 ]

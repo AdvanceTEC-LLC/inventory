@@ -13,7 +13,6 @@ import cratesRouter from './controllers/crates.js'
 import crateLocationsRouter from './controllers/crateLocations.js'
 import materialCrateStockRouter from './controllers/materialCrateStock.js'
 import materialCratesRouter from './controllers/materialCrates.js'
-import projectsRouter from './controllers/projects.js'
 import receivedShipmentsRouter from './controllers/receivedShipments.js'
 import sentShipmentsRouter from './controllers/sentShipments.js'
 import shelfLocationsRouter from './controllers/shelfLocations.js'
@@ -40,7 +39,6 @@ app.use('/api/crates', cratesRouter)
 app.use('/api/crateLocations', crateLocationsRouter)
 app.use('/api/materialCrateStock', materialCrateStockRouter)
 app.use('/api/materialCrates', materialCratesRouter)
-app.use('/api/projects', projectsRouter)
 app.use('/api/receivedShipments', receivedShipmentsRouter)
 app.use('/api/sentShipments', sentShipmentsRouter)
 app.use('/api/shelfLocations', shelfLocationsRouter)

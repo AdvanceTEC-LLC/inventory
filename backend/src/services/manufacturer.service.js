@@ -1,7 +1,7 @@
 import { Manufacturer } from '../models/index.js'
+import BaseService from './BaseService.js'
 import {
   MissingRequiredError,
-  NotFoundError,
   UniqueConstraintError,
 } from '../util/errors/index.js'
 import { trace } from '../util/logger.js'
@@ -26,98 +26,41 @@ const validateName = async (name) => {
   }
 }
 
-const getAllManufacturers = async () => {
-  trace()
-
-  const manufacturer = await Manufacturer.findAll(manufacturerFindOptions)
-
-  if (!manufacturer) {
-    throw new NotFoundError('Manufacturer', id)
+class ManufacturerService extends BaseService {
+  constructor() {
+    trace()
+    super(Manufacturer)
   }
 
-  return manufacturer
-}
+  async validate(manufacturer) {
+    trace()
+    await super.validate(manufacturer)
 
-const getManufacturer = async (id) => {
-  trace()
-
-  const manufacturer = await Manufacturer.findByPk(id, manufacturerFindOptions)
-
-  if (!manufacturer) {
-    throw new NotFoundError('Manufacturer', id)
+    await validateName(manufacturer.name)
   }
 
-  return manufacturer
-}
+  async getByName(name) {
+    trace()
 
-const createBulkManufacturers = async (manufacturers, transaction) => {
-  trace()
+    const manufacturersInDb = await Manufacturer.find(
+      { where: { name: name } },
+      manufacturerFindOptions,
+    )
 
-  await Promise.all(
-    manufacturers.map(async (manufacturer) => {
-      await validateName(manufacturer.name)
-    }),
-  )
-
-  return await Manufacturer.bulkCreate(manufacturers, {
-    transaction,
-  })
-}
-
-const createManufacturer = async (data, transaction) => {
-  trace()
-
-  await validateName(data.name)
-
-  return await Manufacturer.create(data, { transaction })
-}
-
-const updateManufacturer = async (id, data, transaction) => {
-  trace()
-
-  await validateName(data.name)
-
-  const manufacturer = await getManufacturer(id)
-
-  return await manufacturer.update(data, { transaction })
-}
-
-const deleteManufacturer = async (id, transaction) => {
-  trace()
-
-  const manufacturer = await getManufacturer(id, transaction)
-
-  return await manufacturer.destroy({ transaction })
-}
-
-const deleteAllManufacturers = async (transaction) => {
-  trace()
-
-  return await Manufacturer.destroy({ where: {}, transaction })
-}
-
-const getManufacturerByName = async (name) => {
-  trace()
-
-  const manufacturer = await Manufacturer.findOne({
-    where: { name: name },
-    ...manufacturerFindOptions,
-  })
-
-  if (!manufacturer) {
-    throw new NotFoundError('Manufacturer', name)
+    return manufacturersInDb
   }
 
-  return manufacturer
+  async createBulk(manufacturers, transaction) {
+    trace()
+
+    await super.validateArray(manufacturers)
+
+    const manufacturersInDb = await Manufacturer.bulkCreate(manufacturers, {
+      transaction,
+    })
+
+    return manufacturersInDb
+  }
 }
 
-export const manufacturerService = {
-  getAllManufacturers,
-  createManufacturer,
-  updateManufacturer,
-  deleteManufacturer,
-  deleteAllManufacturers,
-  getManufacturer,
-  getManufacturerByName,
-  createBulkManufacturers,
-}
+export default ManufacturerService

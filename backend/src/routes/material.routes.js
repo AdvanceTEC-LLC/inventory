@@ -1,27 +1,17 @@
-import Router from 'express'
-import {
-  getAllMaterials,
-  createMaterial,
-  deleteAllMaterials,
-  getMaterial,
-  updateMaterial,
-  deleteMaterial,
-  createDeepMaterial,
-  createBulkMaterials,
-} from '../controllers/material.controller'
+import MaterialController from '../controllers/material.controller.js'
+import BaseRouter from './BaseRouter.js'
+import { trace } from '../util/logger.js'
 
-const router = Router()
+const controller = new MaterialController()
 
-router
-  .route('/')
-  .get(getAllMaterials)
-  .post(createMaterial)
-  .delete(deleteAllMaterials)
+class MaterialRouter extends BaseRouter {
+  constructor() {
+    trace()
+    super(controller)
 
-router.route('/:id').get(getMaterial).put(updateMaterial).delete(deleteMaterial)
+    this.router.route('/deep').post(controller.deepCreate)
+    this.router.route('/bulk').post(controller.bulkCreate)
+  }
+}
 
-router.route('/deep').post(createDeepMaterial)
-
-router.route('/bulk').post(createBulkMaterials)
-
-export default router
+export default MaterialRouter

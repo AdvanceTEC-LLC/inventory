@@ -1,15 +1,14 @@
 import { Manufacturer, Material } from '../models/index.js'
 import { trace } from '../util/logger.js'
-import {
+import ManufacturerService, {
   manufacturerFindOptions,
-  manufacturerService,
 } from './manufacturer.service.js'
 import {
   MissingRequiredError,
   ValidationError,
-  NotFoundError,
   UniqueConstraintError,
 } from '../util/errors/index.js'
+import BaseService from './BaseService.js'
 
 export const materialFindOptions = {
   attributes: {
@@ -22,42 +21,6 @@ export const materialFindOptions = {
       ...manufacturerFindOptions,
     },
   ],
-}
-
-const validateMaterials = async (materials) => {
-  trace()
-
-  if (!Array.isArray(materials) || materials.length === 0) {
-    throw new ValidationError('Materials must be a non-empty array')
-  }
-  await Promise.all(
-    materials.map(async (material) => {
-      await validateName(material.name)
-      await validateMaterial(material.materialId)
-      await validateUnit(material.unit)
-    }),
-  )
-}
-
-const validateMaterial = async (material) => {
-  trace()
-
-  if (material === undefined || material === null) {
-    throw new MissingRequiredError('Material', 'material', 'is required')
-  } else if (typeof material !== 'object')
-    throw new MissingRequiredError('Material', 'material', 'must be an object')
-  else if (Array.isArray(material))
-    throw new MissingRequiredError(
-      'Material',
-      'material',
-      'must not be an array',
-    )
-  else if (Object.keys(material).length === 0)
-    throw new MissingRequiredError('Material', 'material', 'must not be empty')
-
-  await validateName(material.name)
-  await validateManufacturer(material.manufacturerId)
-  await validateUnit(material.unit)
 }
 
 const validateName = async (name) => {
@@ -74,7 +37,7 @@ const validateName = async (name) => {
   }
 }
 
-const validateManufacturer = async (manufacturerId) => {
+const validateManufacturerId = async (manufacturerId) => {
   trace()
 
   if (manufacturerId === undefined || manufacturerId === null) {
@@ -111,100 +74,52 @@ const validateUnit = async (unit) => {
   }
 }
 
-const getAllMaterials = async () => {
-  trace()
-
-  const material = await Material.findAll(materialFindOptions)
-
-  if (!material) {
-    throw new NotFoundError('Material', id)
+class MaterialService extends BaseService {
+  constructor() {
+    trace()
+    super(Material)
   }
 
-  return material
-}
+  async validate(material) {
+    trace()
+    await super.validate(material)
 
-const getMaterial = async (id) => {
-  trace()
-
-  const material = await Material.findByPk(id, materialFindOptions)
-
-  if (!material) {
-    throw new NotFoundError('Material', id)
+    await validateName(material.name)
+    await validateManufacturerId(material.manufacturerId)
+    await validateUnit(material.unit)
   }
 
-  return material
+  async createDeep(data, transaction) {
+    trace()
+
+    const { manufacturer } = data
+
+    const manufacturerInDb = await new ManufacturerService().create(
+      manufacturer,
+      transaction,
+    )
+
+    const material = await this.create(
+      {
+        ...data,
+        manufacturerId: manufacturerInDb.id,
+      },
+      transaction,
+    )
+    return material
+  }
+
+  async createBulk(materials, transaction) {
+    trace()
+
+    await super.validateArray(materials)
+
+    const materialsInDb = await Material.bulkCreate(materials, {
+      transaction,
+    })
+
+    return materialsInDb
+  }
 }
 
-const createMaterial = async (data, transaction) => {
-  trace()
-
-  await validateMaterial(data)
-
-  const material = await Material.create(data, {
-    transaction,
-  })
-
-  return material
-}
-
-const createDeepMaterial = async (data, transaction) => {
-  trace()
-
-  const manufacturerInDb = await manufacturerService.create(data, transaction)
-
-  const material = await createMaterial(
-    {
-      ...data,
-      manufacturerId: manufacturerInDb.id,
-    },
-    transaction,
-  )
-  return material
-}
-
-const createBulkMaterials = async (data, transaction) => {
-  trace()
-
-  await validateMaterials(data)
-
-  const materials = await Material.bulkCreate(data, {
-    transaction,
-  })
-
-  return materials
-}
-
-const updateMaterial = async (id, data, transaction) => {
-  trace()
-
-  await validateName(data.name)
-
-  const material = await getMaterial(id)
-
-  return await material.update(data, { transaction })
-}
-
-const deleteMaterial = async (id, transaction) => {
-  trace()
-
-  const material = await getMaterial(id, transaction)
-
-  return await material.destroy({ transaction })
-}
-
-const deleteAllMaterials = async (transaction) => {
-  trace()
-
-  return await Material.destroy({ where: {}, transaction })
-}
-
-export const materialService = {
-  getAllMaterials,
-  getMaterial,
-  createMaterial,
-  createDeepMaterial,
-  createBulkMaterials,
-  updateMaterial,
-  deleteMaterial,
-  deleteAllMaterials,
-}
+export default MaterialService

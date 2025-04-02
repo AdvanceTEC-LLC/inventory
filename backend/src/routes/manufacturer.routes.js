@@ -1,31 +1,17 @@
-import Router from 'express'
-import {
-  getAllManufacturers,
-  createManufacturer,
-  deleteAllManufacturers,
-  getManufacturer,
-  updateManufacturer,
-  deleteManufacturer,
-  getManufacturerByName,
-  createBulkManufacturers,
-} from '../controllers/manufacturer.controller'
+import ManufacturerController from '../controllers/manufacturer.controller.js'
+import BaseRouter from './BaseRouter.js'
+import { trace } from '../util/logger.js'
 
-const router = Router()
+const controller = new ManufacturerController()
 
-router
-  .route('/')
-  .get(getAllManufacturers)
-  .post(createManufacturer)
-  .delete(deleteAllManufacturers)
+class ManufacturerRouter extends BaseRouter {
+  constructor() {
+    trace()
+    super(controller)
 
-router
-  .route('/:id')
-  .get(getManufacturer)
-  .put(updateManufacturer)
-  .delete(deleteManufacturer)
+    this.router.route('/:name').get(controller.getByName)
+    this.router.route('/bulk').post(controller.bulkCreate)
+  }
+}
 
-router.route('/:name').get(getManufacturerByName)
-
-router.route('/bulk').post(createBulkManufacturers)
-
-export default router
+export default ManufacturerRouter

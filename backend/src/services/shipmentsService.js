@@ -1,6 +1,6 @@
 import { Shipment } from '../models/index.js'
 import { info } from '../util/logger.js'
-import { projectsService } from './projectsService.js'
+import { projectsService } from './project.service.js'
 
 const validateTrackingNumber = async (trackingNumber, transaction) => {
   const shipment = await Shipment.findOne({

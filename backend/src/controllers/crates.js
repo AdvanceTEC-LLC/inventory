@@ -4,7 +4,7 @@ import {
   Project,
   CrateLocation,
 } from '../models/index.js'
-import { projectFindOptions } from './projects.js'
+import { projectFindOptions } from './project.controller.js'
 import { shelfLocationFindOptions } from './shelfLocations.js'
 import { crateLocationFindOptions } from './crateLocations.js'
 import createGenericRouter from '../util/genericRouter.js'

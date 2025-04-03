@@ -34,14 +34,20 @@ jobs:
         run: |
           npm run lint
 
+      - name: Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Set up PostgreSQL proxy
+        run: |
+          flyctl proxy 5432 -a advancetecllc-db &
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
       - name: Run tests for Backend
         env:
           TEST_DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}
         working-directory: backend
         run: |
-          echo ${{ secrets.TEST_DATABASE_URI }}
-          echo "Database Host: $(echo ${{ secrets.TEST_DATABASE_URI }} | cut -d'/' -f3 | cut -d':' -f1)"
-          echo "Database Name: $(echo ${{ secrets.TEST_DATABASE_URI }} | cut -d'/' -f4)"
           npm run test
 
       # Frontend
@@ -78,11 +84,11 @@ jobs:
       #    path: ./end-to-end-tests/playwright-report/
       #    retention-days: 30
 
-      # Combined Build and Deployment Step
-      - name: Set up Flyctl
-        if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
-        uses: superfly/flyctl-actions/setup-flyctl@master
+      #- name: Set up Flyctl
+      #  if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
+      #  uses: superfly/flyctl-actions/setup-flyctl@master
 
+      # Combined Build and Deployment Step
       - name: Build and Deploy
         if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
         run: |

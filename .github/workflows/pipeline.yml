@@ -39,6 +39,9 @@ jobs:
           TEST_DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}
         working-directory: backend
         run: |
+          echo ${{ secrets.TEST_DATABASE_URI }}
+          echo "Database Host: $(echo ${{ secrets.TEST_DATABASE_URI }} | cut -d'/' -f3 | cut -d':' -f1)"
+          echo "Database Name: $(echo ${{ secrets.TEST_DATABASE_URI }} | cut -d'/' -f4)"
           npm run test
 
       # Frontend

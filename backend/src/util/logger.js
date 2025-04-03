@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const logInfo = true
 const logError = true
-const logTrace = true
+const logTrace = false
 const logLabels = false
 
 const COLORS = {

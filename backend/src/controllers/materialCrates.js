@@ -2,7 +2,7 @@ import createGenericRouter from '../util/genericRouter.js'
 import { MaterialCrate, Crate, Stock } from '../models/index.js'
 import { materialCratesService } from '../services/materialCratesService.js'
 import { crateFindOptions } from './crates.js'
-import { stockFindOptions } from './stock.js'
+import { stockService } from '../services/index.js'
 
 export const materialCrateFindOptions = {
   attributes: {
@@ -18,7 +18,7 @@ export const materialCrateFindOptions = {
       model: Stock,
       as: 'stock',
       through: { attributes: [] },
-      ...stockFindOptions,
+      ...stockService.findOptions,
     },
   ],
 }

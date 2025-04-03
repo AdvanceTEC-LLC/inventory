@@ -12,6 +12,7 @@ const materialSchema = yup.object({
     .required('manufacturerId is required')
     .positive('manufacturerId must be positive')
     .integer('manufacturerId must be an integer')
+    .max(Number.MAX_SAFE_INTEGER, 'quantity must be a safe integer')
     .test('exists', `manufacturer does not exist`, async (id) => {
       const exists = await Manufacturer.findByPk(id)
       return !!exists

@@ -1,16 +1,14 @@
-import ManufacturerController from '../controllers/manufacturer.controller.js'
+import { manufacturerController } from '../controllers/index.js'
 import BaseRouter from './classes/BaseRouter.js'
 import { trace } from '../util/logger.js'
-
-const controller = new ManufacturerController()
 
 class ManufacturerRouter extends BaseRouter {
   constructor() {
     trace()
-    super(controller)
+    super(manufacturerController)
 
-    this.router.route('/:name').get(controller.getByName)
-    this.router.route('/bulk').post(controller.bulkCreate)
+    this.router.route('/:name').get(manufacturerController.getByName)
+    this.router.route('/bulk').post(manufacturerController.bulkCreate)
   }
 }
 

@@ -20,7 +20,7 @@ class ProjectService extends BaseService {
     await super.validate(projectSchema, project)
   }
 
-  async createBulk(projects, transaction) {
+  async bulkCreate(projects, transaction) {
     trace()
 
     await super.validateArray(projects)

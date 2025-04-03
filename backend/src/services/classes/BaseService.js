@@ -37,8 +37,8 @@ class BaseService {
 
   async update(id, data, transaction) {
     trace()
-    await this.validate(data)
     const record = await this.get(id)
+    await this.validate(data)
     return await record.update(data, { transaction })
   }
 

@@ -1,16 +1,14 @@
-import MaterialController from '../controllers/material.controller.js'
+import { materialController } from '../controllers/index.js'
 import BaseRouter from './classes/BaseRouter.js'
 import { trace } from '../util/logger.js'
-
-const controller = new MaterialController()
 
 class MaterialRouter extends BaseRouter {
   constructor() {
     trace()
-    super(controller)
+    super(materialController)
 
-    this.router.route('/deep').post(controller.deepCreate)
-    this.router.route('/bulk').post(controller.bulkCreate)
+    this.router.route('/deep').post(materialController.deepCreate)
+    this.router.route('/bulk').post(materialController.bulkCreate)
   }
 }
 

@@ -63,3 +63,15 @@ export const createTestProject = async (data = {}) => {
     ...data,
   })
 }
+
+export const createTestStock = async (overrides = {}) => {
+  const material = await createTestMaterial()
+  const project = await createTestProject()
+
+  return await sequelize.models.stock.create({
+    materialId: material.id,
+    projectId: project.id,
+    quantity: 10,
+    ...overrides,
+  })
+}

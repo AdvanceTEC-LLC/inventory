@@ -7,7 +7,7 @@ import { NotFoundError, ValidationError } from '../util/errors/index.js'
 
 const parseReceivedDate = (receivedDate) => {
   if (!receivedDate) {
-    throw new CustomError('ValidationError', 'Received date is required.', 400)
+    throw new ValidationError('Received date is required.')
   }
 
   const parsedReceivedDate = new Date(receivedDate)

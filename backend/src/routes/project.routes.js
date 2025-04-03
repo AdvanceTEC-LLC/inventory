@@ -1,15 +1,13 @@
-import ProjectController from '../controllers/project.controller.js'
+import { projectController } from '../controllers/index.js'
 import { trace } from '../util/logger.js'
 import BaseRouter from './classes/BaseRouter.js'
-
-const controller = new ProjectController()
 
 class ProjectRouter extends BaseRouter {
   constructor() {
     trace()
-    super(controller)
+    super(projectController)
 
-    this.router.route('/bulk').post(controller.bulkCreate)
+    this.router.route('/bulk').post(projectController.bulkCreate)
   }
 }
 

@@ -33,7 +33,7 @@ class ManufacturerService extends BaseService {
     return manufacturersInDb
   }
 
-  async createBulk(manufacturers, transaction) {
+  async bulkCreate(manufacturers, transaction) {
     trace()
 
     await super.validateArray(manufacturers)

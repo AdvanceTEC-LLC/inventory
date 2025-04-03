@@ -10,7 +10,7 @@ class MaterialService extends BaseService {
 
     this.manufacturerService = manufacturerService
 
-    this.createDeep = this.createDeep.bind(this)
+    this.deepCreate = this.deepCreate.bind(this)
   }
 
   get findOptions() {
@@ -33,7 +33,7 @@ class MaterialService extends BaseService {
     await super.validate(materialSchema, material)
   }
 
-  async createDeep(data, transaction) {
+  async deepCreate(data, transaction) {
     trace()
 
     const { manufacturer } = data
@@ -53,7 +53,7 @@ class MaterialService extends BaseService {
     return material
   }
 
-  async createBulk(materials, transaction) {
+  async bulkCreate(materials, transaction) {
     trace()
 
     await super.validateArray(materials)

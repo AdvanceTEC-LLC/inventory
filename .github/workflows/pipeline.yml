@@ -39,17 +39,27 @@ jobs:
 
       - name: Run unit tests for Backend
         env:
-          TEST_DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}
           FLYCTL_ACCESS_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         working-directory: backend
         run: |
-          echo "Starting Fly.io database proxy..."
+          # Authentication happens automatically via the environment variable
+
+          # Start database proxy in background and capture PID
+          echo "Starting database proxy..."
           flyctl proxy 5432 -a advancetecllc-db &
           PROXY_PID=$!
-          echo "Waiting for proxy connection..."
-          sleep 10
+
+          # Give the proxy time to establish connection
+          echo "Waiting for proxy connection to stabilize..."
+          sleep 8
+
+          # Run your database operations
+          echo "Running tests..."
           npm run test
-          kill $PROXY_PID
+
+          # Clean up the proxy process when done
+          echo "Cleaning up proxy connection..."
+          kill $PROXY_PID || true
 
       # Frontend
       - name: Set up Node.js for Frontend

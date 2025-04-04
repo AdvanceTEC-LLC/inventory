@@ -35,7 +35,6 @@ jobs:
           npm run lint
 
       - name: Set up Flyctl CLI
-        if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Run unit tests for Backend

@@ -42,23 +42,34 @@ jobs:
           FLYCTL_ACCESS_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         working-directory: backend
         run: |
-          # Authentication happens automatically via the environment variable
+          # Verify token is set (will print "Token is set" if available, without exposing it)
+          if [ -n "$FLYCTL_ACCESS_TOKEN" ]; then echo "Token is set"; else echo "Token is NOT set"; fi
 
-          # Start database proxy in background and capture PID
+          # Try flyctl version to check authentication without opening proxy
+          echo "Checking flyctl auth..."
+          flyctl version
+
+          # Try explicit auth token login with non-interactive flag
+          echo "Performing explicit login..."
+          flyctl auth token $FLYCTL_ACCESS_TOKEN
+
+          # Start database proxy in background
           echo "Starting database proxy..."
-          flyctl proxy 5432 -a advancetecllc-db &
+          flyctl proxy 5432 -a your-db-app-name &
           PROXY_PID=$!
 
           # Give the proxy time to establish connection
           echo "Waiting for proxy connection to stabilize..."
-          sleep 8
+          sleep 10
 
-          # Run your database operations
+          # Check if proxy is running
+          ps aux | grep flyctl
+
+          # Run database operations/tests
           echo "Running tests..."
-          npm run test
+          npm test
 
-          # Clean up the proxy process when done
-          echo "Cleaning up proxy connection..."
+          # Clean up
           kill $PROXY_PID || true
 
       # Frontend

@@ -41,7 +41,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.FLY_WIREGUARD_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"name": "github-actions", "group": "k8s", "pubkey": "lUvE5PlnPYuHJsuoNi3evv1BNarK5lHEsxCahwWu1jw=", "region": "dev"}' \
-            http://fly.io/api/v3/wire_guard_peers
+            https://fly.io/api/v3/wire_guard_peers
         env:
           WG_TOKEN: ${{ secrets.FLY_WIREGUARD_TOKEN }}
 

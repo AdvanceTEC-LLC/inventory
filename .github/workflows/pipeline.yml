@@ -40,7 +40,7 @@ jobs:
           curl -v --request POST https://api.machines.dev/v1/wireguard/peers \
             -H "Authorization: Bearer ${{ secrets.FLY_WIREGUARD_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data '{"name": "github-actions", "group": "k8s", "pubkey": "lUvE5PlnPYuHJsuoNi3evv1BNarK5lHEsxCahwWu1jw=", "region": "dev"}'
+            --data '{"name": "github-actions", "group": "k8s", "pubkey": "lUvE5PlnPYuHJsuoNi3evv1BNarK5lHEsxCahwWu1jw=", "region": "iad"}'
         env:
           WG_TOKEN: ${{ secrets.FLY_WIREGUARD_TOKEN }}
 

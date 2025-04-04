@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { Assembly, Material, Project } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
-import { projectFindOptions } from './projects.js'
-import { materialFindOptions } from './materials.js'
+import { projectService } from '../services/index.js'
+import { materialService } from '../services/index.js'
 import { sequelize } from '../util/db.js'
 import { assembliesService } from '../services/assembliesService.js'
-import { info } from '../util/logger.js'
+import { NotFoundError } from '../util/errors/index.js'
+
 const assembliesRouter = Router()
 
 const transformAssembly = (assembly) => {
@@ -35,13 +35,13 @@ export const assemblyFindOptions = {
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
     {
       model: Material,
       as: 'materials',
       through: { attributes: ['quantity'] },
-      ...materialFindOptions,
+      ...materialService.findOptions,
     },
   ],
 }
@@ -51,12 +51,9 @@ const assemblyFinder = async (request, _response, next) => {
   const assembly = await Assembly.findByPk(id, assemblyFindOptions)
 
   if (!assembly) {
-    throw new CustomError(
-      'NotFoundError',
-      `Assembly with id ${id} not found`,
-      404,
-    )
+    throw new NotFoundError('Assembly', id)
   }
+
   const transformedAssembly = transformAssembly(assembly)
 
   request.assembly = transformedAssembly
@@ -77,17 +74,13 @@ assembliesRouter.get('/:id', assemblyFinder, async (request, response) => {
   response.status(200).send(request.assembly)
 })
 
-assembliesRouter.post('/', async (request, response, next) => {
+assembliesRouter.post('/', async (request, response) => {
   const { code, type, projectId, prefabricated } = request.body
 
   const projectInDb = await Project.findByPk(projectId)
 
   if (!projectInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Project with id ${projectId} not found`,
-      404,
-    )
+    throw new NotFoundError('Project', projectId)
   }
 
   const assembly = await Assembly.create({

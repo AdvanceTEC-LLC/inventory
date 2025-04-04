@@ -34,12 +34,43 @@ jobs:
         run: |
           npm run lint
 
-      #- name: Run unit tests for Backend
-      #  env:
-      #    TEST_DATABASE_URI: ${{ secrets.TEST_DATABASE_URI }}
-      #  working-directory: backend
-      #  run: |
-      #    npm run test
+      - name: Set up Flyctl CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Run unit tests for Backend
+        env:
+          FLYCTL_ACCESS_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        working-directory: backend
+        run: |
+          # Verify token is set (will print "Token is set" if available, without exposing it)
+          if [ -n "$FLYCTL_ACCESS_TOKEN" ]; then echo "Token is set"; else echo "Token is NOT set"; fi
+
+          # Try flyctl version to check authentication without opening proxy
+          echo "Checking flyctl auth..."
+          flyctl version
+
+          # Try explicit auth token login with non-interactive flag
+          echo "Performing explicit login..."
+          flyctl auth token $FLYCTL_ACCESS_TOKEN
+
+          # Start database proxy in background
+          echo "Starting database proxy..."
+          flyctl proxy 5432 -a your-db-app-name &
+          PROXY_PID=$!
+
+          # Give the proxy time to establish connection
+          echo "Waiting for proxy connection to stabilize..."
+          sleep 10
+
+          # Check if proxy is running
+          ps aux | grep flyctl
+
+          # Run database operations/tests
+          echo "Running tests..."
+          npm test
+
+          # Clean up
+          kill $PROXY_PID || true
 
       # Frontend
       - name: Set up Node.js for Frontend
@@ -76,10 +107,6 @@ jobs:
       #    retention-days: 30
 
       # Combined Build and Deployment Step
-      - name: Set up Flyctl
-        if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
-        uses: superfly/flyctl-actions/setup-flyctl@master
-
       - name: Build and Deploy
         if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
         run: |

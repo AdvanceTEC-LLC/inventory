@@ -1,16 +1,16 @@
 import SentShipment from '../models/sentShipment.js'
-import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
 import { assemblyCratesService } from './assemblyCratesService.js'
-import { projectsService } from './projectsService.js'
+import { projectService } from './index.js'
 import { sentShipmentAssemblyCratesService } from './sentShipmentAssemblyCratesService.js'
+import { NotFoundError, ValidationError } from '../util/errors/index.js'
 
 const parseSendDate = (sendDate) => {
   info('ENTERING SENT SHIPMENT PARSE SEND DATE')
   const parsedSendDate = new Date(sendDate)
 
   if (sendDate !== null && isNaN(parsedSendDate.getTime())) {
-    throw new CustomError('ValidationError', 'Sent date is invalid.', 400)
+    throw new ValidationError('Sent date is invalid')
   }
 
   return parsedSendDate
@@ -24,11 +24,7 @@ const find = async (sentShipmentId, transaction) => {
   })
 
   if (!sentShipmentInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Sent shipment with id ${sentShipmentId} not found.`,
-      404,
-    )
+    throw new NotFoundError('Sent shipment', sentShipmentId)
   }
 
   return sentShipmentInDb
@@ -41,7 +37,7 @@ const create = async (sentShipment, transaction) => {
 
   const parsedSendDate = parseSendDate(sendDate)
 
-  await projectsService.find(projectId, transaction)
+  await projectService.find(projectId, transaction)
 
   const sentShipmentInDb = await SentShipment.create(
     {

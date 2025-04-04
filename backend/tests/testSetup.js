@@ -1,48 +1,42 @@
-import 'dotenv/config'
-import logger, { info } from '../src/util/logger.js'
+import { afterAll, beforeEach } from 'vitest'
 import { runMigrations, sequelize } from '../src/util/db.js'
+import logger from '../src/util/logger.js'
 
-export const setupTestEnvironment = async () => {
+export const dropAllTables = async () => {
   try {
-    // Reset the database
-    await resetDatabase()
+    // Drop all tables with CASCADE to remove dependencies
+    await sequelize.query('DROP SCHEMA public CASCADE')
+    await sequelize.query('CREATE SCHEMA public')
+  } catch (error) {
+    logger.error('Failed to drop tables:', error)
+    throw error
+  }
+}
 
-    // Run all migrations to initialize the test database schema
+export const setupTestDatabase = async () => {
+  try {
+    // Authenticate connection
+    await sequelize.authenticate()
+
+    // Ensure completely clean state by dropping and recreating the schema
+    await dropAllTables()
     await runMigrations()
   } catch (error) {
-    logger.error('Failed to set up test database:', error)
+    logger.error('Test database setup failed:', error)
+    throw error
   }
 }
 
-const resetDatabase = async () => {
-  try {
-    // Check if the public schema exists
-    const schemaExists = await sequelize.query(
-      `SELECT schema_name 
-       FROM information_schema.schemata 
-       WHERE schema_name = 'public';`,
-      { type: sequelize.QueryTypes.SELECT },
-    )
-
-    if (schemaExists.length > 0) {
-      // Drop the public schema if it exists
-      await sequelize.query('DROP SCHEMA public CASCADE;')
-    } else {
-      info('Public schema does not exist')
-    }
-
-    await sequelize.query('CREATE SCHEMA public;')
-  } catch (err) {
-    logger.error('Failed to reset database schema:', err)
-    throw err
-  }
-}
-
-export const tearDownTestEnvironment = async () => {
+afterAll(async () => {
+  // Add optional cleanup
   try {
     await sequelize.close()
-    info('Database connection closed')
-  } catch (err) {
-    logger.error('Failed to close database connection:', err)
+  } catch (error) {
+    logger.error('Failed to close database connection:', error)
   }
-}
+})
+
+beforeEach(async () => {
+  // Reset database state before each test
+  await setupTestDatabase()
+})

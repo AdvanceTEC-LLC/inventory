@@ -11,6 +11,7 @@ const suppressedLogger = {
 }
 
 // True when running tests, used to prevent sequelize logs
+// eslint-disable-next-line no-undef
 const testing = process.env.NODE_ENV === 'test'
 
 export const sequelize = new Sequelize(DATABASE_URI, {
@@ -25,6 +26,7 @@ export const connectToDatabase = async () => {
   } catch (err) {
     error(err)
     error('failed to connect to the database')
+    // eslint-disable-next-line no-undef
     return process.exit(1)
   }
 
@@ -38,6 +40,7 @@ const migrationConf = {
   },
   storage: new SequelizeStorage({ sequelize, tableName: 'migrations' }),
   context: sequelize.getQueryInterface(),
+  // eslint-disable-next-line no-undef
   logger: testing ? suppressedLogger : console,
 }
 
@@ -50,6 +53,7 @@ export const runMigrations = async () => {
       files: migrations.map((mig) => mig.name),
     })
   }
+  info('migrations complete')
 }
 
 export const rollbackMigration = async () => {

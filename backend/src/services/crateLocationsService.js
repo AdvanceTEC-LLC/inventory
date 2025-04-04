@@ -1,6 +1,6 @@
 import { CrateLocation } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
 import { info } from '../util/logger.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const findMaterialCrateDefault = async (transaction) => {
   info('ENTERING CRATE LOCATION FIND MATERIAL CRATE DEFAULT')
@@ -11,10 +11,8 @@ const findMaterialCrateDefault = async (transaction) => {
   })
 
   if (!defaultLocation) {
-    throw new CustomError(
-      'ValidationError',
-      'Material Crate default location not found.',
-      400,
+    throw new NotFoundError(
+      'Default crate location for material crates not found.',
     )
   }
 
@@ -30,10 +28,8 @@ const findAssemblyCrateDefault = async (transaction) => {
   })
 
   if (!defaultLocation) {
-    throw new CustomError(
-      'ValidationError',
-      'Assembly Crate default location not found.',
-      400,
+    throw new NotFoundError(
+      'Default crate location for assembly crates not found.',
     )
   }
 

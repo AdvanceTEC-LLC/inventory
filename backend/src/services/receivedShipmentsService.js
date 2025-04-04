@@ -1,20 +1,19 @@
 import { ReceivedShipment } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
-import { error, info } from '../util/logger.js'
-import { manufacturersService } from './manufacturersService.js'
+import { info } from '../util/logger.js'
+import { manufacturerService } from './index.js'
 import { materialCratesService } from './materialCratesService.js'
-import { projectsService } from './projectsService.js'
 import { receivedShipmentMaterialCratesService } from './receivedShipmentMaterialCratesService.js'
+import { NotFoundError, ValidationError } from '../util/errors/index.js'
 
 const parseReceivedDate = (receivedDate) => {
   if (!receivedDate) {
-    throw new CustomError('ValidationError', 'Received date is required.', 400)
+    throw new ValidationError('Received date is required.')
   }
 
   const parsedReceivedDate = new Date(receivedDate)
 
-  if (isNaN(parsedReceivedDate.getTime())) {
-    throw new CustomError('ValidationError', 'Received date is invalid.', 400)
+  if (receivedDate !== null && isNaN(parsedReceivedDate.getTime())) {
+    throw new ValidationError('Received date is invalid')
   }
 
   return parsedReceivedDate
@@ -31,11 +30,7 @@ const find = async (receivedShipmentId, transaction) => {
   )
 
   if (!receivedShipmentInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Received shipment with id ${receivedShipmentId} not found.`,
-      404,
-    )
+    throw new NotFoundError('Received shipment', receivedShipmentId)
   }
 
   return receivedShipmentInDb
@@ -56,8 +51,7 @@ const create = async (receivedShipment, transaction) => {
 
   const parsedReceivedDate = parseReceivedDate(receivedDate)
 
-  await manufacturersService.find(manufacturerId, transaction)
-  await projectsService.find(projectId, transaction)
+  await manufacturerService.get(manufacturerId)
 
   const receivedShipmentInDb = await ReceivedShipment.create(
     {

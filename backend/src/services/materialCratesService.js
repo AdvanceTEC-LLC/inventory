@@ -3,7 +3,8 @@ import { info } from '../util/logger.js'
 import { crateLocationsService } from './crateLocationsService.js'
 import { cratesService } from './cratesService.js'
 import { materialCrateStockService } from './materialCrateStockService.js'
-import { stockService } from './stockService.js'
+import { stockService } from './index.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const find = async (materialCrateId, transaction) => {
   const materialCrateInDb = await MaterialCrate.findByPk(materialCrateId, {
@@ -11,11 +12,7 @@ const find = async (materialCrateId, transaction) => {
   })
 
   if (!materialCrateInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Material crate with id ${materialCrateId} not found`,
-      404,
-    )
+    throw new NotFoundError('Material crate', materialCrateId)
   }
 
   return materialCrateInDb

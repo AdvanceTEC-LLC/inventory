@@ -1,11 +1,10 @@
-import { Crate, CrateLocation } from '../models/index.js'
-import { CustomError } from '../util/errors/CustomError.js'
-import { projectsService } from './projectsService.js'
+import { Crate } from '../models/index.js'
+import { projectService } from './index.js'
 import { shelfLocationsService } from './shelfLocationsService.js'
-import { stockService } from './stockService.js'
 import { crateLocationsService } from './crateLocationsService.js'
 import { materialCratesService } from './materialCratesService.js'
 import { info } from '../util/logger.js'
+import { NotFoundError, UniqueConstraintError } from '../util/errors/index.js'
 
 const validateCrateNumber = async (number, transaction) => {
   info('ENTERING VALIDATE CRATE NUMBER')
@@ -16,11 +15,7 @@ const validateCrateNumber = async (number, transaction) => {
   })
 
   if (crateInDb) {
-    throw new CustomError(
-      'ValidationError',
-      `Crate with number ${number} already exists.`,
-      400,
-    )
+    throw new UniqueConstraintError('Crate', 'number', number)
   }
 }
 
@@ -32,11 +27,7 @@ const find = async (crateId, transaction) => {
   })
 
   if (!crateInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Crate with id ${crateId} not found.`,
-      404,
-    )
+    throw new NotFoundError('Crate', crateId)
   }
 
   return crateInDb
@@ -107,7 +98,7 @@ const deepCreate = async (crate, transaction) => {
   }
   const shelfLocationId = shelfLocationInDb ? shelfLocationInDb.id : null
 
-  const projectInDb = await projectsService.findOrCreate(
+  const projectInDb = await projectService.findOrCreate(
     crate.project,
     transaction,
   )
@@ -117,7 +108,6 @@ const deepCreate = async (crate, transaction) => {
       ...crate,
       crateLocationId,
       shelfLocationId,
-      stagingAreaId,
       projectId: projectInDb.id,
     },
     transaction,

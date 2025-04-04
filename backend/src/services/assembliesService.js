@@ -1,6 +1,7 @@
 import { Assembly } from '../models/index.js'
 import { info } from '../util/logger.js'
 import { assemblyMaterialsService } from './assemblyMaterialsService.js'
+import { NotFoundError } from '../util/errors/index.js'
 
 const find = async (assemblyId, transaction) => {
   info('ENTERING ASSEMBLY FIND')
@@ -10,11 +11,7 @@ const find = async (assemblyId, transaction) => {
   })
 
   if (!assemblyInDb) {
-    throw new CustomError(
-      'NotFoundError',
-      `Assembly with id ${assemblyId} not found.`,
-      404,
-    )
+    throw new NotFoundError('Assembly', assemblyId)
   }
 
   return assemblyInDb
@@ -53,7 +50,7 @@ const deepCreate = async (assembly, transaction) => {
 }
 
 const update = async (assembly, transaction) => {
-  const { id, code, prefabricated, project, billOfMaterials } = assembly
+  const { id, code, prefabricated, project } = assembly
 
   const updatedAssembly = {
     id,

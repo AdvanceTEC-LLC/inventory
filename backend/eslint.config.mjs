@@ -1,5 +1,11 @@
+import js from '@eslint/js'
+import prettier from 'eslint-config-prettier'
+
 export default [
-  { ignores: ['dist'] },
+  {
+    ignores: ['dist'],
+  },
+  js.configs.recommended,
   {
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
@@ -26,7 +32,31 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'error',
-      'react/prop-types': 0,
+      'max-lines-per-function': [
+        'error',
+        { max: 50, skipBlankLines: true, skipComments: true },
+      ],
+      'max-lines': [
+        'warn',
+        { max: 300, skipBlankLines: true, skipComments: true },
+      ],
+    },
+  },
+  prettier,
+  {
+    files: ['tests/**/*.js'],
+    languageOptions: {
+      globals: {
+        test: true, // Define Jest globals
+        expect: true,
+        beforeEach: true,
+        afterEach: true,
+        describe: true,
+      },
+    },
+    rules: {
+      'max-lines-per-function': 'off',
+      'max-lines': 'off',
     },
   },
 ]

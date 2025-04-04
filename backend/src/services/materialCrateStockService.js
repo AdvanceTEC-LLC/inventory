@@ -1,6 +1,6 @@
 import { Crate, MaterialCrateStock, Stock } from '../models/index.js'
 import { materialCratesService } from './materialCratesService.js'
-import { stockService } from './stockService.js'
+import { stockService } from './index.js'
 
 const create = async (materialCrateStock, transaction) => {
   const { stockId, materialCrateId } = materialCrateStock

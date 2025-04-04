@@ -6,9 +6,9 @@ import {
 } from '../models/index.js'
 import { receivedShipmentsService } from '../services/receivedShipmentsService.js'
 import createGenericRouter from '../util/genericRouter.js'
-import { manufacturerFindOptions } from './manufacturers.js'
+import { manufacturerService } from '../services/index.js'
 import { materialCrateFindOptions } from './materialCrates.js'
-import { projectFindOptions } from './projects.js'
+import { projectService } from '../services/index.js'
 
 export const receivedShipmentFindOptions = {
   attributes: {
@@ -18,12 +18,12 @@ export const receivedShipmentFindOptions = {
     {
       model: Manufacturer,
       as: 'manufacturer',
-      ...manufacturerFindOptions,
+      ...manufacturerService.findOptions,
     },
     {
       model: Project,
       as: 'project',
-      ...projectFindOptions,
+      ...projectService.findOptions,
     },
     {
       model: MaterialCrate,

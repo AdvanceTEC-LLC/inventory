@@ -37,11 +37,10 @@ jobs:
       - name: Set up WireGuard VPN for Database Access
         run: |
           echo ${{ secrets.FLY_WIREGUARD_TOKEN }} > wireguard-token.json
-          curl -v --request POST \
+          curl -v --request POST https://api.machines.dev/v1/wireguard/peers \
             -H "Authorization: Bearer ${{ secrets.FLY_WIREGUARD_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data '{"name": "github-actions", "group": "k8s", "pubkey": "lUvE5PlnPYuHJsuoNi3evv1BNarK5lHEsxCahwWu1jw=", "region": "dev"}' \
-            https://fly.io/api/v3/wire_guard_peers
+            --data '{"name": "github-actions", "group": "k8s", "pubkey": "lUvE5PlnPYuHJsuoNi3evv1BNarK5lHEsxCahwWu1jw=", "region": "dev"}'
         env:
           WG_TOKEN: ${{ secrets.FLY_WIREGUARD_TOKEN }}
 

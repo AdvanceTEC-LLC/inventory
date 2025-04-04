@@ -34,9 +34,6 @@ jobs:
         run: |
           npm run lint
 
-      - name: Set up Flyctl
-        uses: superfly/flyctl-actions/setup-flyctl@master
-
       - name: Set up WireGuard VPN for Database Access
         run: |
           echo ${{ secrets.FLY_WIREGUARD_TOKEN }} > wireguard-token.json
@@ -94,6 +91,9 @@ jobs:
       #  uses: superfly/flyctl-actions/setup-flyctl@master
 
       # Combined Build and Deployment Step
+      - name: Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
       - name: Build and Deploy
         if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
         run: |
